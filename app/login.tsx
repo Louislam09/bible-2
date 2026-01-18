@@ -46,7 +46,7 @@ const LoginScreen = () => {
     const checkExistingSession = async () => {
       const isValid = await authState$.checkSession();
       if (isValid) {
-        router.replace("(dashboard)");
+        router.replace("/(dashboard)");
       }
     };
 
@@ -122,7 +122,7 @@ const LoginScreen = () => {
   };
 
   const handleForgotPassword = () => {
-    router.push("/forgot-password");
+    router.push("/tutorials");
   };
 
   return (
@@ -144,7 +144,7 @@ const LoginScreen = () => {
                 headerRightProps: {
                   headerRightIcon: "Trash2",
                   headerRightIconColor: "red",
-                  onPress: () => {},
+                  onPress: () => { },
                   disabled: true,
                   style: { opacity: 0 },
                 },

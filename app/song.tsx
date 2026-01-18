@@ -372,24 +372,6 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
           )}
           {...createOptimizedWebViewProps({}, "static")}
         />
-        {/* <FlashList
-          key={schema}
-          contentContainerStyle={{
-            backgroundColor: theme.colors.background,
-            paddingVertical: 20,
-          }}
-          decelerationRate={"normal"}
-          data={filterData}
-          renderItem={({ item, index }) => (
-            <RenderItem
-              {...{ theme, onItemClick: handleSongPress }}
-              item={item}
-              index={index}
-            />
-          )}
-          keyExtractor={(item: any, index: any) => `note-${index}`}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-        /> */}
       </View>
     </>
   );

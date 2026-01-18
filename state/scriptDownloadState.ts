@@ -109,53 +109,5 @@ export const scriptDownloadHelpers = {
     clearFontStyles: () => {
         scriptDownloadState$.fontStyles.set({});
     },
-
-    /**
-     * Migrate script download data from old LocalstoreContext to new scriptDownloadState
-     * This function should be called once on app startup to migrate existing data
-     */
-    migrateFromOldStorage: async () => {
-        try {
-            // Read old data from AsyncStorage
-            const oldDataString = await AsyncStorage.getItem(StorageKeys.BIBLE);
-
-
-            if (!oldDataString) {
-                return;
-            }
-            const oldData = JSON.parse(oldDataString);
-
-            // Check if old data has script download fields
-            const hasOldData = oldData.tailwindScript || oldData.lexicalBundle ||
-                (oldData.fontStyles && Object.keys(oldData.fontStyles).length > 0);
-
-            if (!hasOldData) {
-                return;
-            }
-
-            // Migrate data to new state
-            if (oldData.tailwindScript) {
-                scriptDownloadState$.tailwindScript.set(oldData.tailwindScript);
-            }
-            if (oldData.lexicalBundle) {
-                scriptDownloadState$.lexicalBundle.set(oldData.lexicalBundle);
-            }
-            if (oldData.fontStyles) {
-                scriptDownloadState$.fontStyles.set(oldData.fontStyles);
-            }
-
-            // Remove old fields from old storage
-            delete oldData.tailwindScript;
-            delete oldData.lexicalBundle;
-            delete oldData.fontStyles;
-
-            // Save cleaned data back to AsyncStorage
-            await AsyncStorage.setItem(StorageKeys.BIBLE, JSON.stringify(oldData));
-
-            console.log('✅ Migrated script download data from old storage to new state');
-        } catch (error) {
-            console.error('Error migrating script download data:', error);
-        }
-    },
 };
 

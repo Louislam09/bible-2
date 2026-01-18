@@ -34,6 +34,7 @@ import {
 import { useDBContext } from "./databaseContext";
 import { storedData$ } from "./LocalstoreContext";
 import { showToast } from "@/utils/showToast";
+import { useNetwork } from "./NetworkProvider";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -244,6 +245,8 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const [orientation, setOrientation] = useState("PORTRAIT");
   const { addFavoriteVerse, removeFavoriteVerse } = useFavoriteVerseService();
   const logo = require("../assets/images/icon.png");
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo;
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -273,14 +276,14 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [currentBibleVersion, installedBibles]);
 
   useEffect(() => {
-    if (!isDataLoaded) return;
+    if (!isDataLoaded || !isConnected) return;
     const initLocalSettings = async () => {
       await authState$.checkSession();
       await syncLocalSettings();
     };
 
     initLocalSettings();
-  }, [isDataLoaded]);
+  }, [isDataLoaded, isConnected]);
 
   useEffect(() => {
     if (requiresSettingsReloadAfterSync) {

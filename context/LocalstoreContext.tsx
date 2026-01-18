@@ -190,8 +190,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const loadState = async () => {
       await when(() => syncState$.isPersistLoaded.get());
       await when(() => syncScriptDownloadState$.isPersistLoaded.get());
-      // Migrate script download data from old storage to new state
-      await scriptDownloadHelpers.migrateFromOldStorage();
 
       bibleState$.changeBibleQuery({
         book: storedData$.lastBook.get(),
@@ -216,18 +214,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       loadFromCloud();
     }
   }, [pb.authStore.isValid, isConnected]);
-
-  // useEffect(() => {
-  //   const unsubscribeFromChanges = storedData$.onChange((value) => {
-  //     if (storedData$.user.get() && pb.authStore.isValid) {
-  //       console.log('Change detected, scheduling sync...');
-  //       setHasPendingCloudSync(true);
-  //     }
-  //   });
-  //   return () => {
-  //     unsubscribeFromChanges();
-  //   };
-  // }, []);
 
   const clearData = async () => {
     storedData$.set(initialContext);
@@ -348,17 +334,8 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           isSyncedWithCloud: true,
           token: storedData$.get().token,
           user: storedData$.get().user,
+          isAlegresNuevasUnlocked: storedData$.get().isAlegresNuevasUnlocked || false,
         }));
-
-        bibleState$.changeBibleQuery({
-          // book: settingsData.lastBook,
-          // chapter: settingsData.lastChapter,
-          // verse: settingsData.lastVerse,
-          bottomSideBook: settingsData.lastBottomSideBook,
-          bottomSideChapter: settingsData.lastBottomSideChapter,
-          bottomSideVerse: settingsData.lastBottomSideVerse,
-          isHistory: true,
-        });
 
         settingState$.requiresSettingsReloadAfterSync.set(true);
 

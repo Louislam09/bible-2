@@ -167,7 +167,7 @@ const HymnScreen = () => {
   });
 
   useEffect(() => {
-    if (!request?.id || isFetchingRequests) return;
+    if (!request?.id || isFetchingRequests || !isConnected) return;
     if (request.status === "approved") {
       storedData$.isAlegresNuevasUnlocked.set(true);
       storedData$.hasRequestAccess.set(true);
@@ -176,9 +176,11 @@ const HymnScreen = () => {
         request.status as AccessStatus
       )
     ) {
-      storedData$.isAlegresNuevasUnlocked.set(false);
+      if (isConnected) {
+        storedData$.isAlegresNuevasUnlocked.set(false);
+      }
     }
-  }, [request, isFetchingRequests]);
+  }, [request, isFetchingRequests, isConnected]);
 
   const handleRequestAccessPress = useCallback(() => {
     if (!isConnected) {
@@ -187,7 +189,7 @@ const HymnScreen = () => {
     }
 
     requestAccessBottomSheetModalRef.current?.present();
-  }, [isConnected, hasRequestAccess, alertInfo]);
+  }, [isConnected, hasRequestAccess]);
 
   const navigateToSongs = useCallback(
     (isAlegres: boolean) => {

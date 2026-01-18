@@ -122,11 +122,12 @@ export const authState$ = observable<AuthState>({
   },
 
   checkSession: async () => {
-    // console.log("🔎 checking session 🔍");
+    console.log("🔎 checking session 🔍");
+
     try {
       authState$.isLoading.set(true);
-      const token = storedData$.token.get();
-      const userData = storedData$.user.get();
+      const token = storedData$.token.get() || pb.authStore.token;
+      const userData = storedData$.user.get() || pb.authStore.record;
       if (token && userData) {
         if (pb.authStore.token !== token) {
           pb.authStore.save(token, userData);
@@ -137,7 +138,17 @@ export const authState$ = observable<AuthState>({
           authState$.isAuthenticated.set(true);
           return true;
         } else {
-          await StorageService.clearSession();
+          await pb.collection('users').authRefresh();
+          if (pb.authStore.isValid) {
+            const user = pb.authStore.record as pbUser;
+            authState$.user.set(user);
+            authState$.isAuthenticated.set(true);
+            return true;
+          } else {
+            console.log("🔎 session expired, clearing session 🔍");
+            await StorageService.clearSession();
+            return false;
+          }
         }
       }
       return false;
