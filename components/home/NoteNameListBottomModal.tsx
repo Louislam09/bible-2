@@ -20,11 +20,12 @@ const NoteNameListBottomModal = () => {
 
   // Open the bottom sheet when the component mounts
   useEffect(() => {
+    if (!isOpen) return;
     const timer = setTimeout(() => {
       modalState$.noteListRef.current?.snapToIndex(0);
     }, 50);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isOpen]);
 
   return (
     <BottomSheet

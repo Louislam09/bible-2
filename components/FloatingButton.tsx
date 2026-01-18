@@ -232,12 +232,12 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "center",
       alignItems: "center",
       elevation: 5,
-      zIndex: 9999,
+      zIndex: 99,
     },
     expandedContainer: {
       position: "absolute",
       backgroundColor: colors.background,
-      zIndex: 9999,
+      zIndex: 99,
     },
     header: {
       flexDirection: "row",

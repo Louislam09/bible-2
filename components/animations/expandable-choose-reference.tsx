@@ -172,13 +172,13 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
     return progress.value === 1 ? "flex" : "none";
   });
 
-const rWebviewStyle = useAnimatedStyle(() => {
-  return {
-    opacity: progress.value,
-    // @ts-ignore
-    display: display.value,
-  };
-});
+  const rWebviewStyle = useAnimatedStyle(() => {
+    return {
+      opacity: progress.value,
+      // @ts-ignore
+      display: display.value,
+    };
+  });
 
   const handleClose = () => {
     progress.value = withTiming(
@@ -247,7 +247,7 @@ const rWebviewStyle = useAnimatedStyle(() => {
         </TouchableOpacity>
       </Animated.View>
 
-      <Animated.View style={[rWebviewStyle,styles.webviewContainer]}>
+      <Animated.View style={[rWebviewStyle, styles.webviewContainer]}>
         <WebviewReferenceChoose isCommentary={isCommentary} onClose={handleClose} />
       </Animated.View>
     </Animated.View>
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     overflow: "hidden",
     flex: 9999,
-    zIndex: 9999, 
+    zIndex: 9999,
   },
   knob: {
     // backgroundColor: "#767676",
