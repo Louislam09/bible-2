@@ -1,4 +1,3 @@
-import BottomModal from "@/components/BottomModal";
 import Icon, { IconProps } from "@/components/Icon";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { isPrimaryBibleDatabase } from "@/constants/databaseNames";
@@ -13,6 +12,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { DictionaryData, EBibleVersions, Screens, TTheme } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import BottomSheet from "@gorhom/bottom-sheet";
 import React, {
   FC,
   useCallback,
@@ -31,7 +31,6 @@ import {
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
-import BottomSheet from "@gorhom/bottom-sheet";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -452,7 +451,7 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
     <BottomSheet
       ref={modalState$.multipleStrongsRef.get()}
       index={0}
-      snapPoints={["60%"]}
+      snapPoints={["55%"]}
       backgroundStyle={{
         ...styles.bottomSheet,
         backgroundColor: theme.colors.background,
@@ -464,21 +463,16 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
         modalState$.isMultipleStrongsOpen.set(false);
       }}
     >
-      {/* // <BottomSheet
-    //   style={styles.bottomSheet}
-    //   backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-    //   shouldScroll={false}
-    //   ref={modalState$.multipleStrongsRef.get()}
-    //   justOneSnap
-    //   showIndicator
-    //   justOneValue={["60%"]}
-    //   startAT={0}
-    //   onDismiss={() => modalState$.isMultipleStrongsOpen.set(false)}
-    // > */}
       <View style={[styles.webviewWrapper]}
         onLayout={() => {
-          modalState$.strongSearchRef.current?.close();
-          modalState$.multipleStrongsRef.current?.snapToIndex(0);
+          try {
+            if (modalState$.strongSearchRef.get().current) {
+              modalState$.strongSearchRef.get().current?.close();
+            }
+            modalState$.multipleStrongsRef.current?.snapToIndex(0);
+          } catch (error) {
+            console.error("Error closing strong search bottom sheet: ", error);
+          }
         }}
       >
         <View style={styles.actionContainer}>

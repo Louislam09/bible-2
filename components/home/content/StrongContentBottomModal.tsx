@@ -293,20 +293,15 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
         modalState$.isStrongSearchOpen.set(false);
       }}
     >
-      {/* // <BottomModal
-    //   style={styles.bottomSheet}
-    //   backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-    //   shouldScroll={false}
-    //   ref={modalState$.strongSearchRef.get()}
-    //   justOneSnap
-    //   showIndicator
-    //   justOneValue={["60%"]}
-    //   startAT={0}
-    //   onDismiss={() => modalState$.isStrongSearchOpen.set(false)}
-    // > */}
       <View style={[styles.webviewWrapper]} onLayout={() => {
-        modalState$.multipleStrongsRef.current?.close();
-        modalState$.strongSearchRef.current?.snapToIndex(0);
+        try {
+          if (modalState$.multipleStrongsRef.get().current) {
+            modalState$.multipleStrongsRef.get().current?.close();
+          }
+          modalState$.strongSearchRef.current?.snapToIndex(0);
+        } catch (error) {
+          console.error("Error closing multiple strongs bottom sheet: ", error);
+        }
       }}>
         <View style={styles.actionContainer}>
           {backUrl.length !== 0 && (
