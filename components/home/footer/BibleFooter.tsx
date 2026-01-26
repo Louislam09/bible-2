@@ -36,9 +36,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
 
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-  const playRef = useRef<BottomSheetModal>(null);
-  const navigation = useNavigation();
-  const params = useParams();
   const bibleQuery = use$(() => bibleState$.bibleQuery.get());
 
 
@@ -136,13 +133,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
     );
   };
 
-  // const onPress = useSingleAndDoublePress({
-  //   onSinglePress: onSingleFooterTitle,
-  //   onDoublePress: onDoubleFooterTitle,
-  //   delay: 200,
-  // });
-
-
   const displayBookName = renameLongBookName(book);
 
   return (
@@ -170,8 +160,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           ref={tourState$.bookSelector.get()}
           style={styles.titleContainer}
           onPress={onSingleFooterTitle}
-          // onLongPress={onLongFooterTitle}
-          // delayLongPress={200}
+        // onLongPress={onLongFooterTitle}
+        // delayLongPress={200}
         >
           <Text
             style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}

@@ -16,7 +16,6 @@ export const getStyles = ({ colors }: TTheme) =>
       bottom: -2,
       paddingBottom: 10,
       zIndex: 9999,
-      borderRadius: 10,
     },
     footerAudio: {
       backgroundColor: colors.notification + 90,
