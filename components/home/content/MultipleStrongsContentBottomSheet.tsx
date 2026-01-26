@@ -31,6 +31,7 @@ import {
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -293,12 +294,13 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
   }, [currentStrongNumber, cognate]);
 
   // Present modal when component mounts
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      modalState$.multipleStrongsRef.current?.present();
-    }, 0);
-    return () => clearTimeout(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     console.log("multiple strongs bottom sheet mounted");
+  //     modalState$.multipleStrongsRef.current?.snapToIndex(0);
+  //   }, 0);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   useEffect(() => {
     const fetchDictionaryData = async () => {
@@ -447,18 +449,38 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
   };
 
   return (
-    <BottomModal
-      style={styles.bottomSheet}
-      backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-      shouldScroll={false}
+    <BottomSheet
       ref={modalState$.multipleStrongsRef.get()}
-      justOneSnap
-      showIndicator
-      justOneValue={["60%"]}
-      startAT={0}
-      onDismiss={() => modalState$.isMultipleStrongsOpen.set(false)}
+      index={0}
+      snapPoints={["60%"]}
+      backgroundStyle={{
+        ...styles.bottomSheet,
+        backgroundColor: theme.colors.background,
+      }}
+      enablePanDownToClose
+      handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
+      enableDynamicSizing={false}
+      onClose={() => {
+        modalState$.isMultipleStrongsOpen.set(false);
+      }}
     >
-      <View style={[styles.webviewWrapper]}>
+      {/* // <BottomSheet
+    //   style={styles.bottomSheet}
+    //   backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+    //   shouldScroll={false}
+    //   ref={modalState$.multipleStrongsRef.get()}
+    //   justOneSnap
+    //   showIndicator
+    //   justOneValue={["60%"]}
+    //   startAT={0}
+    //   onDismiss={() => modalState$.isMultipleStrongsOpen.set(false)}
+    // > */}
+      <View style={[styles.webviewWrapper]}
+        onLayout={() => {
+          modalState$.strongSearchRef.current?.close();
+          modalState$.multipleStrongsRef.current?.snapToIndex(0);
+        }}
+      >
         <View style={styles.actionContainer}>
           {backUrl.length !== 0 && (
             <Pressable
@@ -527,7 +549,7 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
           {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>
-    </BottomModal>
+    </BottomSheet>
   );
 };
 

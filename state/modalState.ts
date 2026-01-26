@@ -11,13 +11,13 @@ export enum ChooseReferenceStep {
 
 export const modalState$ = observable({
   compareRef: createRef<BottomSheetModal>(),
-  strongSearchRef: createRef<BottomSheetModal>(),
+  strongSearchRef: createRef<BottomSheet>(),
   dictionaryRef: createRef<BottomSheetModal>(),
   commentaryRef: createRef<BottomSheetModal>(),
   interlinealRef: createRef<BottomSheetModal>(),
   searchFilterRef: createRef<BottomSheetModal>(),
   strongSearchFilterRef: createRef<BottomSheetModal>(),
-  multipleStrongsRef: createRef<BottomSheetModal>(),
+  multipleStrongsRef: createRef<BottomSheet>(),
   bibleSettingRef: createRef<BottomSheetModal>(),
   highlighterRef: createRef<BottomSheet>(),
   noteListRef: createRef<BottomSheet>(),
@@ -62,7 +62,7 @@ export const modalState$ = observable({
   },
   closeStrongSearchBottomSheet: () => {
     modalState$.isStrongSearchOpen.set(false);
-    modalState$.strongSearchRef.current?.dismiss();
+    modalState$.strongSearchRef.current?.close();
   },
   openDictionaryBottomSheet: (text: string) => {
     modalState$.setSearchWordOnDic(text);
@@ -76,7 +76,7 @@ export const modalState$ = observable({
   openExplainVerseBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
     modalState$.isStrongSearchOpen.set(false);
-    modalState$.strongSearchRef.current?.dismiss();
+    modalState$.strongSearchRef.current?.close();
   },
   closeExplainVerseBottomSheet: () => {
     modalState$.isSheetClosed.set(true);
@@ -98,7 +98,7 @@ export const modalState$ = observable({
   },
   closeMultipleStrongsBottomSheet: () => {
     modalState$.isMultipleStrongsOpen.set(false);
-    modalState$.multipleStrongsRef.current?.dismiss();
+    modalState$.multipleStrongsRef.current?.close();
   },
   openSearchFilterBottomSheet: () => {
     modalState$.searchFilterRef.current?.present();

@@ -1,4 +1,3 @@
-import BottomModal from "@/components/BottomModal";
 import Icon, { IconProps } from "@/components/Icon";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { isPrimaryBibleDatabase } from "@/constants/databaseNames";
@@ -19,6 +18,7 @@ import {
   TTheme,
 } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import React, {
   FC,
@@ -123,12 +123,12 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
   }, [data]);
 
   // Present modal when component mounts
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      modalState$.strongSearchRef.current?.present();
-    }, 0);
-    return () => clearTimeout(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     modalState$.strongSearchRef.current?.present();
+  //   }, 0);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   useEffect(() => {
     const fetchDictionaryData = async () => {
@@ -278,18 +278,36 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
   };
 
   return (
-    <BottomModal
-      style={styles.bottomSheet}
-      backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-      shouldScroll={false}
+    <BottomSheet
       ref={modalState$.strongSearchRef.get()}
-      justOneSnap
-      showIndicator
-      justOneValue={["60%"]}
-      startAT={0}
-      onDismiss={() => modalState$.isStrongSearchOpen.set(false)}
+      index={-1}
+      snapPoints={["55%"]}
+      backgroundStyle={{
+        ...styles.bottomSheet,
+        backgroundColor: theme.colors.background,
+      }}
+      enablePanDownToClose
+      handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
+      enableDynamicSizing={false}
+      onClose={() => {
+        modalState$.isStrongSearchOpen.set(false);
+      }}
     >
-      <View style={[styles.webviewWrapper]}>
+      {/* // <BottomModal
+    //   style={styles.bottomSheet}
+    //   backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+    //   shouldScroll={false}
+    //   ref={modalState$.strongSearchRef.get()}
+    //   justOneSnap
+    //   showIndicator
+    //   justOneValue={["60%"]}
+    //   startAT={0}
+    //   onDismiss={() => modalState$.isStrongSearchOpen.set(false)}
+    // > */}
+      <View style={[styles.webviewWrapper]} onLayout={() => {
+        modalState$.multipleStrongsRef.current?.close();
+        modalState$.strongSearchRef.current?.snapToIndex(0);
+      }}>
         <View style={styles.actionContainer}>
           {backUrl.length !== 0 && (
             <Pressable
@@ -346,7 +364,8 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
           {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>
-    </BottomModal>
+    </BottomSheet>
+
   );
 };
 
