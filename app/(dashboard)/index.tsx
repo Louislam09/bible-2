@@ -174,13 +174,6 @@ const MainDashboard = () => {
       isNew: isWithinTimeframe("1w", new Date("2026-01-06")).isActive,
     },
     {
-      icon: "TestTubeDiagonal",
-      label: "Ejemplos",
-      action: () => navigation?.navigate("example" as any),
-      color: "#9389ec",
-      disabled: !__DEV__,
-    },
-    {
       icon: "GraduationCap",
       label: "Tutoriales",
       action: () => {
