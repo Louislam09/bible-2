@@ -15,12 +15,12 @@ import { StorageKeys } from "./constants/StorageKeys";
 
 const authStore = new AsyncAuthStore({
   save: async (serialized) => {
-    console.log("Saving auth state to AsyncStorage:", serialized);
+    // console.log("Saving auth state to AsyncStorage:", serialized);
     await AsyncStorage.setItem(StorageKeys.POCKETBASE_AUTH, serialized);
   },
   initial: AsyncStorage.getItem(StorageKeys.POCKETBASE_AUTH),
   clear: async () => {
-    console.log("Clearing auth state from AsyncStorage");
+    // console.log("Clearing auth state from AsyncStorage");
     await AsyncStorage.removeItem(StorageKeys.POCKETBASE_AUTH);
   },
 });
