@@ -1,5 +1,6 @@
 import { StorageKeys } from "@/constants/StorageKeys";
 import { pb } from "@/globalConfig";
+import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
 import { scriptDownloadHelpers, scriptDownloadState$ } from "@/state/scriptDownloadState";
 import { settingState$ } from "@/state/settingState";
@@ -191,6 +192,9 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       await when(() => syncState$.isPersistLoaded.get());
       await when(() => syncScriptDownloadState$.isPersistLoaded.get());
       // console.log("🔎 loading state 🔍", scriptDownloadState$);
+
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await authState$.checkSession();
 
       bibleState$.changeBibleQuery({
         book: storedData$.lastBook.get(),

@@ -79,7 +79,6 @@ export const authState$ = observable<AuthState>({
   logout: async () => {
     try {
       authState$.isLoading.set(true);
-      pb.authStore.clear();
       await StorageService.clearSession();
 
       authState$.user.set(null);
@@ -122,39 +121,61 @@ export const authState$ = observable<AuthState>({
   },
 
   checkSession: async () => {
-    // console.log("🔎 checking session 🔍");
-
     try {
       authState$.isLoading.set(true);
-      const token = storedData$.token.get() || pb.authStore.token;
-      const userData = storedData$.user.get() || pb.authStore.record;
-      if (token && userData) {
-        if (pb.authStore.token !== token) {
-          pb.authStore.save(token, userData);
-        }
-        if (pb.authStore.isValid) {
-          const user = pb.authStore.record as pbUser;
-          authState$.user.set(user);
-          authState$.isAuthenticated.set(true);
-          return true;
-        } else {
+
+      const syncAuthState = (user: pbUser) => {
+        storedData$.user.set(user);
+        storedData$.token.set(pb.authStore.token);
+        authState$.user.set(user);
+        authState$.isAuthenticated.set(true);
+      };
+
+      const clearAuthState = async () => {
+        await StorageService.clearSession();
+        authState$.user.set(null);
+        authState$.isAuthenticated.set(false);
+      };
+
+      if (pb.authStore.isValid && pb.authStore.record) {
+        syncAuthState(pb.authStore.record as pbUser);
+        return true;
+      }
+
+      if (pb.authStore.token && pb.authStore.record) {
+        try {
           await pb.collection('users').authRefresh();
-          if (pb.authStore.isValid) {
-            const user = pb.authStore.record as pbUser;
-            authState$.user.set(user);
-            authState$.isAuthenticated.set(true);
+          if (pb.authStore.isValid && pb.authStore.record) {
+            syncAuthState(pb.authStore.record as pbUser);
             return true;
-          } else {
-            console.log("🔎 session expired, clearing session 🔍");
-            await StorageService.clearSession();
+          }
+          await clearAuthState();
+          return false;
+        } catch (refreshError: any) {
+          if (refreshError?.status === 400 || refreshError?.status === 401) {
+            await clearAuthState();
             return false;
           }
+          const isNetworkError =
+            !refreshError?.status ||
+            refreshError?.status >= 500 ||
+            refreshError?.message?.toLowerCase().includes('network') ||
+            refreshError?.message?.toLowerCase().includes('fetch') ||
+            refreshError?.message?.toLowerCase().includes('timeout') ||
+            refreshError?.originalError?.message?.toLowerCase().includes('network');
+
+          if (isNetworkError && pb.authStore.record) {
+            syncAuthState(pb.authStore.record as pbUser);
+            return true;
+          }
+          await clearAuthState();
+          return false;
         }
       }
+
       return false;
     } catch (error) {
       console.error("Error al verificar la sesión:", error);
-      // await StorageService.clearSession();
       return false;
     } finally {
       authState$.isLoading.set(false);

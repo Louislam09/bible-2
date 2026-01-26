@@ -278,7 +278,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!isDataLoaded || !isConnected) return;
     const initLocalSettings = async () => {
-      await authState$.checkSession();
       await syncLocalSettings();
     };
 

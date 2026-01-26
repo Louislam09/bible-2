@@ -4,8 +4,8 @@ import { pb } from "@/globalConfig";
 export const StorageService = {
   saveSession: async (token: string, userData: any) => {
     try {
-      storedData$.user.set(userData)
-      storedData$.token.set(token)
+      storedData$.user.set(userData);
+      storedData$.token.set(token);
       return true;
     } catch (error) {
       console.error("Error saving session:", error);

@@ -61,7 +61,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     confirm(
       "Cerrar Sesión",
       "¿Estás seguro de que deseas cerrar tu sesión?",
-      () => authState$.logout().then(console.log)
+      () => authState$.logout()
     );
   };
 

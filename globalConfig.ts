@@ -8,10 +8,24 @@ export const POCKETBASE_URL = process.env.EXPO_PUBLIC_POCKETBASE_URL;
 export const APP_DEEPLINK_URI = "https://louislam09.github.io/bible-deeplink";
 export const IS_DEV = process.env.EXPO_PUBLIC_APP_VARIANT === "development";
 
-import PocketBase from "pocketbase";
+import PocketBase, { AsyncAuthStore } from "pocketbase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { pbUser } from "./types";
+import { StorageKeys } from "./constants/StorageKeys";
 
-export const pb = new PocketBase(POCKETBASE_URL);
+const authStore = new AsyncAuthStore({
+  save: async (serialized) => {
+    console.log("Saving auth state to AsyncStorage:", serialized);
+    await AsyncStorage.setItem(StorageKeys.POCKETBASE_AUTH, serialized);
+  },
+  initial: AsyncStorage.getItem(StorageKeys.POCKETBASE_AUTH),
+  clear: async () => {
+    console.log("Clearing auth state from AsyncStorage");
+    await AsyncStorage.removeItem(StorageKeys.POCKETBASE_AUTH);
+  },
+});
+
+export const pb = new PocketBase(POCKETBASE_URL, authStore);
 
 export const handleGoogleAuthError = (error: any) => {
   console.log("Google Auth Error:", error);

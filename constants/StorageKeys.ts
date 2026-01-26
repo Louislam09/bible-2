@@ -3,4 +3,5 @@ export const StorageKeys = {
   LEGEND: "bible:state",
   DOWNLOADS: "bible:downloads",
   SCRIPT_DOWNLOADS: "bible:script-downloads",
+  POCKETBASE_AUTH: "pocketbase:auth",
 };
