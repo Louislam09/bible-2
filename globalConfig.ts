@@ -27,6 +27,40 @@ const authStore = new AsyncAuthStore({
 
 export const pb = new PocketBase(POCKETBASE_URL, authStore);
 
+/**
+ * Refreshes the auth token: request a new one from PocketBase, then save it.
+ * Keeps session on network errors. Used by beforeSend so tokens stay valid.
+ * Set a long Auth token duration in PocketBase for "login until sign-out".
+ */
+async function refreshAuthTokenSilent(): Promise<boolean> {
+  if (!pb.authStore.token || !pb.authStore.record) return false;
+  try {
+    const refresh = await pb.collection("users").authRefresh();
+    pb.authStore.save(refresh.token, refresh.record);
+    return true;
+  } catch (err: any) {
+    if (err?.status === 400 || err?.status === 401) return false;
+    const isNetworkError =
+      !err?.status ||
+      err?.status >= 500 ||
+      err?.message?.toLowerCase().includes("network") ||
+      err?.message?.toLowerCase().includes("fetch") ||
+      err?.message?.toLowerCase().includes("timeout") ||
+      err?.originalError?.message?.toLowerCase().includes("network");
+    if (isNetworkError && pb.authStore.record) return true;
+    return false;
+  }
+}
+
+// Refresh token before any request when it’s invalid so the session never expires in use
+pb.beforeSend = async (url, options) => {
+  if (url.includes("auth-refresh")) return { url, options };
+  if (pb.authStore.token && pb.authStore.record && !pb.authStore.isValid) {
+    await refreshAuthTokenSilent();
+  }
+  return { url, options };
+};
+
 export const handleGoogleAuthError = (error: any) => {
   console.log("Google Auth Error:", error);
   console.log("originalError", error.originalError);

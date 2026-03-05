@@ -144,13 +144,10 @@ export const authState$ = observable<AuthState>({
 
       if (pb.authStore.token && pb.authStore.record) {
         try {
-          await pb.collection('users').authRefresh();
-          if (pb.authStore.isValid && pb.authStore.record) {
-            syncAuthState(pb.authStore.record as pbUser);
-            return true;
-          }
-          await clearAuthState();
-          return false;
+          const refresh = await pb.collection('users').authRefresh();
+          pb.authStore.save(refresh.token, refresh.record);
+          syncAuthState(refresh.record as pbUser);
+          return true;
         } catch (refreshError: any) {
           if (refreshError?.status === 400 || refreshError?.status === 401) {
             await clearAuthState();
