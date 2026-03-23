@@ -339,7 +339,7 @@ export default [
     chorus:
       'Me redimió, más no con plata.\nMe compro el salvador.\nCon oro no, más con su sangre.\nGrande precio de su amor.',
     stanzas: [
-      '(1)Ni oro ni plata me han redimido\nRiquezas terrenas no pueden salvar,\nLa sangre de Cristo ya fue mi pecado\nTan sólo por ella el me pudo librar',
+      '(1)Ni oro ni plata me han redimido\nRiquezas terrenas no pueden salvar,\nLa sangre de Cristo ya fue mi rescate\nTan sólo por ella el me pudo librar',
       '(2)Ni oro ni plata me han redimido,\nPara ello mi culpa grandísima fue.\nLa sangre de Cristo ya fue mi rescate.\nTan sólo por ella perdón yo hallé.',
       '(3)Ni oro ni plata me han redimido,\nEstando alejado en pecado atroz.\nLa sangre de Cristo ya fue mi rescate\n¡Amor tan sublime y precioso de Dios!',
       '(4)Ni oro ni plata me han redimido,\nDel miedo que nunca me pude quitar,\nLa sangre de Cristo ya fue mi rescate\nTan sólo por ella me pudo librar.',

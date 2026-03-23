@@ -128,10 +128,18 @@ const SongDetailPage = () => {
     return currentStanza?.replace(/^\(\d+\)\s*/, "");
   }, [currentStanza]);
 
+  const titleInfo = useMemo(() => {
+    return {
+      hymnNumber: title?.split("-")[0],
+      hymnTitle: title?.split("-")[1],
+    };
+  }, [title]);
+
+
   const screenOptions = useMemo(() => {
     return {
       theme,
-      title: "Himno",
+      title: `Himno (${titleInfo.hymnNumber.trim()})`,
       titleIcon: "Music2",
       backgroundColor: "#2c3e50",
       titleTextColor: "#ecf0f1",
@@ -241,12 +249,6 @@ const SongDetailPage = () => {
     };
   }, [backgroundDecorations]);
 
-  const titleInfo = useMemo(() => {
-    return {
-      hymnNumber: title?.split("-")[0],
-      hymnTitle: title?.split("-")[1],
-    };
-  }, [title]);
 
   return (
     <>
@@ -258,7 +260,7 @@ const SongDetailPage = () => {
       >
         {/* Title Section */}
         <View style={styles.titleSection}>
-          <View style={styles.hymnNumberContainer}>
+          {/* <View style={styles.hymnNumberContainer}>
             <LinearGradient
               colors={["#e74c3c", "#c0392b"]}
               style={styles.hymnNumberGradient}
@@ -267,13 +269,13 @@ const SongDetailPage = () => {
                 {titleInfo.hymnNumber.trim()}
               </Text>
             </LinearGradient>
-          </View>
+          </View> */}
 
           <Text style={styles.title}>{titleInfo.hymnTitle}</Text>
 
           {shouldShowChorus ? (
             <Text style={styles.chorusLabel}>
-              — CORO {Math.floor(currentIndex) + 1} —
+              — CORO {Math.floor(currentIndex) + 1} de {stanzas.length} —
             </Text>
           ) : (
             <Text style={styles.chorusLabel}>
