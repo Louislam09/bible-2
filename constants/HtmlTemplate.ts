@@ -1,6 +1,7 @@
 import { storedData$ } from "@/context/LocalstoreContext";
 import { getFontCss } from "@/hooks/useLoadFonts";
 import { DictionaryData } from "@/types";
+import { normalizeDictionaryDefinitionHtml } from "@/utils/normalizeDictionaryDefinitionHtml";
 
 export const htmlTemplate = (
     content: DictionaryData[] | any,
@@ -45,14 +46,18 @@ export const htmlTemplate = (
                 h4 {
                     display: ${content?.[1]?.topic ? "block" : "none"};
                 }
+                .selectable-definition {
+                    -webkit-user-select: text;
+                    user-select: text;
+                }
             </style>
         </head>
         <body>
             <h4>${content?.[0]?.topic || ""} > <a href='S:${content?.[1]?.topic || ""}'>${content?.[1]?.topic || ""}</a> 🔍</h4>
 
-        ${(
+        <div class="selectable-definition">${normalizeDictionaryDefinitionHtml(
             content?.[0]?.definition || "No hay resultado para esta palabra"
-        )?.replaceAll("font", "p")}
+        )}</div>
             <script>
                 window.ReactNativeWebView.postMessage(document.body.scrollHeight)
             </script>

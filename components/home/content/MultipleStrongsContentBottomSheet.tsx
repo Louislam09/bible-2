@@ -11,6 +11,7 @@ import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { DictionaryData, EBibleVersions, Screens, TTheme } from "@/types";
+import { normalizeDictionaryDefinitionHtml } from "@/utils/normalizeDictionaryDefinitionHtml";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import BottomSheet from "@gorhom/bottom-sheet";
 import React, {
@@ -144,6 +145,10 @@ const createMultipleStrongsHtmlTemplate = (
             h4 {
                 display: ${content?.[1]?.topic ? "block" : "none"};
             }
+            .selectable-definition {
+                -webkit-user-select: text;
+                user-select: text;
+            }
         </style>
     </head>
     <body>
@@ -155,7 +160,9 @@ const createMultipleStrongsHtmlTemplate = (
                 ${content?.[0]?.topic || ""} > <a href='S:${content?.[1]?.topic || ""
     }'>${content?.[1]?.topic || ""}</a>
             </h4>
-            ${content?.[0]?.definition || ""}
+            <div class="selectable-definition">${normalizeDictionaryDefinitionHtml(
+              content?.[0]?.definition || ""
+            )}</div>
         </div>
         
         <script>
