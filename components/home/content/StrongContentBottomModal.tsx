@@ -19,6 +19,7 @@ import {
 } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import BottomSheet from "@gorhom/bottom-sheet";
+import * as Clipboard from "expo-clipboard";
 import { use$ } from "@legendapp/state/react";
 import React, {
   FC,
@@ -36,7 +37,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import WebView from "react-native-webview";
-import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
+import {
+  ShouldStartLoadRequest,
+  WebViewMessageEvent,
+} from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
 
 type HeaderAction = {
@@ -81,7 +85,7 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
   const [backUrl, setBackUrl] = useState<any>([]);
   const { createAndShareTextFile, printToFile } = usePrintAndShare();
   const animatedScaleIcon = useRef(new Animated.Value(1)).current;
-  const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
+  const HTML_DATA = htmlTemplate(values, theme.colors, fontSize, false, true);
   const { currentBibleVersion } = useBibleContext();
   const haptics = useHaptics();
   const isInterlineal = [EBibleVersions.INTERLINEAR, EBibleVersions.GREEK].includes(
@@ -332,8 +336,25 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
           ref={webViewRef}
           originWhitelist={["*"]}
           source={{ html: HTML_DATA }}
-          onMessage={(event) => {
-            const text = `${event.nativeEvent.data}`;
+          onMessage={async (event: WebViewMessageEvent) => {
+            const raw = event.nativeEvent.data;
+            try {
+              const parsed = JSON.parse(raw) as {
+                type?: string;
+                text?: string;
+              };
+              if (parsed.type === "strongCopy" && parsed.text != null) {
+                await Clipboard.setStringAsync(parsed.text);
+                await haptics.notification.success();
+                return;
+              }
+              if (parsed.type === "strongHeight") {
+                return;
+              }
+            } catch {
+              /* not JSON */
+            }
+            const text = `${raw}`;
             createAndShareTextFile(text, title || "-");
           }}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
