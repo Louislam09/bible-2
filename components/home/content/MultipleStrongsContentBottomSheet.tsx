@@ -12,7 +12,13 @@ import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { DictionaryData, EBibleVersions, Screens, TTheme } from "@/types";
 import { normalizeDictionaryDefinitionHtml } from "@/utils/normalizeDictionaryDefinitionHtml";
+import {
+  strongCopyDefinitionBootScript,
+  strongCopyDefinitionCss,
+} from "@/utils/strongCopyWebviewHtml";
+import { wrapStrongSectionsForCopy } from "@/utils/strongDefinitionCopySections";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import * as Clipboard from "expo-clipboard";
 import BottomSheet from "@gorhom/bottom-sheet";
 import React, {
   FC,
@@ -30,7 +36,10 @@ import {
   StyleSheet,
 } from "react-native";
 import WebView from "react-native-webview";
-import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
+import {
+  ShouldStartLoadRequest,
+  WebViewMessageEvent,
+} from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
 
 type HeaderAction = {
@@ -149,6 +158,7 @@ const createMultipleStrongsHtmlTemplate = (
                 -webkit-user-select: text;
                 user-select: text;
             }
+            ${strongCopyDefinitionCss(colors)}
         </style>
     </head>
     <body>
@@ -160,8 +170,10 @@ const createMultipleStrongsHtmlTemplate = (
                 ${content?.[0]?.topic || ""} > <a href='S:${content?.[1]?.topic || ""
     }'>${content?.[1]?.topic || ""}</a>
             </h4>
-            <div class="selectable-definition">${normalizeDictionaryDefinitionHtml(
-              content?.[0]?.definition || ""
+            <div class="selectable-definition">${wrapStrongSectionsForCopy(
+              normalizeDictionaryDefinitionHtml(
+                content?.[0]?.definition || ""
+              )
             )}</div>
         </div>
         
@@ -188,6 +200,7 @@ const createMultipleStrongsHtmlTemplate = (
                 }
             });
         </script>
+        <script>${strongCopyDefinitionBootScript}</script>
     </body>
     </html>
   `;
@@ -518,16 +531,28 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
             minHeight: screenHeight,
             backgroundColor: "transparent",
           }}
-          onMessage={(event) => {
+          onMessage={async (event: WebViewMessageEvent) => {
             try {
-              const message = JSON.parse(event.nativeEvent.data);
-              if (message.type === "switchTab") {
+              const message = JSON.parse(event.nativeEvent.data) as {
+                type?: string;
+                data?: { index: number };
+                text?: string;
+              };
+              if (message.type === "switchTab" && message.data != null) {
                 haptics.impact.light();
                 setActiveTab(message.data.index);
                 return;
               }
-            } catch (error) {
-              // Not JSON, treat as text
+              if (message.type === "strongCopy" && message.text != null) {
+                await Clipboard.setStringAsync(message.text);
+                await haptics.notification.success();
+                return;
+              }
+              if (message.type === "strongHeight") {
+                return;
+              }
+            } catch {
+              /* not JSON */
             }
 
             const text = `${event.nativeEvent.data}`;
