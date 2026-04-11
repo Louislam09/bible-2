@@ -32,6 +32,22 @@ const persistOptions = configureSynced({
   },
 });
 
+export interface StoredAIMessage {
+  id: string;
+  type: "user" | "ai";
+  content: string;
+  timestamp: string;
+  scriptureReferences?: string[];
+}
+
+export interface StoredAIThread {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  messages: StoredAIMessage[];
+}
+
 type StoreState = {
   lastBook: string;
   lastChapter: number;
@@ -84,6 +100,8 @@ type StoreState = {
   charactersViewMode: 'grid' | 'list';
   concordanceViewMode: 'grid' | 'list';
   dictionaryViewMode: 'grid' | 'list';
+  aiBibleThreads: StoredAIThread[];
+  aiBibleActiveThreadId: string;
 };
 
 const initialContext: StoreState = {
@@ -138,6 +156,8 @@ const initialContext: StoreState = {
   charactersViewMode: "list",
   concordanceViewMode: "list",
   dictionaryViewMode: "list",
+  aiBibleThreads: [],
+  aiBibleActiveThreadId: "",
 };
 
 export const storedData$ = observable(initialContext);

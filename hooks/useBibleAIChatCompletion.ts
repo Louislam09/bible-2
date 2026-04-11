@@ -17,6 +17,9 @@ interface UseBibleAIChatCompletionReturn {
     isEmpty: boolean;
 }
 
+const BIBLE_REFERENCE_REGEX =
+    /([1-3]?\s*[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*)\s+(\d+):(\d+(?:-\d+)?)/g;
+
 const useBibleAIChatCompletion = (googleAIKey: string | null): UseBibleAIChatCompletionReturn => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -31,7 +34,7 @@ const useBibleAIChatCompletion = (googleAIKey: string | null): UseBibleAIChatCom
                 modelRef.current = genAI.getGenerativeModel({
                     model: "gemini-2.5-flash",
                     generationConfig: {
-                        temperature: 0.7,
+                        temperature: 0.3,
                         topP: 0.95,
                         topK: 40,
                         maxOutputTokens: 8192,
@@ -63,18 +66,33 @@ const useBibleAIChatCompletion = (googleAIKey: string | null): UseBibleAIChatCom
                 }));
 
                 // System instruction for Bible guide context
-                const systemInstruction = `Eres un asistente bíblico experto y comprensivo. Tu propósito es ayudar a las personas a entender y explorar las Escrituras de manera clara y accesible.
+                const systemInstruction = `Eres un guía bíblico cristiano. NO eres reemplazo de la Biblia.
+
+REGLA SUPREMA:
+- Solo puedes responder temas de Biblia, fe cristiana, teología cristiana y aplicación espiritual basada en Escritura.
+- Si el usuario pide algo fuera de este dominio, rechaza brevemente y redirígelo a un tema bíblico.
+- Puedes responder definiciones siempre que estén relacionadas con Biblia, fe cristiana, doctrina, historia bíblica o contexto religioso.
+- Si una palabra es ambigua, pregunta si el usuario la quiere en contexto bíblico antes de responder fuera de alcance.
+- No inventes información ni versículos.
 
 Instrucciones:
 - Responde en español con nombres bíblicos en español
 - Sé claro, conciso y basado en las Escrituras
+- No inventes versículos ni doctrinas fuera del texto bíblico
+- Siempre prioriza invitar al usuario a leer la Escritura
 - IMPORTANTE: Siempre incluye referencias bíblicas cuando menciones versículos. Debes usar el formato exacto: "Libro Capítulo:Versículo" o "Libro Capítulo:Versículo-Versículo" para rangos
 - Ejemplos de formato correcto: "Juan 3:16", "Mateo 5:3-5", "1 Corintios 15:55", "2 Timoteo 3:16-17"
 - El formato debe ser: [Número opcional] [Nombre del Libro] [Capítulo]:[Versículo] o [Número opcional] [Nombre del Libro] [Capítulo]:[Versículo]-[Versículo]
-- SIEMPRE incluye al menos una referencia bíblica en cada respuesta cuando sea relevante
+- SIEMPRE incluye al menos una referencia bíblica en cada respuesta
 - Mantén el contexto de la conversación anterior
 - Si el usuario hace preguntas de seguimiento, responde considerando el contexto previo
-- Sé amable, pastoral y edificante`;
+- Sé amable, pastoral y edificante
+
+Formato de respuesta obligatorio:
+1. Explicación breve
+2. Versículos (referencias bíblicas claras)
+3. Aplicación
+4. Pregunta reflexiva (al menos una pregunta final)`;
 
                 // Always rebuild chat session with current history to maintain context
                 // This ensures we always have the correct conversation context
@@ -90,11 +108,11 @@ Instrucciones:
 
                 // Extract scripture references from the response
                 // Pattern: Book Chapter:Verse or Book Chapter:Verse-Verse
-                const referencePattern = /([1-3]?\s*[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*)\s+(\d+):(\d+(?:-\d+)?)/g;
                 const references: string[] = [];
                 let match;
 
-                while ((match = referencePattern.exec(text)) !== null) {
+                BIBLE_REFERENCE_REGEX.lastIndex = 0;
+                while ((match = BIBLE_REFERENCE_REGEX.exec(text)) !== null) {
                     const reference = `${match[1]} ${match[2]}:${match[3]}`;
                     if (!references.includes(reference)) {
                         references.push(reference);

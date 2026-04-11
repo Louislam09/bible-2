@@ -16,7 +16,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Markdown from "react-native-markdown-display";
 import {
+    Modal,
     Platform,
+    Pressable,
     SafeAreaView,
     ScrollView,
     Share,
@@ -765,6 +767,7 @@ const exampleQuestions = [
 const AIBibleGuideScreen = () => {
     const { confirm } = useAlert();
     const [inputText, setInputText] = useState("");
+    const [showHistoryModal, setShowHistoryModal] = useState(false);
     const selectedTranslation = "RV1960";
     const [hasAttemptedSend, setHasAttemptedSend] = useState(false);
     const googleAIKey = use$(() => storedData$.googleAIKey.get());
@@ -792,10 +795,15 @@ const AIBibleGuideScreen = () => {
     // Use the chat hook
     const {
         messages,
+        threads,
+        activeThreadId,
         loading,
         error,
         sendMessage,
         clearConversation,
+        switchThread,
+        deleteThread,
+        startNewConversation,
         isEmpty,
     } = useBibleAIChat(googleAIKey);
 
@@ -1092,6 +1100,32 @@ const AIBibleGuideScreen = () => {
 
     const randomExampleQuestions = useMemo(() => exampleQuestions.sort(() => Math.random() - 0.5).slice(0, 4), []);
     const isEmptyState = messages.length === 0 && !loading && isEmpty;
+    const sortedThreads = useMemo(
+        () => [...threads].sort((a, b) => +b.updatedAt - +a.updatedAt),
+        [threads]
+    );
+
+    const formatThreadDate = (date: Date) =>
+        date.toLocaleDateString("es-ES", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+        });
+
+    const handleOpenThread = (threadId: string) => {
+        switchThread(threadId);
+        setShowHistoryModal(false);
+    };
+
+    const handleDeleteThread = (threadId: string) => {
+        deleteThread(threadId);
+    };
+
+    const handleNewThread = () => {
+        startNewConversation();
+        setHasAttemptedSend(false);
+        setShowHistoryModal(false);
+    };
 
     return (
         <View style={styles.pageContainer}>
@@ -1103,10 +1137,10 @@ const AIBibleGuideScreen = () => {
                         titleIcon: "Sparkles",
                         titleIconColor: theme.colors.notification,
                         headerRightProps: {
-                            headerRightIcon: isGeneratingPDF ? "Loader" : "FileText",
+                            headerRightIcon: "History",
                             headerRightIconColor: theme.colors.notification,
-                            onPress: generateConversationPDF,
-                            disabled: messages.length === 0 || isGeneratingPDF,
+                            onPress: () => setShowHistoryModal(true),
+                            disabled: false,
                         },
                     }),
                 }}
@@ -1248,6 +1282,88 @@ const AIBibleGuideScreen = () => {
                     styles={styles}
                 />
             </SafeAreaView>
+            <Modal
+                visible={showHistoryModal}
+                transparent
+                animationType="slide"
+                onRequestClose={() => setShowHistoryModal(false)}
+            >
+                <Pressable
+                    style={styles.historyOverlay}
+                    onPress={() => setShowHistoryModal(false)}
+                >
+                    <Pressable style={styles.historyCard}>
+                        <View style={styles.historyHeader}>
+                            <Text style={styles.historyTitle}>Historial de chats</Text>
+                            <TouchableOpacity onPress={() => setShowHistoryModal(false)}>
+                                <Icon name="X" size={20} color={theme.colors.text} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.historyActionRow}>
+                            <TouchableOpacity
+                                style={styles.historyActionButton}
+                                onPress={handleNewThread}
+                                activeOpacity={0.8}
+                            >
+                                <Icon name="Plus" size={16} color={"white"} />
+                                <Text style={styles.historyActionButtonText}>Nuevo chat</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[
+                                    styles.historySecondaryButton,
+                                    (messages.length === 0 || isGeneratingPDF) && styles.historySecondaryButtonDisabled,
+                                ]}
+                                onPress={generateConversationPDF}
+                                disabled={messages.length === 0 || isGeneratingPDF}
+                                activeOpacity={0.8}
+                            >
+                                <Icon
+                                    name={isGeneratingPDF ? "Loader" : "FileText"}
+                                    size={16}
+                                    color={theme.colors.text}
+                                />
+                                <Text style={styles.historySecondaryButtonText}>Exportar PDF</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView style={styles.historyList}>
+                            {sortedThreads.map((thread) => (
+                                <View
+                                    key={thread.id}
+                                    style={[
+                                        styles.threadItem,
+                                        activeThreadId === thread.id && styles.threadItemActive,
+                                    ]}
+                                >
+                                    <TouchableOpacity
+                                        style={styles.threadMainContent}
+                                        onPress={() => handleOpenThread(thread.id)}
+                                        activeOpacity={0.8}
+                                    >
+                                        <Text style={styles.threadTitle} numberOfLines={1}>
+                                            {thread.title}
+                                        </Text>
+                                        <Text style={styles.threadMeta}>
+                                            {thread.messages.length} mensajes • {formatThreadDate(thread.updatedAt)}
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.threadDeleteButton}
+                                        onPress={() => handleDeleteThread(thread.id)}
+                                        activeOpacity={0.7}
+                                    >
+                                        <Icon
+                                            name="Trash2"
+                                            size={16}
+                                            color={theme.colors.notification}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </Pressable>
+                </Pressable>
+            </Modal>
             <KeyboardPaddingView />
         </View>
     );
@@ -1663,6 +1779,100 @@ const getStyles = ({ colors }: TTheme) =>
         },
         errorBannerClose: {
             padding: 4,
+        },
+        historyOverlay: {
+            flex: 1,
+            backgroundColor: "#00000066",
+            justifyContent: "flex-end",
+        },
+        historyCard: {
+            backgroundColor: colors.background,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            padding: 16,
+            maxHeight: "75%",
+        },
+        historyHeader: {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 12,
+        },
+        historyTitle: {
+            fontSize: 18,
+            fontWeight: "700",
+            color: colors.text,
+        },
+        historyActionRow: {
+            flexDirection: "row",
+            gap: 10,
+            marginBottom: 12,
+        },
+        historyActionButton: {
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 6,
+            backgroundColor: colors.notification,
+            borderRadius: 8,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+        },
+        historyActionButtonText: {
+            color: "white",
+            fontWeight: "600",
+            fontSize: 13,
+        },
+        historySecondaryButton: {
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 6,
+            backgroundColor: colors.text + "1A",
+            borderRadius: 8,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+        },
+        historySecondaryButtonDisabled: {
+            opacity: 0.5,
+        },
+        historySecondaryButtonText: {
+            color: colors.text,
+            fontWeight: "600",
+            fontSize: 13,
+        },
+        historyList: {
+            marginTop: 6,
+        },
+        threadItem: {
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: colors.text + "12",
+            borderRadius: 10,
+            marginBottom: 8,
+            borderWidth: 1,
+            borderColor: "transparent",
+        },
+        threadItemActive: {
+            borderColor: colors.notification,
+            backgroundColor: colors.notification + "12",
+        },
+        threadMainContent: {
+            flex: 1,
+            paddingVertical: 10,
+            paddingHorizontal: 12,
+        },
+        threadTitle: {
+            fontSize: 14,
+            fontWeight: "600",
+            color: colors.text,
+            marginBottom: 2,
+        },
+        threadMeta: {
+            fontSize: 12,
+            color: colors.text + "AA",
+        },
+        threadDeleteButton: {
+            paddingHorizontal: 12,
+            paddingVertical: 10,
         },
     });
 
