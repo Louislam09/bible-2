@@ -397,7 +397,6 @@ const MainDashboard = () => {
         <StudyTools list={studyToolItems} theme={theme} />
         <AdditionalResources list={additionalResourceList} theme={theme} />
 
-        <BuyMeACoffeeButton />
 
         <BottomModal shouldScroll startAT={2} ref={voiceBottomSheetModalRef}>
           <VoiceList theme={theme} />

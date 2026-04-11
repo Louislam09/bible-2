@@ -1,9 +1,9 @@
-import { IAdditionalResourceList } from "@/components/new-dashboard/MainDashboard";
+import { useHaptics } from "@/hooks/useHaptics";
 import { TTheme } from "@/types";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "./Icon";
-import { useHaptics } from "@/hooks/useHaptics";
+import { IAdditionalResourceList } from "@/app/(dashboard)";
 
 type AdditionalResourcesProps = {
   list: IAdditionalResourceList;
