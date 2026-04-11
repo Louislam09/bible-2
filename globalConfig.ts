@@ -3,6 +3,11 @@ import "./utils/eventSourcePolyfill";
 export const WEB_GOOGLE_CLIENT_ID =
   process.env.EXPO_PUBLIC_WEB_GOOGLE_CLIENT_ID;
 export const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID;
+/** Native OAuth clients (GCP: Android / iOS) — token exchange works with PKCE only, no client_secret. */
+export const ANDROID_GOOGLE_CLIENT_ID =
+  process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID;
+export const IOS_GOOGLE_CLIENT_ID =
+  process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID;
 export const GOOGLE_REDIRECT_URI = "com.louislam09.bible";
 export const POCKETBASE_URL = process.env.EXPO_PUBLIC_POCKETBASE_URL;
 export const APP_DEEPLINK_URI = "https://louislam09.github.io/bible-deeplink";

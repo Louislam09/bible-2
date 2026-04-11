@@ -1,9 +1,9 @@
 import { ConfigContext, ExpoConfig } from "@expo/config";
 
 // const IS_DEV = true;
-const IS_DEV = process.env.APP_VARIANT === "development";
+// const IS_DEV = process.env.APP_VARIANT === "development";
 const IS_PREVIEW = process.env.APP_VARIANT === "preview";
-// const IS_PREVIEW = true
+const IS_DEV = true
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) {
@@ -103,6 +103,16 @@ const getAndroidAppIcons = () => {
   ]
 }
 
+const getScheme = () => {
+  if (IS_DEV) {
+    return "b-rv60-dev";
+  }
+  if (IS_PREVIEW) {
+    return "sb-rv60-preview";
+  }
+  return "sb-rv60";
+}
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
@@ -112,7 +122,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     version: "2.0.1",
     orientation: "default",
     icon: getAssetPath().icon,
-    scheme: "sb-rv60",
+    scheme: getScheme(),
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     androidNavigationBar: {
@@ -293,6 +303,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ],
       "expo-asset",
       "expo-font",
+      "react-native-cloud-storage",
       "expo-router",
       "expo-web-browser"
     ],

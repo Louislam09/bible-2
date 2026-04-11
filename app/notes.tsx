@@ -5,6 +5,7 @@ import NoteActionsBottomSheet from "@/components/note/NoteActionsBottomSheet";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import TutorialWalkthrough from "@/components/TutorialWalkthrough";
+import { GOOGLE_DRIVE_USER_HINT_ES } from "@/constants/googleDriveSetup";
 import { notesListHtmlTemplate, ViewMode } from "@/constants/notesListHtmlTemplate";
 import { useAlert } from "@/context/AlertContext";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -14,6 +15,10 @@ import { getFontCss } from "@/hooks/useLoadFonts";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
+import {
+  getGoogleDriveOAuthClientId,
+  uploadNotesToGoogleDrive,
+} from "@/services/googleDriveService";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { noteSelectors$ } from "@/state/notesState";
@@ -32,11 +37,13 @@ import React, {
 import {
   AccessibilityInfo,
   ActivityIndicator,
+  Alert,
   Keyboard,
+  Platform,
   View as RNView,
   StyleSheet,
   ToastAndroid,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import WebView from "react-native-webview";
 
@@ -58,6 +65,8 @@ const NotesPage = () => {
   const styles = getStyles(theme);
 
   const [filterData, setFilterData] = useState<TNote[]>([]);
+  const [driveUploadBusy, setDriveUploadBusy] = useState(false);
+  const [driveUploadLabel, setDriveUploadLabel] = useState("");
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     // Get saved view mode from stored data or default to 'grid'
@@ -538,6 +547,134 @@ const NotesPage = () => {
     await exportNotes(ids);
   }, [selectedItems, exportNotes]);
 
+  const handleUploadToGoogleDrive = useCallback(async () => {
+    console.log("Uploading note with ID:");
+    if (!user) {
+      alertWarning(
+        "Google Drive",
+        "Debes iniciar sesión en la app para subir notas a Drive."
+      );
+      return;
+    }
+    if (!isConnected) {
+      alertWarning(
+        "Sin conexión",
+        "No hay conexión a Internet para subir a Google Drive."
+      );
+      return;
+    }
+    if (!getGoogleDriveOAuthClientId()) {
+      alertError(
+        "Google Drive",
+        "Falta un ID de cliente OAuth de Google para Drive: en la app nativa lo ideal es EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID o EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID (cliente Android/iOS en Google Cloud). Alternativa: EXPO_PUBLIC_WEB_GOOGLE_CLIENT_ID junto con EXPO_PUBLIC_GOOGLE_WEB_CLIENT_SECRET (el secreto del cliente Web; queda empaquetado en la app)."
+      );
+      return;
+    }
+    const ids = Array.from(selectedItems);
+    const notes = ids
+      .map((id) => noteList.find((n) => n.id === id))
+      .filter((n): n is TNote => n != null);
+    if (!notes.length) return;
+
+    setDriveUploadBusy(true);
+    setDriveUploadLabel("Preparando…");
+    try {
+      const { uploaded } = await uploadNotesToGoogleDrive(notes, {
+        onProgress: (current, total) => {
+          setDriveUploadLabel(`Subiendo ${current} de ${total}…`);
+        },
+      });
+      const msg =
+        uploaded === 1
+          ? "1 nota subida a Google Drive (carpeta «Santa Escritura — Notas»)."
+          : `${uploaded} notas subidas a Google Drive (carpeta «Santa Escritura — Notas»).`;
+      const fullMsg = `${msg}\n\n${GOOGLE_DRIVE_USER_HINT_ES}`;
+      Alert.alert("Google Drive", fullMsg);
+      noteSelectors$.clearSelections();
+      modalState$.closeNoteActionsBottomSheet();
+      webViewRef.current?.injectJavaScript(`
+        if (typeof exitSelectionMode === 'function') {
+          exitSelectionMode();
+        }
+        true;
+      `);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      if (
+        message === "GOOGLE_DRIVE_AUTH_CANCELLED" ||
+        message.includes("GOOGLE_DRIVE_AUTH_CANCELLED")
+      ) {
+        return;
+      }
+      if (message === "GOOGLE_DRIVE_NATIVE_ONLY") {
+        alertWarning(
+          "Google Drive",
+          "Subir a Google Drive solo está disponible en la app para Android e iOS, no en la versión web."
+        );
+        return;
+      }
+      if (message === "MISSING_GOOGLE_OAUTH_CLIENT_ID") {
+        alertError(
+          "Google Drive",
+          "Configura EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID / EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID, o el cliente Web más EXPO_PUBLIC_GOOGLE_WEB_CLIENT_SECRET."
+        );
+        return;
+      }
+      if (
+        message === "GOOGLE_DRIVE_OAUTH_WEB_CLIENT_MISSING_SECRET" ||
+        message.includes("GOOGLE_DRIVE_OAUTH_WEB_CLIENT_MISSING_SECRET")
+      ) {
+        alertError(
+          "Google Drive",
+          "Con el cliente OAuth «Web», Google exige el secreto al canjear el código. Añade EXPO_PUBLIC_GOOGLE_WEB_CLIENT_SECRET (Google Cloud → Clientes → tu cliente Web), o mejor crea clientes Android/iOS y define EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID / EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID para no usar el secreto en la app."
+        );
+        return;
+      }
+      if (
+        message === "GOOGLE_DRIVE_SESSION_EXPIRED" ||
+        message.includes("GOOGLE_DRIVE_SESSION_EXPIRED")
+      ) {
+        alertWarning(
+          "Google Drive",
+          "La sesión de Google Drive expiró o se revocó. Vuelve a intentar y acepta conectar de nuevo."
+        );
+        return;
+      }
+      if (
+        message === "GOOGLE_DRIVE_UNAUTHORIZED" ||
+        message.includes("GOOGLE_DRIVE_UNAUTHORIZED")
+      ) {
+        alertWarning(
+          "Google Drive",
+          "Google rechazó el acceso. Vuelve a conectar la cuenta cuando se te pida."
+        );
+        return;
+      }
+      console.error("Google Drive upload:", e);
+      alertError(
+        "Google Drive",
+        "No se pudieron subir las notas. Si es la primera vez, acepta los permisos. Comprueba también la consola de Google Cloud (Drive API y URI de redirección)."
+      );
+    } finally {
+      setDriveUploadBusy(false);
+      setDriveUploadLabel("");
+    }
+  }, [
+    user,
+    isConnected,
+    selectedItems,
+    noteList,
+    alertWarning,
+    alertError,
+  ]);
+
+  const handleGoogleDriveBlocked = useCallback(() => {
+    alertWarning(
+      "Google Drive",
+      "Debes iniciar sesión en la app para subir notas a Drive."
+    );
+  }, [alertWarning]);
+
   const checkUserAndConnection = useCallback(() => {
     if (!user) {
       alertWarning("Sincronizar notas", "Debes iniciar sesión para sincronizar tus notas.");
@@ -875,13 +1012,17 @@ const NotesPage = () => {
               />
             ))}
 
-          {isSyncing && (
+          {(isSyncing || driveUploadBusy) && (
             <View style={styles.syncingOverlay}>
               <ActivityIndicator
                 size="large"
                 color={theme.colors.notification}
               />
-              <Text style={styles.syncingText}>Sincronizando...</Text>
+              <Text style={styles.syncingText}>
+                {driveUploadBusy
+                  ? driveUploadLabel || "Subiendo a Google Drive…"
+                  : "Sincronizando..."}
+              </Text>
             </View>
           )}
 
@@ -894,6 +1035,9 @@ const NotesPage = () => {
         selectedCount={selectedItems.size}
         onSync={handleSyncSelectedNotes}
         onExport={handleExportSelectedNotes}
+        onUploadToDrive={handleUploadToGoogleDrive}
+        googleDriveUploadEnabled={!!user}
+        onGoogleDriveBlocked={handleGoogleDriveBlocked}
         onShare={handleShareSelectedNotes}
         onDelete={handleDeleteSelectedNotes}
         onSelectAll={handleSelectAll}

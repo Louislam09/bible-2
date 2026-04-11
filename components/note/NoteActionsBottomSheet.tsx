@@ -15,12 +15,17 @@ interface ActionItem {
   onPress: () => void;
   color?: string;
   hide?: boolean;
+  dimmed?: boolean;
 }
 
 interface NoteActionsBottomSheetProps {
   selectedCount: number;
   onSync: () => void;
   onExport: () => void;
+  onUploadToDrive: () => void;
+  /** When false, Drive row is dimmed; use with onGoogleDriveBlocked for messaging. */
+  googleDriveUploadEnabled?: boolean;
+  onGoogleDriveBlocked?: () => void;
   onShare: () => void;
   onDelete: () => void;
   onSelectAll: () => void;
@@ -32,6 +37,9 @@ const NoteActionsBottomSheet: React.FC<NoteActionsBottomSheetProps> = ({
   selectedCount,
   onSync,
   onExport,
+  onUploadToDrive,
+  googleDriveUploadEnabled = true,
+  onGoogleDriveBlocked,
   onShare,
   onDelete,
   onSelectAll,
@@ -95,6 +103,20 @@ const NoteActionsBottomSheet: React.FC<NoteActionsBottomSheetProps> = ({
       color: theme.colors.notification,
     },
     {
+      icon: "CloudUpload",
+      label: "Subir a Google Drive",
+      dimmed: !googleDriveUploadEnabled,
+      onPress: () => {
+        if (!googleDriveUploadEnabled) {
+          onGoogleDriveBlocked?.();
+          return;
+        }
+        onUploadToDrive();
+        modalState$.closeNoteActionsBottomSheet();
+      },
+      color: theme.colors.notification,
+    },
+    {
       icon: "Share2",
       label: "Compartir como PDF",
       onPress: () => {
@@ -113,7 +135,7 @@ const NoteActionsBottomSheet: React.FC<NoteActionsBottomSheetProps> = ({
       },
       color: "#EF4444",
     },
-  ], [isAllSelected, onSelectAll, onSync, onExport, onShare, onDelete, selectedCount, theme.colors.notification]);
+  ], [isAllSelected, onSelectAll, onSync, onExport, onUploadToDrive, googleDriveUploadEnabled, onGoogleDriveBlocked, onShare, onDelete, selectedCount, theme.colors.notification]);
 
   return (
     <BottomSheet
@@ -145,7 +167,7 @@ const NoteActionsBottomSheet: React.FC<NoteActionsBottomSheetProps> = ({
           {actions.filter(action => !action.hide).map((action, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.actionItem}
+              style={[styles.actionItem, action.dimmed && styles.actionItemDimmed]}
               onPress={action.onPress}
               activeOpacity={0.7}
             >
@@ -221,6 +243,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingVertical: 14,
       paddingHorizontal: 4,
       backgroundColor: "transparent",
+    },
+    actionItemDimmed: {
+      opacity: 0.45,
     },
     actionIconContainer: {
       width: 40,

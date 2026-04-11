@@ -2,8 +2,8 @@ import { useAlert } from "@/context/AlertContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { pbUser, TTheme } from "@/types";
+import { getAppGoogleOAuthRedirectUri } from "@/utils/googleOAuthSession";
 import { AntDesign } from "@expo/vector-icons";
-import * as AuthSession from "expo-auth-session";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useState } from "react";
@@ -14,6 +14,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { pb } from "../globalConfig";
+import { GOOGLE_DRIVE_SCOPES } from "@/constants/googleDriveSetup";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -41,7 +42,7 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
   const router = useRouter();
   const { theme } = useMyTheme();
   const styles = getStyles(theme as TTheme);
-  const REDIRECT_URI = AuthSession.makeRedirectUri();
+  const REDIRECT_URI = getAppGoogleOAuthRedirectUri();
   const { alertError } = useAlert();
 
   const InitiateGoogleAuth = async () => {
@@ -52,9 +53,10 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
       const authData = await pb.collection("users").authWithOAuth2({
         provider: "google",
         urlCallback: async (url) => {
-          WebBrowser.openAuthSessionAsync(url, REDIRECT_URI);
+          await WebBrowser.openAuthSessionAsync(url, REDIRECT_URI, { presentationStyle: WebBrowser.WebBrowserPresentationStyle.AUTOMATIC });
         },
       });
+      console.log(JSON.stringify(authData, null, 2))
       authState$.loginWithGoogle(pb.authStore.record as pbUser, authData.token);
       setLoading(false);
 
@@ -62,7 +64,11 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
     } catch (error: any) {
       console.log(error.originalError, error);
       handleAuthenticationError(new Error("Error al autenticar con Google"));
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleAuthenticationError = (error: Error) => {
@@ -76,16 +82,21 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
     alertError("Error de Autenticación", authError.message);
   };
 
+  const onButtonPress = async () => {
+    try {
+      setLoading(true);
+      await InitiateGoogleAuth();
+    } catch (error) {
+      handleAuthenticationError(error as Error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <TouchableOpacity
       style={[styles.googleButton, loading && styles.disabledButton]}
-      onPress={() => {
-        setLoading(true);
-        InitiateGoogleAuth().catch((error) => {
-          setLoading(false);
-          handleAuthenticationError(error);
-        });
-      }}
+      onPress={onButtonPress}
       disabled={loading}
     >
       {loading ? (
