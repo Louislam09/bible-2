@@ -845,25 +845,25 @@ const AIBibleGuideScreen = () => {
     }, []);
 
     // Warn user before leaving if they have messages
-    useEffect(() => {
-        const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-            // Only warn if there are messages in the chat
-            if (messages.length === 0) return;
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+    //         // Only warn if there are messages in the chat
+    //         if (messages.length === 0) return;
 
-            e.preventDefault();
+    //         e.preventDefault();
 
-            confirm(
-                "¿Salir de la conversación?",
-                "Si sales de esta página, la conversación se reiniciará y perderás todos los mensajes.",
-                () => {
-                    // clearConversation();
-                    navigation.dispatch(e.data.action);
-                }
-            );
-        });
+    //         confirm(
+    //             "¿Salir de la conversación?",
+    //             "Si sales de esta página, la conversación se reiniciará y perderás todos los mensajes.",
+    //             () => {
+    //                 // clearConversation();
+    //                 navigation.dispatch(e.data.action);
+    //             }
+    //         );
+    //     });
 
-        return unsubscribe;
-    }, [navigation, messages.length, clearConversation, confirm]);
+    //     return unsubscribe;
+    // }, [navigation, messages.length, clearConversation, confirm]);
 
     // Scroll to bottom when new messages arrive
     useEffect(() => {
