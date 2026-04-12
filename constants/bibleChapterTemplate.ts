@@ -411,7 +411,15 @@ const createHtmlHead = (
     </head>
 `;
 
-const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1, showReadingTime: boolean, theme: any, shouldLoadTour?: boolean) => `
+const createHtmlBody = (
+    content: string,
+    initialScrollIndex: number = 0,
+    chapterNumber: number = 1,
+    showReadingTime: boolean,
+    theme: any,
+    shouldLoadTour?: boolean,
+    quizButtonText: string = "Tomar quiz"
+) => `
     <body class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden ">
     <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
 
@@ -422,6 +430,15 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             <p class="text-theme-text text-center text-font-xs mt-1 ${showReadingTime ? 'block' : 'hidden'}">Tiempo de lectura: ~ ${bibleState$.readingTimeData.top.get()} min(s)</p>
         </div>
         ${content}
+        <div id="chapterQuizCtaContainer" style="padding: 4px 16px 20px 16px; display: flex; justify-content: center;">
+            <button
+                id="chapterQuizCtaButton"
+                onclick="handleChapterQuizClick()"
+                style="display: inline-flex; align-items: center; justify-content: center; border: 1px solid ${theme.colors.notification}66; border-radius: 999px; padding: 8px 14px; font-weight: 600; font-size: 13px; color: ${theme.colors.text}; background: ${theme.colors.notification}22;"
+            >
+                ${quizButtonText}
+            </button>
+        </div>
     </div>  
         
         <script>
@@ -429,6 +446,8 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             let lastOffset = 0;
             let topVerseRef = null;
             let intersectionObserver = null;
+            let hasSentChapterEnd = false;
+            let currentQuizButtonText = ${JSON.stringify(quizButtonText)};
             
             // Initial scroll functionality
             function performInitialScroll() {
@@ -439,6 +458,33 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                         verseElement.scrollIntoView({ behavior: 'instant', block: 'start' });
                     }
                 }
+            }
+            
+            function notifyChapterEndIfNeeded(container) {
+                if (!container || hasSentChapterEnd) return;
+                const remainingScroll = container.scrollHeight - container.scrollTop - container.clientHeight;
+                const chapterEndThreshold = 120;
+
+                if (remainingScroll <= chapterEndThreshold) {
+                    hasSentChapterEnd = true;
+                    window.ReactNativeWebView.postMessage(JSON.stringify({
+                        type: 'chapterEndReached',
+                    }));
+                }
+            }
+
+            function updateQuizButtonText(text) {
+                const button = document.getElementById('chapterQuizCtaButton');
+                currentQuizButtonText = text || currentQuizButtonText;
+                if (button) {
+                    button.textContent = currentQuizButtonText;
+                }
+            }
+
+            function handleChapterQuizClick() {
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'chapterQuizPressed',
+                }));
             }
             
             
@@ -464,6 +510,8 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                         direction: direction
                     }));
                 }
+
+                notifyChapterEndIfNeeded(event.target);
             }
 
             // Handle regular word click
@@ -1068,6 +1116,9 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     case 'updateFavorite':
                         updateFavoriteState(data.verseKey, data.isFavorite);
                         break;
+                    case 'updateQuizButtonText':
+                        updateQuizButtonText(data.text);
+                        break;
                 }
             }
 
@@ -1103,6 +1154,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 const container = document.getElementById('chapterContainer');
                 if (container) {
                     container.addEventListener('scroll', handleScroll, { passive: true });
+                    requestAnimationFrame(() => notifyChapterEndIfNeeded(container));
                 }
                 
                 // Perform initial scroll immediately for faster perceived load
@@ -1486,7 +1538,7 @@ const renderVerses = (
             const verseKey = `${item.book_number}-${item.chapter}-${item.verse}`;
             return createRegularVerse(item, verseKey, highlights);
         })
-        .join("") + "<br />".repeat(7);
+        .join("") + "<br />";
 };
 
 type TBibleChapterHtmlTemplateProps = {
@@ -1500,6 +1552,7 @@ type TBibleChapterHtmlTemplateProps = {
     showReadingTime: boolean
     selectedFont?: string;
     shouldLoadTour?: boolean;
+    quizButtonText?: string;
     highlights?: Map<string, { color: string; style: string }>;
 };
 
@@ -1514,6 +1567,7 @@ export const bibleChapterHtmlTemplate = ({
     showReadingTime,
     selectedFont,
     shouldLoadTour = false,
+    quizButtonText = "Tomar quiz",
     highlights
 }: TBibleChapterHtmlTemplateProps) => {
     const containerWidth = width || "100%";
@@ -1540,7 +1594,15 @@ export const bibleChapterHtmlTemplate = ({
         selectedFont,
         shouldLoadTour
     )}
-        ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber, showReadingTime, theme, shouldLoadTour)}
+        ${createHtmlBody(
+        versesContent,
+        initialScrollIndex,
+        chapterNumber,
+        showReadingTime,
+        theme,
+        shouldLoadTour,
+        quizButtonText
+    )}
     </html>
     `;
 };

@@ -10,9 +10,13 @@ export class GameManager {
   private score: number;
   private _gameOver: boolean;
 
-  constructor(questionsPerLevel: number = 5) {
-    this.questions = gameQuestion;
-    this.levels = generateLevels(this.questions.length, questionsPerLevel);
+  constructor(questionsPerLevel: number = 5, questionsOverride?: Question[]) {
+    this.questions = questionsOverride && questionsOverride.length > 0 ? questionsOverride : gameQuestion;
+    const normalizedQuestionsPerLevel = Math.max(
+      1,
+      Math.min(questionsPerLevel, this.questions.length)
+    );
+    this.levels = generateLevels(this.questions.length, normalizedQuestionsPerLevel);
     this.currentLevel = 0;
     this.currentQuestionIndex = 0;
     this.score = 0;

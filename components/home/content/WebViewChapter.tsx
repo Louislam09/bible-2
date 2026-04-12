@@ -42,6 +42,8 @@ interface WebViewChapterProps {
   onImage?: (item: IBookVerse | IBookVerse[]) => void;
   onQuote?: (item: IBookVerse | IBookVerse[]) => void;
   onVerseLongPress?: (item: IBookVerse) => void;
+  onChapterQuizPressed?: () => void;
+  quizButtonText?: string;
 }
 
 const WebViewChapter = memo(
@@ -62,6 +64,8 @@ const WebViewChapter = memo(
     onImage,
     onQuote,
     onVerseLongPress,
+    onChapterQuizPressed,
+    quizButtonText = "Tomar quiz",
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
     const startVerseSectionTour = use$(() => tourState$.startVerseSectionTour.get());
@@ -88,6 +92,10 @@ const WebViewChapter = memo(
               break;
             case "scroll":
               onScroll?.(message.direction);
+              break;
+            case "chapterQuizPressed":
+              console.log("chapterQuizPressed");
+              onChapterQuizPressed?.();
               break;
             case "verseClick":
               if (message.data?.item) {
@@ -230,6 +238,7 @@ const WebViewChapter = memo(
         onImage,
         onQuote,
         onVerseLongPress,
+        onChapterQuizPressed,
         startVerseSectionTour
       ]
     );
@@ -378,6 +387,21 @@ const WebViewChapter = memo(
       startVerseSectionTour,
       highlights
     ]);
+
+    useEffect(() => {
+      if (!webViewRef.current) return;
+      webViewRef.current.injectJavaScript(`
+        (function() {
+          if (window.handleMessage) {
+            window.handleMessage({
+              type: 'updateQuizButtonText',
+              text: ${JSON.stringify(quizButtonText)}
+            });
+          }
+        })();
+        true;
+      `);
+    }, [quizButtonText]);
 
     const startTour = useCallback(() => {
       webViewRef.current?.postMessage(JSON.stringify({ type: "startTour" }));

@@ -18,6 +18,7 @@ import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
 import WebviewBibleSettingBottomModal from "./home/WebviewBibleSettingBottomModal";
 import InterlinearBottomSheet from "./InterlinearBottomSheet";
 import HighlighterBottomSheet from "./HighlighterBottomSheet";
+import ChapterQuizBottomSheet from "./ChapterQuizBottomSheet";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
@@ -37,6 +38,7 @@ const BookContentModals = () => {
   const isMultipleStrongsOpen = use$(() => modalState$.isMultipleStrongsOpen.get());
   const isDictionaryOpen = use$(() => modalState$.isDictionaryOpen.get());
   const isCommentaryOpen = use$(() => modalState$.isCommentaryOpen.get());
+  const isChapterQuizOpen = use$(() => modalState$.isChapterQuizOpen.get());
 
   return (
     <>
@@ -77,6 +79,7 @@ const BookContentModals = () => {
       )}
 
       {isNoteListOpen && <NoteNameListBottomModal />}
+      {isChapterQuizOpen && <ChapterQuizBottomSheet />}
       <ExpandableChooseReference />
       {isPlayerOpened && <AudioPlayerExpandedSheet />}
     </>

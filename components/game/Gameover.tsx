@@ -12,12 +12,14 @@ interface IGameOverScreen {
   progress: GameProgress | null;
   handleNextLevel: () => void;
   handleTryAgain: () => void;
+  isChapterQuiz?: boolean;
 }
 
 const GameOverScreen = ({
   progress,
   handleNextLevel,
   handleTryAgain,
+  isChapterQuiz = false,
 }: IGameOverScreen) => {
   const router = useRouter();
   const levelCompletedAnimation = lottieAssets.star;
@@ -87,7 +89,7 @@ const GameOverScreen = ({
             onPress={hasPassed ? handleNextLevel : handleTryAgain}
           >
             <Text style={styles.buttonText}>
-              {hasPassed ? 'Siguiente Nivel' : 'Reintentar'}
+              {hasPassed ? (isChapterQuiz ? 'Finalizar' : 'Siguiente Nivel') : 'Reintentar'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

@@ -8,23 +8,24 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { audioState$ } from "@/hooks/useAudioPlayer";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { useHaptics } from "@/hooks/useHaptics";
+import { useChapterQuizAI } from "@/hooks/useChapterQuizAI";
+import { chapterQuizCacheService } from "@/services/chapterQuizCacheService";
+import { chapterQuizLocalDbService } from "@/services/chapterQuizLocalDbService";
 import { bibleState$ } from "@/state/bibleState";
+import { chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { modalState$ } from "@/state/modalState";
 import { tourState$ } from "@/state/tourState";
-import { EBibleVersions, IBookVerse, IFavoriteVerse, Screens } from "@/types";
+import { EBibleVersions, IBookVerse, IFavoriteVerse } from "@/types";
 import copyToClipboard, { formatForImageQuote } from "@/utils/copyToClipboard";
 import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
+import BottomModal from "@/components/BottomModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
-import React, { FC, useCallback, useEffect, useMemo } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 import { useAlert } from "@/context/AlertContext";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import WebViewChapter from "./home/content/WebViewChapter";
@@ -85,6 +86,19 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
     verse: verse,
   } = bibleQuery;
   const verseNumber = use$(() => bibleState$.bibleQuery.get().verse);
+  const googleAIKey = use$(() => storedData$.googleAIKey.get());
+  const completedByChapter = use$(() =>
+    storedData$.chapterQuizCompletedByChapter.get()
+  );
+  const { loading: isPreparingQuiz, getQuestionsForChapter } = useChapterQuizAI(googleAIKey);
+  const quizCountSheetRef = useRef<BottomSheetModal>(null);
+  const [selectedQuestionCount, setSelectedQuestionCount] = useState(5);
+  const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
+  const [chapterQuizStatusByKey, setChapterQuizStatusByKey] = useState<
+    Record<string, "take_quiz" | "completed" | "retake">
+  >({});
+  const quizQuestionCountOptions = [5, 10, 15, 20];
+  const chapterKey = `${book.trim().toLowerCase()}-${chapter}`;
 
   const { nextChapter, previousChapter } = useChangeBookOrChapter({
     book,
@@ -104,24 +118,113 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
     nextChapter();
   };
 
+  useEffect(() => {
+    let isMounted = true;
+    const hydrateChapterQuizCompletion = async () => {
+      try {
+        const completionMap = await chapterQuizLocalDbService.getAllCompletions();
+        if (!isMounted) return;
+        if (Object.keys(completionMap).length > 0) {
+          storedData$.chapterQuizCompletedByChapter.set((prev) => ({
+            ...prev,
+            ...completionMap,
+          }));
+        }
+      } catch (error) {
+        // Keep the UI working with whatever is already in memory.
+      }
+    };
+    hydrateChapterQuizCompletion();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isInterlinear) return;
+    if (!chapterData || chapterData.length === 0) return;
+
+    let isActive = true;
+    const prefetchQuizInBackground = () => {
+      const key = chapterQuizCacheService.buildChapterKey(book, chapter);
+      void chapterQuizCacheService
+        .getValidChapterQuestions(key)
+        .then((questions) => {
+          if (!isActive || !questions || questions.length === 0) return;
+          chapterQuizStateHelpers.setPrefetchedQuestions(key, questions);
+        })
+        .catch(() => {
+          // Ignore background prefetch failures.
+        });
+    };
+
+    const timer = setTimeout(prefetchQuizInBackground, 250);
+    return () => {
+      isActive = false;
+      clearTimeout(timer);
+    };
+  }, [book, chapter, chapterData, isInterlinear]);
+
+  useEffect(() => {
+    const completion = completedByChapter[chapterKey];
+    if (!completion) return;
+
+    setChapterQuizStatusByKey((prev) => ({ ...prev, [chapterKey]: "completed" }));
+    const timeout = setTimeout(() => {
+      setChapterQuizStatusByKey((prev) => {
+        if (prev[chapterKey] !== "completed") return prev;
+        return { ...prev, [chapterKey]: "retake" };
+      });
+    }, 1400);
+
+    return () => clearTimeout(timeout);
+  }, [chapterKey, completedByChapter]);
+
   const headerHeight = useSharedValue(1);
 
-  const handleScroll = useCallback((direction: "up" | "down") => {
-    // console.log("handleScroll", direction);
-    // const toValue = direction === "up" ? 1 : 0;
-    // Animated.parallel([
-    //   Animated.timing(headerHeight, {
-    //     toValue,
-    //     duration: 200,
-    //     useNativeDriver: false,
-    //   }),
-    //   Animated.timing(footerHeight, {
-    //     toValue,
-    //     duration: 200,
-    //     useNativeDriver: false,
-    //   }),
-    // ]).start();
-  }, []);
+  const handleOpenQuizSelector = useCallback(() => {
+    if (isPreparingQuiz || isGeneratingQuiz) return;
+    const hasAIKey = storedData$.googleAIKey.get();
+    if (!hasAIKey) {
+      alertWarning("Aviso", "Configura tu API key de Google AI para crear quizzes");
+      return;
+    }
+    requestAnimationFrame(() => {
+      quizCountSheetRef.current?.present();
+    });
+  }, [alertWarning, isPreparingQuiz, isGeneratingQuiz]);
+
+  const handleStartChapterQuiz = useCallback(
+    async (questionCount: number) => {
+      try {
+        setSelectedQuestionCount(questionCount);
+        setIsGeneratingQuiz(true);
+
+        const result = await getQuestionsForChapter({
+          book,
+          chapter,
+          chapterVerses: chapterData,
+          requestedCount: questionCount,
+        });
+
+        chapterQuizStateHelpers.setActiveQuiz({
+          chapterKey: result.chapterKey,
+          book,
+          chapter,
+          requestedCount: questionCount,
+          questions: result.questions,
+        });
+
+        quizCountSheetRef.current?.dismiss();
+        modalState$.openChapterQuizBottomSheet();
+      } catch (error) {
+        alertWarning("Error", "No se pudo preparar el quiz. Intenta nuevamente.");
+      } finally {
+        setIsGeneratingQuiz(false);
+      }
+    },
+    [book, chapter, chapterData, getQuestionsForChapter, router, alertWarning]
+  );
 
   const headerStyle = useAnimatedStyle(() => ({
     transform: [{ scaleY: headerHeight.value }],
@@ -358,6 +461,15 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
   }));
 
   const showRegularChapter = !isInterlinear;
+  const currentQuizStatus = chapterQuizStatusByKey[chapterKey] || "take_quiz";
+  const quizButtonLabel =
+    isPreparingQuiz || isGeneratingQuiz
+      ? "Preparando preguntas..."
+      : currentQuizStatus === "completed"
+        ? "Quiz completado"
+        : currentQuizStatus === "retake"
+          ? "Volver a hacer quiz"
+          : "Tomar quiz";
 
   return (
     <Animated.View style={[containerAnimatedStyle]}>
@@ -451,7 +563,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
             initialScrollIndex={initialScrollIndex}
             isInterlinear={isInterlinear}
             isSplit={false}
-            onScroll={handleScroll}
+            onScroll={() => { }}
             {...{
               onStrongWordClicked,
               onInterlinear,
@@ -464,6 +576,8 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
               onVerseLongPress,
               onMemorizeVerse,
               onFavoriteVerse,
+              onChapterQuizPressed: handleOpenQuizSelector,
+              quizButtonText: quizButtonLabel,
             }}
           />
         ) : (
@@ -486,10 +600,72 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
           </TouchableOpacity>
         </View>
       )}
-
       <Animated.View style={[styles.footer]}>
         <BibleFooter isSplit={false} />
       </Animated.View>
+
+      <BottomModal
+        ref={quizCountSheetRef}
+        _theme={theme}
+        justOneSnap
+        showIndicator
+        justOneValue={["52%"]}
+        startAT={0}
+        shouldScroll={false}
+      >
+        <View style={styles.quizSheetContent}>
+          <Text style={[styles.quizModalTitle, { color: theme.colors.text }]}>
+            Selecciona número de preguntas
+          </Text>
+          <View style={styles.quizModalOptions}>
+            {quizQuestionCountOptions.map((count) => (
+              <TouchableOpacity
+                key={count}
+                style={[
+                  styles.quizOptionButton,
+                  {
+                    borderColor:
+                      selectedQuestionCount === count
+                        ? theme.colors.notification
+                        : theme.colors.text + "40",
+                    backgroundColor:
+                      selectedQuestionCount === count
+                        ? theme.colors.notification + "25"
+                        : "transparent",
+                  },
+                ]}
+                onPress={() => {
+                  if (isPreparingQuiz || isGeneratingQuiz) return;
+                  setSelectedQuestionCount(count);
+                  handleStartChapterQuiz(count);
+                }}
+                disabled={isPreparingQuiz || isGeneratingQuiz}
+              >
+                <Text style={[styles.quizOptionText, { color: theme.colors.text }]}>
+                  {count} preguntas
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          {(isPreparingQuiz || isGeneratingQuiz) && (
+            <View style={styles.quizLoadingContainer}>
+              <ActivityIndicator color={theme.colors.notification} />
+              <Text style={[styles.quizLoadingText, { color: theme.colors.text }]}>
+                Generando preguntas del capitulo...
+              </Text>
+            </View>
+          )}
+          <TouchableOpacity
+            style={styles.quizModalCloseButton}
+            disabled={isPreparingQuiz || isGeneratingQuiz}
+            onPress={() => quizCountSheetRef.current?.dismiss()}
+          >
+            <Text style={{ color: theme.colors.text, opacity: isPreparingQuiz || isGeneratingQuiz ? 0.5 : 1 }}>
+              Cancelar
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </BottomModal>
     </Animated.View>
   );
 };
@@ -541,6 +717,45 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 9999,
+  },
+  quizSheetContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    gap: 10,
+  },
+  quizModalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  quizModalOptions: {
+    gap: 8,
+    marginTop: 8,
+  },
+  quizOptionButton: {
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  quizOptionText: {
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  quizModalCloseButton: {
+    marginTop: 8,
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  quizLoadingContainer: {
+    marginTop: 8,
+    alignItems: "center",
+    gap: 8,
+  },
+  quizLoadingText: {
+    fontSize: 13,
+    fontWeight: "500",
+    textAlign: "center",
   },
 });
 

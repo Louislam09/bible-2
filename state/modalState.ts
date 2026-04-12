@@ -22,6 +22,7 @@ export const modalState$ = observable({
   highlighterRef: createRef<BottomSheet>(),
   noteListRef: createRef<BottomSheet>(),
   noteActionsRef: createRef<BottomSheet>(),
+  chapterQuizRef: createRef<BottomSheetModal>(),
   searchWordOnDic: "",
   commentaryReference: { bookNumber: 40, chapter: 1, verse: 1 },
   highlighterReference: { bookNumber: 40, chapter: 1, verse: 1 },
@@ -40,6 +41,7 @@ export const modalState$ = observable({
   isHighlighterOpen: false,
   isNoteListOpen: false,
   isNoteActionsOpen: false,
+  isChapterQuizOpen: false,
   previewHighlight: { color: "", style: "" },
 
   setSearchWordOnDic: (word: string) => {
@@ -153,5 +155,12 @@ export const modalState$ = observable({
   },
   closeNoteActionsBottomSheet: () => {
     modalState$.isNoteActionsOpen.set(false);
+  },
+  openChapterQuizBottomSheet: () => {
+    modalState$.isChapterQuizOpen.set(true);
+  },
+  closeChapterQuizBottomSheet: () => {
+    modalState$.isChapterQuizOpen.set(false);
+    modalState$.chapterQuizRef.current?.dismiss();
   },
 });

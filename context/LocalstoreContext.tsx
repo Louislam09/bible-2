@@ -102,6 +102,14 @@ type StoreState = {
   dictionaryViewMode: 'grid' | 'list';
   aiBibleThreads: StoredAIThread[];
   aiBibleActiveThreadId: string;
+  chapterQuizCompletedByChapter: Record<
+    string,
+    {
+      score: number;
+      total: number;
+      completedAt: string;
+    }
+  >;
 };
 
 const initialContext: StoreState = {
@@ -158,6 +166,7 @@ const initialContext: StoreState = {
   dictionaryViewMode: "list",
   aiBibleThreads: [],
   aiBibleActiveThreadId: "",
+  chapterQuizCompletedByChapter: {},
 };
 
 export const storedData$ = observable(initialContext);

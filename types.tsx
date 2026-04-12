@@ -163,7 +163,11 @@ export type RootStackParamList = {
   timeline: undefined;
   "memorization/memoryList": undefined;
   song: { isAlegres: boolean };
-  "(game)": { questionsPerLevel: number };
+  "(game)": {
+    questionsPerLevel: number;
+    quizMode?: "classic" | "chapter_ai";
+    chapterQuizKey?: string;
+  };
   hymn: undefined;
   notification: undefined;
   history: undefined;
