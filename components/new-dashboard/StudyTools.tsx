@@ -123,7 +123,10 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
               borderRadius: 8,
               overflow: 'hidden',
               elevation: 5,
-              flex: 1
+              flex: 1,
+              // height: 40,
+              padding: 12,
+
             }}
           >
             <TouchableOpacity
@@ -143,7 +146,6 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
             >
               <SVGComponent />
               <Text style={styles.text}>¡Apóyanos!</Text>
-
             </TouchableOpacity>
           </LinearGradient>
         </Animated.View>
