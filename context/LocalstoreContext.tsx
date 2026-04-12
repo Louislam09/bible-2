@@ -81,6 +81,7 @@ type StoreState = {
   token: string;
   lastSyncTime: string;
   googleAIKey: string;
+  preferredAiProviderId: string;
   notificationPreferences: {
     notificationEnabled: boolean;
     dailyVerseEnabled: boolean;
@@ -145,6 +146,7 @@ const initialContext: StoreState = {
   token: "",
   lastSyncTime: "",
   googleAIKey: "",
+  preferredAiProviderId: "",
   notificationPreferences: {
     notificationEnabled: true,
     dailyVerseEnabled: true,

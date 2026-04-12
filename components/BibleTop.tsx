@@ -9,6 +9,7 @@ import { audioState$ } from "@/hooks/useAudioPlayer";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { useHaptics } from "@/hooks/useHaptics";
 import { useChapterQuizAI } from "@/hooks/useChapterQuizAI";
+import { aiManager } from "@/services/ai/aiManager";
 import { chapterQuizCacheService } from "@/services/chapterQuizCacheService";
 import { chapterQuizLocalDbService } from "@/services/chapterQuizLocalDbService";
 import { bibleState$ } from "@/state/bibleState";
@@ -86,11 +87,10 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
     verse: verse,
   } = bibleQuery;
   const verseNumber = use$(() => bibleState$.bibleQuery.get().verse);
-  const googleAIKey = use$(() => storedData$.googleAIKey.get());
   const completedByChapter = use$(() =>
     storedData$.chapterQuizCompletedByChapter.get()
   );
-  const { loading: isPreparingQuiz, getQuestionsForChapter } = useChapterQuizAI(googleAIKey);
+  const { loading: isPreparingQuiz, getQuestionsForChapter } = useChapterQuizAI();
   const quizCountSheetRef = useRef<BottomSheetModal>(null);
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(5);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
@@ -184,9 +184,8 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
 
   const handleOpenQuizSelector = useCallback(() => {
     if (isPreparingQuiz || isGeneratingQuiz) return;
-    const hasAIKey = storedData$.googleAIKey.get();
-    if (!hasAIKey) {
-      alertWarning("Aviso", "Configura tu API key de Google AI para crear quizzes");
+    if (!aiManager.hasAnyProvider()) {
+      alertWarning("Aviso", "El servicio de IA no está disponible en este momento.");
       return;
     }
     requestAnimationFrame(() => {
@@ -200,12 +199,11 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
         setSelectedQuestionCount(questionCount);
         setIsGeneratingQuiz(true);
 
-        const versesText = getChapterTextRaw(chapterData);
         const result = await getQuestionsForChapter({
           book,
           chapter,
           requestedCount: questionCount,
-          versesText,
+          versesText: getChapterTextRaw(chapterData),
         });
 
         chapterQuizStateHelpers.setActiveQuiz({
@@ -336,9 +334,8 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
 
   const onExplain = useCallback(
     (item: IBookVerse) => {
-      const googleAIKey = storedData$.googleAIKey.get();
-      if (!googleAIKey) {
-        alertWarning("Aviso", "No se ha configurado la API key de Google AI");
+      if (!aiManager.hasAnyProvider()) {
+        alertWarning("Aviso", "El servicio de IA no está disponible en este momento.");
         return;
       }
       const verseText = getVerseTextRaw(item.text);

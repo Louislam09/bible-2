@@ -90,7 +90,7 @@ const createNewThread = (): ChatThread => {
     };
 };
 
-const useBibleAIChat = (googleAIKey: string | null): UseBibleAIChatReturn => {
+const useBibleAIChat = (): UseBibleAIChatReturn => {
     const [threads, setThreads] = useState<ChatThread[]>(() => {
         const storedThreads = storedData$.aiBibleThreads.get() || [];
         const runtimeThreads = storedThreads.map(toRuntimeThread).sort((a, b) => +b.updatedAt - +a.updatedAt);
@@ -125,7 +125,7 @@ const useBibleAIChat = (googleAIKey: string | null): UseBibleAIChatReturn => {
         sendMessage: sendChatMessage,
         clearResults,
         isEmpty: aiEmpty,
-    } = useBibleAIChatCompletion(googleAIKey);
+    } = useBibleAIChatCompletion();
 
     useEffect(() => {
         const normalizedThreads = [...threads]
@@ -186,7 +186,7 @@ const useBibleAIChat = (googleAIKey: string | null): UseBibleAIChatReturn => {
 
     const sendMessage = useCallback(
         async (content: string, translation: string = "RV1960") => {
-            if (!content.trim() || !googleAIKey) {
+            if (!content.trim()) {
                 return;
             }
 
@@ -244,7 +244,7 @@ const useBibleAIChat = (googleAIKey: string | null): UseBibleAIChatReturn => {
                 // Error is already handled by the chat completion hook
             }
         },
-        [googleAIKey, sendChatMessage, messages, trimMessages, ensureActiveThread, upsertThreadMessages]
+        [sendChatMessage, messages, trimMessages, ensureActiveThread, upsertThreadMessages]
     );
 
     const clearConversation = useCallback(() => {

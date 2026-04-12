@@ -95,7 +95,9 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   const fontSizes = getMinMaxFontSize();
   const isSyncedWithCloud = use$(() => storedData$.isSyncedWithCloud.get());
   const isAuthenticated = use$(() => authState$.isAuthenticated.get());
-  const { toggleCloudSync, syncWithCloud, loadFromCloud } = useStorage();
+  const { storedData, toggleCloudSync, syncWithCloud, loadFromCloud } = useStorage();
+  const user = use$(() => storedData$.user.get());
+  const isAdmin = storedData.isAdmin || user?.isAdmin;
   const [currentSetting, setCurrentBottomSetting] = useState<
     "font" | "theme" | "fontSize" | "appIcon"
   >("font");
@@ -302,13 +304,22 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
       title: "Inteligencia Artificial",
       id: "ai",
       options: [
-        {
-          label: "Configurar API Key de Google AI",
-          iconName: "Brain",
-          action: () => router.push("/ai-setup"),
-          extraText: "Configura tu API key para usar la IA de Google",
-          color: theme.colors.notification,
-        },
+        ...(isAdmin ? [
+          {
+            label: "Proveedores de IA",
+            iconName: "Cpu" as const,
+            action: () => router.push("/ai-providers"),
+            extraText: "Groq · Cerebras · OpenRouter · Gemini — estado y cooldowns",
+            color: theme.colors.notification,
+          },
+          {
+            label: "Google AI — clave de respaldo",
+            iconName: "Brain" as const,
+            action: () => router.push("/ai-setup"),
+            extraText: "Override opcional cuando la clave de la app no esté configurada",
+            color: theme.colors.notification,
+          },
+        ] : []),
       ],
     },
     {

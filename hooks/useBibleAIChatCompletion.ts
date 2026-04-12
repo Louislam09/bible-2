@@ -1,73 +1,29 @@
-import { GEMINI_MODEL } from "@/constants/geminiModel";
-import { useState, useCallback, useRef, useEffect } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { aiManager } from "@/services/ai/aiManager";
+import { ChatMessage } from "@/services/ai/types";
+import { use$ } from "@legendapp/state/react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ChatCompletionResponse {
-    content: string;
-    scriptureReferences: string[];
+  content: string;
+  scriptureReferences: string[];
 }
 
 interface UseBibleAIChatCompletionReturn {
-    loading: boolean;
-    error: string | null;
-    sendMessage: (
-        message: string,
-        conversationHistory: Array<{ role: "user" | "model"; parts: string }>
-    ) => Promise<ChatCompletionResponse>;
-    clearResults: () => void;
-    isEmpty: boolean;
+  loading: boolean;
+  error: string | null;
+  sendMessage: (
+    message: string,
+    conversationHistory: Array<{ role: "user" | "model"; parts: string }>,
+  ) => Promise<ChatCompletionResponse>;
+  clearResults: () => void;
+  isEmpty: boolean;
 }
 
 const BIBLE_REFERENCE_REGEX =
-    /([1-3]?\s*[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*)\s+(\d+):(\d+(?:-\d+)?)/g;
+  /([1-3]?\s*[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*)\s+(\d+):(\d+(?:-\d+)?)/g;
 
-const useBibleAIChatCompletion = (googleAIKey: string | null): UseBibleAIChatCompletionReturn => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const modelRef = useRef<any>(null);
-    const chatRef = useRef<any>(null);
-
-    // Initialize the AI model
-    useEffect(() => {
-        if (googleAIKey && !modelRef.current) {
-            try {
-                const genAI = new GoogleGenerativeAI(googleAIKey);
-                modelRef.current = genAI.getGenerativeModel({
-                    model: GEMINI_MODEL,
-                    generationConfig: {
-                        temperature: 0.3,
-                        topP: 0.95,
-                        topK: 40,
-                        maxOutputTokens: 8192,
-                    },
-                });
-            } catch (err) {
-                console.error("Error initializing AI model:", err);
-            }
-        }
-    }, [googleAIKey]);
-
-    const sendMessage = useCallback(
-        async (
-            message: string,
-            conversationHistory: Array<{ role: "user" | "model"; parts: string }> = []
-        ): Promise<ChatCompletionResponse> => {
-            if (!message.trim() || !googleAIKey || !modelRef.current) {
-                throw new Error("Invalid request or AI not initialized");
-            }
-
-            setLoading(true);
-            setError(null);
-
-            try {
-                // Build conversation history for chat completion
-                const history = conversationHistory.map((msg) => ({
-                    role: msg.role === "user" ? "user" : "model",
-                    parts: [{ text: msg.parts }],
-                }));
-
-                // System instruction for Bible guide context
-                const systemInstruction = `Eres un guía bíblico cristiano. NO eres reemplazo de la Biblia.
+const BIBLE_SYSTEM_INSTRUCTION = `Eres un guía bíblico cristiano. NO eres reemplazo de la Biblia.
 
 REGLA SUPREMA:
 - Solo puedes responder temas de Biblia, fe cristiana, teología cristiana y aplicación espiritual basada en Escritura.
@@ -95,79 +51,119 @@ Formato de respuesta obligatorio:
 3. Aplicación
 4. Pregunta reflexiva (al menos una pregunta final)`;
 
-                // Always rebuild chat session with current history to maintain context
-                // This ensures we always have the correct conversation context
-                chatRef.current = modelRef.current.startChat({
-                    history: history,
-                    systemInstruction: systemInstruction,
-                });
+function extractScriptureReferences(text: string): string[] {
+  const references: string[] = [];
+  BIBLE_REFERENCE_REGEX.lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = BIBLE_REFERENCE_REGEX.exec(text)) !== null) {
+    const reference = `${match[1]} ${match[2]}:${match[3]}`;
+    if (!references.includes(reference)) {
+      references.push(reference);
+    }
+  }
+  return references;
+}
 
-                // Send the message
-                const result = await chatRef.current.sendMessage(message);
-                const response = await result.response;
-                const text = response.text();
+/**
+ * Converts the Gemini-format history from useBibleAIChat into a standard
+ * ChatMessage array ready for any AI provider.
+ */
+function buildMessages(
+  conversationHistory: Array<{ role: "user" | "model"; parts: string }>,
+): ChatMessage[] {
+  const history: ChatMessage[] = conversationHistory.map((msg) => ({
+    role: msg.role === "model" ? "assistant" : "user",
+    content: msg.parts,
+  }));
+  return [
+    { role: "system", content: BIBLE_SYSTEM_INSTRUCTION },
+    ...history,
+  ];
+}
 
-                // Extract scripture references from the response
-                // Pattern: Book Chapter:Verse or Book Chapter:Verse-Verse
-                const references: string[] = [];
-                let match;
+const useBibleAIChatCompletion = (): UseBibleAIChatCompletionReturn => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-                BIBLE_REFERENCE_REGEX.lastIndex = 0;
-                while ((match = BIBLE_REFERENCE_REGEX.exec(text)) !== null) {
-                    const reference = `${match[1]} ${match[2]}:${match[3]}`;
-                    if (!references.includes(reference)) {
-                        references.push(reference);
-                    }
-                }
+  // Keep Gemini key in sync with the manager
+  const googleAIKey = use$(() => storedData$.googleAIKey.get());
+  useEffect(() => {
+    aiManager.setGeminiKey(googleAIKey ?? "");
+  }, [googleAIKey]);
 
-                return {
-                    content: text,
-                    scriptureReferences: references,
-                };
-            } catch (err: any) {
-                console.error("Chat Completion Error:", err);
+  const sendMessage = useCallback(
+    async (
+      message: string,
+      conversationHistory: Array<{ role: "user" | "model"; parts: string }> = [],
+    ): Promise<ChatCompletionResponse> => {
+      if (!message.trim()) {
+        throw new Error("Empty message");
+      }
 
-                // Parse error message to provide user-friendly Spanish messages
-                let errorMessage = "Error al generar respuesta";
+      setLoading(true);
+      setError(null);
 
-                if (err.message) {
-                    const message = err.message.toLowerCase();
-                    if (message.includes("api key") || message.includes("api_key") || message.includes("invalid")) {
-                        errorMessage = "La clave de API de Google AI no es válida. Por favor verifica tu clave en la configuración.";
-                    } else if (message.includes("quota") || message.includes("limit")) {
-                        errorMessage = "Se ha alcanzado el límite de solicitudes. Por favor intenta más tarde.";
-                    } else if (message.includes("network") || message.includes("fetch")) {
-                        errorMessage = "Error de conexión. Por favor verifica tu conexión a internet.";
-                    } else if (message.includes("permission") || message.includes("forbidden")) {
-                        errorMessage = "No tienes permiso para usar este servicio. Verifica tu clave de API.";
-                    } else {
-                        errorMessage = "Error al generar respuesta. Por favor intenta nuevamente.";
-                    }
-                }
+      try {
+        const messages = buildMessages(conversationHistory);
+        const text = await aiManager.chat(messages, {
+          maxTokens: 8192,
+          temperature: 0.3,
+        });
 
-                setError(errorMessage);
-                throw err;
-            } finally {
-                setLoading(false);
-            }
-        },
-        [googleAIKey]
-    );
+        return {
+          content: text,
+          scriptureReferences: extractScriptureReferences(text),
+        };
+      } catch (err: unknown) {
+        console.error("[BibleAIChatCompletion]", err);
 
-    const clearResults = useCallback((): void => {
-        setError(null);
-        // Reset chat session
-        chatRef.current = null;
-    }, []);
+        const anyErr = err as Record<string, unknown>;
+        let errorMessage: string;
 
-    return {
-        loading,
-        error,
-        sendMessage,
-        clearResults,
-        isEmpty: !loading && !error,
-    };
+        if (anyErr?._noProviders) {
+          errorMessage =
+            "No hay proveedores de IA disponibles. Verifica la configuración.";
+        } else if (anyErr?._allProvidersFailed) {
+          const cooldownInfo = anyErr._cooldownInfo as string | undefined;
+          errorMessage = cooldownInfo
+            ? `Todos los proveedores alcanzaron su límite. ${cooldownInfo}.`
+            : "Todos los proveedores fallaron. Reintenta en unos minutos.";
+        } else {
+          const msg = String((err as { message?: string })?.message ?? "").toLowerCase();
+          if (msg.includes("api key") || msg.includes("invalid")) {
+            errorMessage =
+              "La clave de API no es válida. Verifica tu clave en la configuración.";
+          } else if (msg.includes("quota") || msg.includes("limit")) {
+            errorMessage =
+              "Se ha alcanzado el límite de solicitudes. Por favor intenta más tarde.";
+          } else if (msg.includes("network") || msg.includes("fetch")) {
+            errorMessage =
+              "Error de conexión. Por favor verifica tu conexión a internet.";
+          } else {
+            errorMessage = "Error al generar respuesta. Por favor intenta nuevamente.";
+          }
+        }
+
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
+  const clearResults = useCallback((): void => {
+    setError(null);
+  }, []);
+
+  return {
+    loading,
+    error,
+    sendMessage,
+    clearResults,
+    isEmpty: !loading && !error,
+  };
 };
 
 export default useBibleAIChatCompletion;
-

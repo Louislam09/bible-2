@@ -2,15 +2,14 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useBibleAIChat, { ChatMessage } from "@/hooks/useBibleAIChat";
+import { aiManager } from "@/services/ai/aiManager";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import { copyTextToClipboard } from "@/utils/copyToClipboard";
 import { parseBibleReferences } from "@/utils/extractVersesInfo";
-import { use$ } from "@legendapp/state/react";
 import { Stack, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -770,7 +769,6 @@ const AIBibleGuideScreen = () => {
     const [showHistoryModal, setShowHistoryModal] = useState(false);
     const selectedTranslation = "RV1960";
     const [hasAttemptedSend, setHasAttemptedSend] = useState(false);
-    const googleAIKey = use$(() => storedData$.googleAIKey.get());
     const { theme } = useMyTheme();
     const styles = getStyles(theme);
     const router = useRouter();
@@ -805,7 +803,7 @@ const AIBibleGuideScreen = () => {
         deleteThread,
         startNewConversation,
         isEmpty,
-    } = useBibleAIChat(googleAIKey);
+    } = useBibleAIChat();
 
     // PDF generation hook
     const { printToFile } = usePrintAndShare();
@@ -889,7 +887,7 @@ const AIBibleGuideScreen = () => {
 
         setHasAttemptedSend(true);
 
-        if (!googleAIKey) {
+        if (!aiManager.hasAnyProvider()) {
             return;
         }
 
@@ -1202,7 +1200,7 @@ const AIBibleGuideScreen = () => {
                                 <Text style={styles.errorBannerText}>
                                     {error}
                                 </Text>
-                                {(error.includes("clave de API") || !googleAIKey) && (
+                                {error.includes("clave de API") && (
                                     <TouchableOpacity
                                         style={styles.errorBannerButton}
                                         onPress={() => router.push(Screens.AISetup)}
@@ -1229,8 +1227,8 @@ const AIBibleGuideScreen = () => {
                         </View>
                     )}
 
-                    {/* Show error banner if no API key and user attempted to send */}
-                    {!googleAIKey && hasAttemptedSend && !error && (
+                    {/* Show error banner if no provider available and user attempted to send */}
+                    {!aiManager.hasAnyProvider() && hasAttemptedSend && !error && (
                         <View style={styles.errorBanner}>
                             <Icon
                                 name="MessageCircleWarning"

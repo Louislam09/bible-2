@@ -45,6 +45,7 @@
     "@react-native-community/netinfo": "^11.4.1",
     "@react-native-picker/picker": "^2.11.1",
     "@shopify/flash-list": "^2.0.2",
+    "@toon-format/toon": "^2.1.0",
     "autoprefixer": "^10.4.21",
     "axios": "^1.8.2",
     "base-64": "^1.0.0",
