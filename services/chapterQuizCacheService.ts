@@ -3,7 +3,9 @@ import { chapterQuizLocalDbService } from "@/services/chapterQuizLocalDbService"
 import { Question } from "@/types";
 
 const QUIZ_CACHE_COLLECTION = "chapter_quiz_cache";
-const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+
+/** No TTL: chapter quiz rows stay valid until replaced by a new upsert. */
+const CACHE_MAX_AGE_MS = Infinity;
 
 const escapeFilterValue = (value: string) => value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 
@@ -20,13 +22,6 @@ const parseQuestions = (rawValue: unknown): Question[] => {
     }
   }
   return [];
-};
-
-const isRecordFresh = (updatedValue?: string): boolean => {
-  if (!updatedValue) return false;
-  const updatedMs = new Date(updatedValue).getTime();
-  if (Number.isNaN(updatedMs)) return false;
-  return Date.now() - updatedMs <= THREE_DAYS_MS;
 };
 
 type CacheRecord = {
@@ -46,7 +41,7 @@ export const chapterQuizCacheService = {
   async getValidChapterQuestions(key: string): Promise<Question[] | null> {
     const localQuestions = await chapterQuizLocalDbService.getValidCachedQuestions(
       key,
-      THREE_DAYS_MS
+      CACHE_MAX_AGE_MS
     );
     if (localQuestions && localQuestions.length > 0) {
       return localQuestions;
@@ -57,7 +52,7 @@ export const chapterQuizCacheService = {
         .collection(QUIZ_CACHE_COLLECTION)
         .getFirstListItem(`key = "${escapeFilterValue(key)}"`)) as CacheRecord;
 
-      if (!record || !isRecordFresh(record.updated)) {
+      if (!record) {
         return null;
       }
 

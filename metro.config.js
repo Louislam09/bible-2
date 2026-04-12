@@ -1,7 +1,14 @@
+const path = require("path");
 const { getDefaultConfig } = require("expo/metro-config");
 
 /** @type {import('expo/metro-config').MetroConfig} */
 const defaultConfig = getDefaultConfig(__dirname);
+
+// react-native-svg (fetchData.ts) imports `buffer`; RN has no Node core — use the npm polyfill.
+defaultConfig.resolver.extraNodeModules = {
+  ...defaultConfig.resolver.extraNodeModules,
+  buffer: path.dirname(require.resolve("buffer/package.json")),
+};
 
 // Asset extensions
 defaultConfig.resolver.assetExts.push("db");

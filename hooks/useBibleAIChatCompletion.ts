@@ -1,3 +1,4 @@
+import { GEMINI_MODEL } from "@/constants/geminiModel";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -32,7 +33,7 @@ const useBibleAIChatCompletion = (googleAIKey: string | null): UseBibleAIChatCom
             try {
                 const genAI = new GoogleGenerativeAI(googleAIKey);
                 modelRef.current = genAI.getGenerativeModel({
-                    model: "gemini-2.5-flash",
+                    model: GEMINI_MODEL,
                     generationConfig: {
                         temperature: 0.3,
                         topP: 0.95,

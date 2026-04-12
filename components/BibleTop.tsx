@@ -18,7 +18,7 @@ import { tourState$ } from "@/state/tourState";
 import { EBibleVersions, IBookVerse, IFavoriteVerse } from "@/types";
 import copyToClipboard, { formatForImageQuote } from "@/utils/copyToClipboard";
 import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { getChapterTextRaw, getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import BottomModal from "@/components/BottomModal";
@@ -200,11 +200,12 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
         setSelectedQuestionCount(questionCount);
         setIsGeneratingQuiz(true);
 
+        const versesText = getChapterTextRaw(chapterData);
         const result = await getQuestionsForChapter({
           book,
           chapter,
-          chapterVerses: chapterData,
           requestedCount: questionCount,
+          versesText,
         });
 
         chapterQuizStateHelpers.setActiveQuiz({

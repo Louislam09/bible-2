@@ -49,6 +49,9 @@ class ChapterQuizLocalDbService {
     this.initialized = true;
   }
 
+  /**
+   * @param maxAgeMs Max age in ms; use `Infinity` for no time-based expiry (cache forever).
+   */
   async getValidCachedQuestions(chapterKey: string, maxAgeMs: number): Promise<Question[] | null> {
     await this.init();
     const db = await getAppDatabase();
@@ -65,7 +68,8 @@ class ChapterQuizLocalDbService {
       if (!row) return null;
 
       const updatedMs = new Date(row.updated_at).getTime();
-      if (Number.isNaN(updatedMs) || Date.now() - updatedMs > maxAgeMs) {
+      if (Number.isNaN(updatedMs)) return null;
+      if (maxAgeMs !== Infinity && Date.now() - updatedMs > maxAgeMs) {
         return null;
       }
 

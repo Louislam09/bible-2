@@ -1,3 +1,4 @@
+import { GEMINI_MODEL } from "@/constants/geminiModel";
 import { userPrompt } from "@/constants/aiPrompts";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
@@ -38,7 +39,7 @@ export const useGoogleAI = (): UseGoogleAIResponse => {
 
       const genAI = new GoogleGenerativeAI(googleAIKey);
       const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
+        model: GEMINI_MODEL,
         generationConfig: {
           temperature: 0.1,
           topP: 0.8,
