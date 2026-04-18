@@ -406,7 +406,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           label: "Mis Quiz",
           iconName: "ListChecks",
           action: () => router.push(`/${Screens.ChapterQuizHistory}`),
-          extraText: "Historial, repaso y regenerar quiz solo en este dispositivo",
+          extraText: "Historial y repaso de tus quizzes en este dispositivo",
           color: theme.colors.notification,
         },
       ],

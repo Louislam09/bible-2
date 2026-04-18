@@ -361,6 +361,19 @@ class ChapterQuizLocalDbService {
     }
   }
 
+  async deleteAttempt(id: string): Promise<void> {
+    await this.init();
+    const db = await getAppDatabase();
+    const statement = await db.prepareAsync(
+      `DELETE FROM ${QUIZ_ATTEMPTS_TABLE} WHERE id = ?;`
+    );
+    try {
+      await statement.executeAsync([id]);
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
   /** Removes cached questions for a chapter (e.g. after cloud invalidation). */
   async deleteCachedQuestions(chapterKey: string): Promise<void> {
     await this.init();

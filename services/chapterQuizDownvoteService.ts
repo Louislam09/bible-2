@@ -18,6 +18,47 @@ export type DownvoteResult =
   | { ok: true; reachedThreshold: boolean }
   | { ok: false; reason: "not_authenticated" | "already_voted" | "network"; message: string };
 
+/** All `chapter_key` values the current user has downvoted (for UI). */
+export async function fetchUserDownvotedChapterKeys(): Promise<string[]> {
+  if (!pb.authStore.isValid) return [];
+  const userId = pb.authStore.record?.id;
+  if (!userId || typeof userId !== "string") return [];
+  try {
+    const rows = await pb.collection(DOWNVOTES_COLLECTION).getFullList({
+      filter: `user = "${escapeFilterValue(userId)}"`,
+    });
+    return rows
+      .map((r) => (r as { chapter_key?: string }).chapter_key)
+      .filter((k): k is string => typeof k === "string" && k.length > 0);
+  } catch (e) {
+    console.error("[chapterQuizDownvote] fetchUserDownvotedChapterKeys", e);
+    return [];
+  }
+}
+
+export async function removeChapterQuizDownvote(
+  chapterKey: string,
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  if (!pb.authStore.isValid) {
+    return { ok: false, message: "Inicia sesión para gestionar tu voto." };
+  }
+  const userId = pb.authStore.record?.id;
+  if (!userId || typeof userId !== "string") {
+    return { ok: false, message: "Sesión inválida." };
+  }
+  const keyFilter = `chapter_key = "${escapeFilterValue(chapterKey)}"`;
+  try {
+    const record = await pb
+      .collection(DOWNVOTES_COLLECTION)
+      .getFirstListItem(`${keyFilter} && user = "${escapeFilterValue(userId)}"`);
+    await pb.collection(DOWNVOTES_COLLECTION).delete(record.id);
+    return { ok: true };
+  } catch (e) {
+    console.error("[chapterQuizDownvote] remove", e);
+    return { ok: false, message: "No se pudo quitar el voto." };
+  }
+}
+
 /**
  * Records a downvote for the shared quiz (chapter_key). If 5 distinct users
  * have voted, deletes the PocketBase cache row, all downvotes for that key,

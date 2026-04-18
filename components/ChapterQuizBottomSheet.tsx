@@ -13,7 +13,7 @@ import { use$ } from "@legendapp/state/react";
 import * as Crypto from "expo-crypto";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 import LottieView from "lottie-react-native";
 import BottomModal from "./BottomModal";
 import { Text, View } from "./Themed";
@@ -51,7 +51,7 @@ function getCompletionCopy(score: number, total: number) {
 
 const ChapterQuizBottomSheet = () => {
   const { theme } = useMyTheme();
-  const { alertWarning } = useAlert();
+  const { alertWarning, confirm } = useAlert();
   const router = useRouter();
   const styles = getStyles(theme);
   const activeQuiz = use$(() => chapterQuizState$.activeQuiz.get());
@@ -64,6 +64,7 @@ const ChapterQuizBottomSheet = () => {
   const [completionRunId, setCompletionRunId] = useState(0);
   const [completedAttemptId, setCompletedAttemptId] = useState<string | null>(null);
   const [voteChoice, setVoteChoice] = useState<null | "up" | "down">(null);
+  const [downvoteSubmitting, setDownvoteSubmitting] = useState(false);
   const [isFavoriteMarked, setIsFavoriteMarked] = useState(false);
   const answersRef = useRef<(string | null)[]>([]);
 
@@ -87,6 +88,7 @@ const ChapterQuizBottomSheet = () => {
     setCompletionRunId(0);
     setCompletedAttemptId(null);
     setVoteChoice(null);
+    setDownvoteSubmitting(false);
     setIsFavoriteMarked(false);
     answersRef.current = new Array(Math.max(total, 0)).fill(null);
   }, [activeQuiz?.chapterKey, total]);
@@ -163,6 +165,7 @@ const ChapterQuizBottomSheet = () => {
     setIsCompleted(false);
     setCompletedAttemptId(null);
     setVoteChoice(null);
+    setDownvoteSubmitting(false);
     setIsFavoriteMarked(false);
   }, []);
 
@@ -172,8 +175,8 @@ const ChapterQuizBottomSheet = () => {
     showToast("¡Gracias! Nos alegra que te haya servido.");
   }, [voteChoice]);
 
-  const onVoteDown = useCallback(async () => {
-    if (voteChoice || !activeQuiz) return;
+  const onVoteDown = useCallback(() => {
+    if (voteChoice || downvoteSubmitting || !activeQuiz) return;
     if (!pb.authStore.isValid) {
       alertWarning(
         "Inicia sesión",
@@ -181,18 +184,29 @@ const ChapterQuizBottomSheet = () => {
       );
       return;
     }
-    setVoteChoice("down");
-    const result = await submitChapterQuizDownvote(activeQuiz.chapterKey);
-    if (!result.ok) {
-      showToast(result.message);
-      return;
-    }
-    if (result.reachedThreshold) {
-      showToast("Con varios votos negativos este quiz se renovará al generarse de nuevo.");
-    } else {
-      showToast("Gracias por tu opinión");
-    }
-  }, [activeQuiz, alertWarning, voteChoice]);
+    confirm(
+      "Marcar quiz compartido como poco útil",
+      "Esto cuenta como un voto negativo sobre la versión del quiz que comparten todos los usuarios. Si varias personas coinciden, ese quiz se puede sustituir por uno nuevo. ¿Deseas continuar?",
+      async () => {
+        setDownvoteSubmitting(true);
+        try {
+          const result = await submitChapterQuizDownvote(activeQuiz.chapterKey);
+          if (!result.ok) {
+            showToast(result.message);
+            return;
+          }
+          setVoteChoice("down");
+          if (result.reachedThreshold) {
+            showToast("Con varios votos negativos este quiz se renovará al generarse de nuevo.");
+          } else {
+            showToast("Gracias por tu opinión");
+          }
+        } finally {
+          setDownvoteSubmitting(false);
+        }
+      },
+    );
+  }, [activeQuiz, alertWarning, confirm, downvoteSubmitting, voteChoice]);
 
   const onFavoriteThisAttempt = useCallback(async () => {
     if (!completedAttemptId) return;
@@ -400,7 +414,7 @@ const ChapterQuizBottomSheet = () => {
                     },
                   ]}
                   onPress={onVoteUp}
-                  disabled={!!voteChoice}
+                  disabled={!!voteChoice || downvoteSubmitting}
                   accessibilityLabel="Útil"
                 >
                   <Icon
@@ -419,14 +433,18 @@ const ChapterQuizBottomSheet = () => {
                     },
                   ]}
                   onPress={onVoteDown}
-                  disabled={!!voteChoice}
+                  disabled={!!voteChoice || downvoteSubmitting}
                   accessibilityLabel="Poco útil"
                 >
-                  <Icon
-                    name="ThumbsDown"
-                    size={22}
-                    color={voteChoice === "down" ? "#ef4444" : theme.colors.text}
-                  />
+                  {downvoteSubmitting ? (
+                    <ActivityIndicator size="small" color={theme.colors.notification} />
+                  ) : (
+                    <Icon
+                      name="ThumbsDown"
+                      size={22}
+                      color={voteChoice === "down" ? "#ef4444" : theme.colors.text}
+                    />
+                  )}
                 </TouchableOpacity>
               </View>
 
