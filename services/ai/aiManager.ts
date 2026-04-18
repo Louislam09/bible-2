@@ -246,8 +246,8 @@ class AIManager {
 // To add a new provider: create the file, then add it to this array.
 // ---------------------------------------------------------------------------
 export const aiManager = new AIManager([
-  // groqProvider,
-  // cerebrasProvider,
-  // openRouterProvider,
+  groqProvider,
+  cerebrasProvider,
+  openRouterProvider,
   geminiProvider,
 ]);
