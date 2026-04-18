@@ -7,6 +7,10 @@ import {
 import Icon from "@/components/Icon";
 import { AnimatedView } from "@/components/quizHistory/AnimatedView";
 import {
+  ChapterQuizDetailView,
+  type ChapterQuizSizeOption,
+} from "@/components/quizHistory/ChapterQuizDetailView";
+import {
   QuizHistoryBooksWebView,
   QuizHistoryChaptersWebView,
 } from "@/components/quizHistory/QuizHistoryListWebViews";
@@ -19,21 +23,27 @@ import { QuizReviewItem } from "@/components/quizHistory/QuizReviewItem";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View as ThemedView } from "@/components/Themed";
 import { useAlert } from "@/context/AlertContext";
+import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
+import { useChapterQuizAI } from "@/hooks/useChapterQuizAI";
 import {
   useQuizProgress,
   type BookSummary,
   type ChapterAttemptIndex,
 } from "@/hooks/useQuizProgress";
+import { aiManager } from "@/services/ai/aiManager";
 import {
   fetchUserDownvotedChapterKeys,
   removeChapterQuizDownvote,
   submitChapterQuizDownvote,
 } from "@/services/chapterQuizDownvoteService";
+import { chapterQuizCacheService } from "@/services/chapterQuizCacheService";
 import {
   chapterQuizLocalDbService,
   type ChapterQuizAttemptRow,
+  type ChapterQuizSessionRow,
 } from "@/services/chapterQuizLocalDbService";
 import { bibleState$ } from "@/state/bibleState";
 import { chapterQuizStateHelpers } from "@/state/chapterQuizState";
@@ -42,6 +52,7 @@ import { Screens } from "@/types";
 import type { QuizHistoryBooksLayout } from "@/constants/quizHistoryWebViewHtml";
 import { headerIconSize } from "@/constants/size";
 import { computeChapterQuizMetrics } from "@/utils/quizHistory";
+import { loadChapterVersesTextForQuiz } from "@/utils/loadChapterVersesForQuiz";
 import { showToast } from "@/utils/showToast";
 import { shuffleArray } from "@/utils/shuffleOptions";
 import { use$ } from "@legendapp/state/react";
@@ -66,10 +77,19 @@ import {
 } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
+type ReviewNavigationFrom =
+  | { kind: "chapters"; book: string }
+  | { kind: "chapterDetail"; book: string; chapter: number };
+
 type ViewState =
   | { kind: "books" }
   | { kind: "chapters"; book: string }
-  | { kind: "review"; attemptId: string; fromBook: string | null };
+  | { kind: "chapterDetail"; book: string; chapter: number }
+  | {
+      kind: "review";
+      attemptId: string;
+      reviewFrom: ReviewNavigationFrom | null;
+    };
 
 type BooksFilter = "started" | "all";
 
@@ -116,8 +136,12 @@ const ChapterQuizHistoryScreen = () => {
   const params = useLocalSearchParams<{ attemptId?: string | string[] }>();
   const { alertWarning, confirm, actionSheet } = useAlert();
   const surfaces = useMemo(() => getSurfaces(theme), [theme]);
+  const { allBibleLoaded, getBibleServices } = useDBContext();
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  const { getQuestionsForChapter } = useChapterQuizAI();
 
   const [attempts, setAttempts] = useState<ChapterQuizAttemptRow[]>([]);
+  const [quizSessions, setQuizSessions] = useState<ChapterQuizSessionRow[]>([]);
   const [viewState, setViewState] = useState<ViewState>({ kind: "books" });
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [booksFilter, setBooksFilter] = useState<BooksFilter>("started");
@@ -130,6 +154,8 @@ const ChapterQuizHistoryScreen = () => {
   const [downvoteLoadingChapterKey, setDownvoteLoadingChapterKey] = useState<
     string | null
   >(null);
+  const [loadingQuizSize, setLoadingQuizSize] =
+    useState<ChapterQuizSizeOption | null>(null);
 
   const isChapterQuizOpen = use$(() => modalState$.isChapterQuizOpen.get());
   const wasQuizOpenRef = useRef(false);
@@ -145,9 +171,13 @@ const ChapterQuizHistoryScreen = () => {
     [userDownvotedChapterKeys],
   );
 
-  const reloadAttempts = useCallback(async () => {
-    const rows = await chapterQuizLocalDbService.getAllAttempts();
+  const reloadLocalQuizData = useCallback(async () => {
+    const [rows, sessions] = await Promise.all([
+      chapterQuizLocalDbService.getAllAttempts(),
+      chapterQuizLocalDbService.getAllQuizSessions(),
+    ]);
     setAttempts(rows);
+    setQuizSessions(sessions);
   }, []);
 
   const reloadDownvotes = useCallback(async () => {
@@ -161,16 +191,16 @@ const ChapterQuizHistoryScreen = () => {
 
   useEffect(() => {
     if (wasQuizOpenRef.current && !isChapterQuizOpen) {
-      void reloadAttempts();
+      void reloadLocalQuizData();
     }
     wasQuizOpenRef.current = isChapterQuizOpen;
-  }, [isChapterQuizOpen, reloadAttempts]);
+  }, [isChapterQuizOpen, reloadLocalQuizData]);
 
   useFocusEffect(
     useCallback(() => {
-      void reloadAttempts();
+      void reloadLocalQuizData();
       void reloadDownvotes();
-    }, [reloadAttempts, reloadDownvotes]),
+    }, [reloadLocalQuizData, reloadDownvotes]),
   );
 
   // Deep-link entry: ?attemptId=...
@@ -182,7 +212,11 @@ const ChapterQuizHistoryScreen = () => {
     void chapterQuizLocalDbService.getAttemptById(id).then((row) => {
       if (cancelled || !row) return;
       setReviewAttempt(row);
-      setViewState({ kind: "review", attemptId: id, fromBook: row.book });
+      setViewState({
+        kind: "review",
+        attemptId: id,
+        reviewFrom: { kind: "chapters", book: row.book },
+      });
       setDirection("forward");
     });
     return () => {
@@ -194,12 +228,24 @@ const ChapterQuizHistoryScreen = () => {
   const goBackInternal = useCallback((): boolean => {
     if (viewState.kind === "review") {
       setDirection("backward");
-      if (viewState.fromBook) {
-        setViewState({ kind: "chapters", book: viewState.fromBook });
+      const rf = viewState.reviewFrom;
+      if (rf?.kind === "chapterDetail") {
+        setViewState({
+          kind: "chapterDetail",
+          book: rf.book,
+          chapter: rf.chapter,
+        });
+      } else if (rf?.kind === "chapters") {
+        setViewState({ kind: "chapters", book: rf.book });
       } else {
         setViewState({ kind: "books" });
       }
       setReviewAttempt(null);
+      return true;
+    }
+    if (viewState.kind === "chapterDetail") {
+      setDirection("backward");
+      setViewState({ kind: "chapters", book: viewState.book });
       return true;
     }
     if (viewState.kind === "chapters") {
@@ -231,35 +277,138 @@ const ChapterQuizHistoryScreen = () => {
     setViewState({ kind: "chapters", book });
   }, []);
 
-  const openReviewByAttempt = useCallback((row: ChapterQuizAttemptRow) => {
-    setReviewAttempt(row);
+  const openReviewByAttempt = useCallback(
+    (row: ChapterQuizAttemptRow, reviewFrom: ReviewNavigationFrom) => {
+      setReviewAttempt(row);
+      setDirection("forward");
+      setViewState({
+        kind: "review",
+        attemptId: row.id,
+        reviewFrom,
+      });
+    },
+    [],
+  );
+
+  const openChapter = useCallback((book: string, chapter: number) => {
     setDirection("forward");
-    setViewState({
-      kind: "review",
-      attemptId: row.id,
-      fromBook: row.book,
-    });
+    setViewState({ kind: "chapterDetail", book, chapter });
   }, []);
 
-  const openChapter = useCallback(
-    (book: string, chapter: number) => {
-      const idx = indexByBook.get(book);
-      const best = idx?.bestByChapter.get(chapter);
-      if (best) {
-        openReviewByAttempt(best);
+  const chapterAttemptsForDetail = useMemo(() => {
+    if (viewState.kind !== "chapterDetail") return [];
+    return attempts.filter(
+      (a) => a.book === viewState.book && a.chapter === viewState.chapter,
+    );
+  }, [attempts, viewState]);
+
+  const attemptsForChaptersList = useMemo(() => {
+    if (viewState.kind !== "chapters") return [];
+    return attempts.filter((a) => a.book === viewState.book);
+  }, [attempts, viewState]);
+
+  const sessionsForChapterDetail = useMemo(() => {
+    if (viewState.kind !== "chapterDetail") return [];
+    const key = chapterQuizCacheService.buildChapterKey(
+      viewState.book,
+      viewState.chapter,
+    );
+    return quizSessions.filter((s) => s.chapterKey === key);
+  }, [quizSessions, viewState]);
+
+  const handleReadChapterFromDetail = useCallback(() => {
+    if (viewState.kind !== "chapterDetail") return;
+    const { book, chapter } = viewState;
+    const queryInfo = { book, chapter, verse: 1 };
+    bibleState$.changeBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isHistory: false,
+    });
+    navigation.navigate(Screens.Home as any, queryInfo);
+  }, [navigation, viewState]);
+
+  const runStartQuizFromDetail = useCallback(
+    async (size: ChapterQuizSizeOption) => {
+      if (viewState.kind !== "chapterDetail") return;
+      const { book, chapter } = viewState;
+      if (!aiManager.hasAnyProvider()) {
+        alertWarning(
+          "Aviso",
+          "El servicio de IA no está disponible en este momento.",
+        );
         return;
       }
-      // Not started → navigate to the Bible chapter so the user can read &
-      // generate a quiz from BibleTop. Cleanest UX given quiz needs context.
-      const queryInfo = { book, chapter, verse: 1 };
-      bibleState$.changeBibleQuery({
-        ...queryInfo,
-        shouldFetch: true,
-        isHistory: false,
-      });
-      navigation.navigate(Screens.Home as any, queryInfo);
+      try {
+        setLoadingQuizSize(size);
+        const versesText =
+          allBibleLoaded
+            ? await loadChapterVersesTextForQuiz(
+                getBibleServices,
+                String(currentBibleVersion),
+                book,
+                chapter,
+              )
+            : "";
+        const result = await getQuestionsForChapter({
+          book,
+          chapter,
+          requestedCount: size,
+          versesText,
+        });
+        chapterQuizStateHelpers.setActiveQuiz({
+          chapterKey: result.chapterKey,
+          book,
+          chapter,
+          requestedCount: size,
+          questions: result.questions,
+        });
+        modalState$.openChapterQuizBottomSheet();
+      } catch {
+        alertWarning(
+          "Error",
+          "No se pudo preparar el quiz. Intenta nuevamente.",
+        );
+      } finally {
+        setLoadingQuizSize(null);
+      }
     },
-    [indexByBook, navigation, openReviewByAttempt],
+    [
+      alertWarning,
+      allBibleLoaded,
+      currentBibleVersion,
+      getBibleServices,
+      getQuestionsForChapter,
+      viewState,
+    ],
+  );
+
+  const handleStartQuizFromDetail = useCallback(
+    (size: ChapterQuizSizeOption) => {
+      if (viewState.kind !== "chapterDetail") return;
+      const key = chapterQuizCacheService.buildChapterKey(
+        viewState.book,
+        viewState.chapter,
+      );
+      const hasAnyAttemptForChapter = attempts.some(
+        (a) => a.book === viewState.book && a.chapter === viewState.chapter,
+      );
+      const hasAnySessionForChapter = quizSessions.some(
+        (s) => s.chapterKey === key,
+      );
+
+      if (hasAnyAttemptForChapter || hasAnySessionForChapter) {
+        void runStartQuizFromDetail(size);
+        return;
+      }
+
+      confirm(
+        "¿Ya leíste este capítulo?",
+        "El quiz se basa en lo que leíste. Confirma que leíste el texto en la Biblia antes de comenzar.",
+        () => void runStartQuizFromDetail(size),
+      );
+    },
+    [attempts, confirm, quizSessions, runStartQuizFromDetail, viewState],
   );
 
   const handleToggleFavorite = useCallback(
@@ -267,13 +416,13 @@ const ChapterQuizHistoryScreen = () => {
       const row = await chapterQuizLocalDbService.getAttemptById(id);
       if (!row) return;
       await chapterQuizLocalDbService.setAttemptFavorite(id, !row.isFavorite);
-      await reloadAttempts();
+      await reloadLocalQuizData();
       if (reviewAttempt?.id === id) {
         setReviewAttempt({ ...row, isFavorite: !row.isFavorite });
       }
       showToast(row.isFavorite ? "Quitado de favoritos" : "Guardado en favoritos");
     },
-    [reloadAttempts, reviewAttempt?.id],
+    [reloadLocalQuizData, reviewAttempt?.id],
   );
 
   const handleDeleteAttempt = useCallback(
@@ -283,7 +432,7 @@ const ChapterQuizHistoryScreen = () => {
         "Este registro se borrará solo de tu dispositivo. Las preguntas del quiz compartido no se modifican. ¿Continuar?",
         async () => {
           await chapterQuizLocalDbService.deleteAttempt(id);
-          await reloadAttempts();
+          await reloadLocalQuizData();
           if (reviewAttempt?.id === id) {
             setReviewAttempt(null);
             goBackInternal();
@@ -292,7 +441,7 @@ const ChapterQuizHistoryScreen = () => {
         },
       );
     },
-    [confirm, reloadAttempts, reviewAttempt?.id, goBackInternal],
+    [confirm, reloadLocalQuizData, reviewAttempt?.id, goBackInternal],
   );
 
   const handleDownvote = useCallback(
@@ -419,16 +568,19 @@ const ChapterQuizHistoryScreen = () => {
         ? "Mis Quiz"
         : viewState.kind === "chapters"
           ? viewState.book
-          : reviewAttempt
-            ? `${reviewAttempt.book} ${reviewAttempt.chapter}`
-            : "Repasar";
+          : viewState.kind === "chapterDetail"
+            ? `${viewState.book} ${viewState.chapter}`
+            : reviewAttempt
+              ? `${reviewAttempt.book} ${reviewAttempt.chapter}`
+              : "Repasar";
 
     const mutedHeaderIcon = `${theme.colors.text}99`;
 
     return {
       theme,
       title,
-      titleIcon: viewState.kind === "books" ? "ListChecks" : "BookOpen",
+      titleIcon:
+        viewState.kind === "books" ? "ListChecks" : "BookOpen",
       titleIconColor: theme.colors.notification,
       goBack: headerGoBack,
       headerRightProps:
@@ -497,11 +649,38 @@ const ChapterQuizHistoryScreen = () => {
                   bookSummaries.find((b) => b.book === viewState.book) ?? null
                 }
                 attemptIndex={indexByBook.get(viewState.book) ?? null}
+                attempts={attemptsForChaptersList}
+                quizSessions={quizSessions}
                 onPressChapter={(chapter) => openChapter(viewState.book, chapter)}
                 onLongPressAttemptId={(attemptId) => {
                   const row = attempts.find((a) => a.id === attemptId);
                   if (row) handleChapterLongPress(row);
                 }}
+              />
+            </AnimatedView>
+          ) : viewState.kind === "chapterDetail" ? (
+            <AnimatedView
+              key={`chapter-detail-${viewState.book}-${viewState.chapter}`}
+              direction={direction}
+            >
+              <ChapterQuizDetailView
+                surfaces={surfaces}
+                chapterKey={chapterQuizCacheService.buildChapterKey(
+                  viewState.book,
+                  viewState.chapter,
+                )}
+                attempts={chapterAttemptsForDetail}
+                sessions={sessionsForChapterDetail}
+                loadingQuizSize={loadingQuizSize}
+                onPressSize={(size) => void handleStartQuizFromDetail(size)}
+                onPressAttempt={(row) =>
+                  openReviewByAttempt(row, {
+                    kind: "chapterDetail",
+                    book: row.book,
+                    chapter: row.chapter,
+                  })
+                }
+                onReadChapter={handleReadChapterFromDetail}
               />
             </AnimatedView>
           ) : reviewAttempt ? (
@@ -552,6 +731,8 @@ const ChaptersView: React.FC<{
   book: string;
   summary: BookSummary | null;
   attemptIndex: ChapterAttemptIndex | null;
+  attempts: ChapterQuizAttemptRow[];
+  quizSessions: ChapterQuizSessionRow[];
   onPressChapter: (chapter: number) => void;
   onLongPressAttemptId: (attemptId: string) => void;
 }> = (props) => <QuizHistoryChaptersWebView {...props} />;

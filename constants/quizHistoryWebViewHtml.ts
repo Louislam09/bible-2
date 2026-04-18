@@ -750,7 +750,7 @@ export function buildQuizHistoryChaptersHtml(payload: {
       const circ = 2 * Math.PI * 24;
       const dash = circ * Math.max(0, Math.min(1, c.ratio));
       const ring =
-        c.state !== "none"
+        c.ratio > 0
           ? `<svg class="ring" viewBox="0 0 58 58" width="58" height="58" aria-hidden="true">
             <circle cx="29" cy="29" r="24" fill="none" stroke="${surfaces.border}" stroke-width="2"/>
             <circle cx="29" cy="29" r="24" fill="none" stroke="${c.state === "pass" ? surfaces.accent : surfaces.fail
@@ -804,8 +804,8 @@ export function buildQuizHistoryChaptersHtml(payload: {
   <div class="divider"></div>
   <div class="grid">${grid}</div>
   <div class="legend">
-    <div class="leg"><span class="dot" style="background:${surfaces.accent}"></span> Aprobado</div>
-    <div class="leg"><span class="dot" style="background:${surfaces.fail}"></span> En proceso</div>
+    <div class="leg"><span class="dot" style="background:${surfaces.accent}"></span> 4/4 retos</div>
+    <div class="leg"><span class="dot" style="background:${surfaces.fail}"></span> Retos en progreso</div>
     <div class="leg"><span class="dot hollow"></span> Sin iniciar</div>
   </div>
 </div>

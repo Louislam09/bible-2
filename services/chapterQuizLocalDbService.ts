@@ -4,6 +4,8 @@ import { getAppDatabase } from "@/utils/appDatabase";
 const QUIZ_CACHE_TABLE = "chapter_quiz_cache_local";
 const QUIZ_COMPLETION_TABLE = "chapter_quiz_completion_local";
 const QUIZ_ATTEMPTS_TABLE = "chapter_quiz_attempts";
+/** Opened quiz (5/10/15/20) not finished — used for “en progreso” until completed or cleared. */
+const QUIZ_SESSIONS_TABLE = "chapter_quiz_sessions_local";
 
 const CREATE_QUIZ_CACHE_TABLE = `
 CREATE TABLE IF NOT EXISTS ${QUIZ_CACHE_TABLE} (
@@ -47,6 +49,14 @@ const CREATE_QUIZ_ATTEMPTS_COMPLETED_AT_INDEX = `
 CREATE INDEX IF NOT EXISTS idx_chapter_quiz_attempts_completed_at
 ON ${QUIZ_ATTEMPTS_TABLE}(completed_at DESC);`;
 
+const CREATE_QUIZ_SESSIONS_TABLE = `
+CREATE TABLE IF NOT EXISTS ${QUIZ_SESSIONS_TABLE} (
+  chapter_key TEXT NOT NULL,
+  question_count INTEGER NOT NULL,
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY (chapter_key, question_count)
+);`;
+
 export type ChapterQuizAnswerEntry = {
   questionIndex: number;
   selected: string | null;
@@ -64,6 +74,12 @@ export type ChapterQuizAttemptRow = {
   answers: ChapterQuizAnswerEntry[];
   pass: boolean;
   isFavorite: boolean;
+};
+
+export type ChapterQuizSessionRow = {
+  chapterKey: string;
+  questionCount: number;
+  updatedAt: string;
 };
 
 const parseQuestions = (value: string): Question[] => {
@@ -103,7 +119,60 @@ class ChapterQuizLocalDbService {
     await db.execAsync(CREATE_QUIZ_ATTEMPTS_TABLE);
     await db.execAsync(CREATE_QUIZ_CACHE_UPDATED_AT_INDEX);
     await db.execAsync(CREATE_QUIZ_ATTEMPTS_COMPLETED_AT_INDEX);
+    await db.execAsync(CREATE_QUIZ_SESSIONS_TABLE);
     this.initialized = true;
+  }
+
+  /** User opened this quiz size but has not finished (or closed mid-quiz). */
+  async upsertQuizSession(chapterKey: string, questionCount: number): Promise<void> {
+    await this.init();
+    const db = await getAppDatabase();
+    const now = toIso();
+    const statement = await db.prepareAsync(
+      `REPLACE INTO ${QUIZ_SESSIONS_TABLE} (chapter_key, question_count, updated_at)
+       VALUES (?, ?, ?);`,
+    );
+    try {
+      await statement.executeAsync([chapterKey, questionCount, now]);
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
+  async deleteQuizSession(chapterKey: string, questionCount: number): Promise<void> {
+    await this.init();
+    const db = await getAppDatabase();
+    const statement = await db.prepareAsync(
+      `DELETE FROM ${QUIZ_SESSIONS_TABLE} WHERE chapter_key = ? AND question_count = ?;`,
+    );
+    try {
+      await statement.executeAsync([chapterKey, questionCount]);
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
+  async getAllQuizSessions(): Promise<ChapterQuizSessionRow[]> {
+    await this.init();
+    const db = await getAppDatabase();
+    const statement = await db.prepareAsync(
+      `SELECT chapter_key, question_count, updated_at FROM ${QUIZ_SESSIONS_TABLE};`,
+    );
+    try {
+      const result = await statement.executeAsync();
+      const rows = (await result.getAllAsync()) as Array<{
+        chapter_key: string;
+        question_count: number;
+        updated_at: string;
+      }>;
+      return rows.map((row) => ({
+        chapterKey: row.chapter_key,
+        questionCount: row.question_count,
+        updatedAt: row.updated_at,
+      }));
+    } finally {
+      await statement.finalizeAsync();
+    }
   }
 
   /**

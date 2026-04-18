@@ -21,6 +21,12 @@ import {
   getSurfaces,
 } from "@/components/quizHistory/quizHistoryTokens";
 import type { ChapterQuizHistoryMetrics } from "@/utils/quizHistory";
+import { chapterQuizCacheService } from "@/services/chapterQuizCacheService";
+import type {
+  ChapterQuizAttemptRow,
+  ChapterQuizSessionRow,
+} from "@/services/chapterQuizLocalDbService";
+import { countCompletedChallengesForChapter } from "@/utils/quizChapterChallenges";
 import { formatRelativeDate } from "@/utils/quizHistory";
 import {
   bookCardPaletteColors,
@@ -265,6 +271,8 @@ export const QuizHistoryChaptersWebView: React.FC<{
   book: string;
   summary: BookSummary | null;
   attemptIndex: ChapterAttemptIndex | null;
+  attempts: ChapterQuizAttemptRow[];
+  quizSessions: ChapterQuizSessionRow[];
   onPressChapter: (chapter: number) => void;
   onLongPressAttemptId: (attemptId: string) => void;
   direction: "forward" | "backward";
@@ -273,6 +281,8 @@ export const QuizHistoryChaptersWebView: React.FC<{
   book,
   summary,
   attemptIndex,
+  attempts,
+  quizSessions,
   onPressChapter,
   onLongPressAttemptId,
   direction,
@@ -303,24 +313,30 @@ export const QuizHistoryChaptersWebView: React.FC<{
 
     const cells = useMemo(() => {
       return chapters.map((c) => {
+        const chapterKey = chapterQuizCacheService.buildChapterKey(book, c);
+        const completedN = countCompletedChallengesForChapter(attempts, book, c);
+        const ratio = completedN / 4;
         const best = attemptIndex?.bestByChapter.get(c);
-        if (!best) {
-          return {
-            chapter: c,
-            state: "none" as const,
-            attemptId: null as string | null,
-            ratio: 0,
-          };
-        }
-        const ratio = best.total > 0 ? best.score / best.total : 0;
+        const hasAnyAttempt = attempts.some(
+          (a) => a.book === book && a.chapter === c,
+        );
+        const hasOpenSession = quizSessions.some(
+          (s) => s.chapterKey === chapterKey,
+        );
+
+        let state: "pass" | "fail" | "none";
+        if (completedN === 4) state = "pass";
+        else if (hasAnyAttempt || hasOpenSession) state = "fail";
+        else state = "none";
+
         return {
           chapter: c,
-          state: best.pass ? ("pass" as const) : ("fail" as const),
-          attemptId: best.id,
+          state,
+          attemptId: best?.id ?? null,
           ratio,
         };
       });
-    }, [chapters, attemptIndex]);
+    }, [attempts, attemptIndex, book, chapters, quizSessions]);
 
     const html = useMemo(
       () =>
@@ -369,7 +385,7 @@ export const QuizHistoryChaptersWebView: React.FC<{
 
     return (
       <WebView
-        key={`chapters-${book}-${total}-${cells.length}`}
+        key={`chapters-${book}-${total}-${attempts.length}-${quizSessions.length}-${cells.length}`}
         originWhitelist={["*"]}
         source={{ html }}
         style={{ flex: 1, minWidth: "100%", backgroundColor: surfaces.base }}

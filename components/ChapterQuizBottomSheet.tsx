@@ -4,6 +4,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
 import { chapterQuizLocalDbService } from "@/services/chapterQuizLocalDbService";
 import { submitChapterQuizDownvote } from "@/services/chapterQuizDownvoteService";
+import type { ActiveChapterQuiz } from "@/state/chapterQuizState";
 import { chapterQuizState$, chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { modalState$ } from "@/state/modalState";
 import { TTheme } from "@/types";
@@ -67,6 +68,8 @@ const ChapterQuizBottomSheet = () => {
   const [downvoteSubmitting, setDownvoteSubmitting] = useState(false);
   const [isFavoriteMarked, setIsFavoriteMarked] = useState(false);
   const answersRef = useRef<(string | null)[]>([]);
+  const isCompletedRef = useRef(false);
+  const lastQuizRef = useRef<ActiveChapterQuiz | null>(null);
 
   const questions = activeQuiz?.questions || [];
   const currentQuestion = questions[currentIndex];
@@ -92,6 +95,35 @@ const ChapterQuizBottomSheet = () => {
     setIsFavoriteMarked(false);
     answersRef.current = new Array(Math.max(total, 0)).fill(null);
   }, [activeQuiz?.chapterKey, total]);
+
+  useEffect(() => {
+    isCompletedRef.current = isCompleted;
+  }, [isCompleted]);
+
+  useEffect(() => {
+    if (activeQuiz) lastQuizRef.current = activeQuiz;
+  }, [activeQuiz]);
+
+  /** Persist “opened this quiz size” as soon as the sheet has questions (covers Bible + Mis Quiz). */
+  useEffect(() => {
+    if (!activeQuiz || total === 0) return;
+    void chapterQuizLocalDbService.upsertQuizSession(
+      activeQuiz.chapterKey,
+      activeQuiz.requestedCount,
+    );
+  }, [activeQuiz?.chapterKey, activeQuiz?.requestedCount, total]);
+
+  const finalizeQuizDismiss = useCallback(() => {
+    modalState$.isChapterQuizOpen.set(false);
+    const q = lastQuizRef.current;
+    if (q && !isCompletedRef.current) {
+      void chapterQuizLocalDbService.upsertQuizSession(
+        q.chapterKey,
+        q.requestedCount,
+      );
+    }
+    chapterQuizStateHelpers.clearActiveQuiz();
+  }, []);
 
   const progressLabel = useMemo(() => {
     if (isCompleted) return `Puntuacion final: ${score}/${total}`;
@@ -134,6 +166,10 @@ const ChapterQuizBottomSheet = () => {
           answers: answersPayload,
           pass,
         });
+        void chapterQuizLocalDbService.deleteQuizSession(
+          activeQuiz.chapterKey,
+          activeQuiz.requestedCount,
+        );
       }
       setCompletionRunId((r) => r + 1);
       setIsCompleted(true);
@@ -146,7 +182,6 @@ const ChapterQuizBottomSheet = () => {
   };
 
   const onClose = () => {
-    chapterQuizStateHelpers.clearActiveQuiz();
     modalState$.closeChapterQuizBottomSheet();
   };
 
@@ -157,6 +192,10 @@ const ChapterQuizBottomSheet = () => {
         ...quiz,
         questions: shuffleArray(quiz.questions),
       });
+      void chapterQuizLocalDbService.upsertQuizSession(
+        quiz.chapterKey,
+        quiz.requestedCount,
+      );
     }
     setCurrentIndex(0);
     setScore(0);
@@ -253,10 +292,7 @@ const ChapterQuizBottomSheet = () => {
         showIndicator
         justOneValue={["50%", "85%"]}
         startAT={1}
-        onDismiss={() => {
-          modalState$.isChapterQuizOpen.set(false);
-          chapterQuizStateHelpers.clearActiveQuiz();
-        }}
+        onDismiss={finalizeQuizDismiss}
       >
         <View style={styles.container}>
           <Text style={styles.title}>No hay quiz disponible</Text>
@@ -277,10 +313,7 @@ const ChapterQuizBottomSheet = () => {
       showIndicator
       justOneValue={["70%", "95%"]}
       startAT={1}
-      onDismiss={() => {
-        modalState$.isChapterQuizOpen.set(false);
-        chapterQuizStateHelpers.clearActiveQuiz();
-      }}
+      onDismiss={finalizeQuizDismiss}
     >
       <View style={[styles.container, isCompleted && styles.containerCompleted]}>
         {showConfettiOverlay ? (
