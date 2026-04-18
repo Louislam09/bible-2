@@ -1,11 +1,18 @@
 import Icon from "@/components/Icon";
+import { useAlert } from "@/context/AlertContext";
 import { useMyTheme } from "@/context/ThemeContext";
+import { pb } from "@/globalConfig";
+import { chapterQuizLocalDbService } from "@/services/chapterQuizLocalDbService";
+import { submitChapterQuizDownvote } from "@/services/chapterQuizDownvoteService";
 import { chapterQuizState$, chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { modalState$ } from "@/state/modalState";
 import { TTheme } from "@/types";
+import { showToast } from "@/utils/showToast";
 import { shuffleArray } from "@/utils/shuffleOptions";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import * as Crypto from "expo-crypto";
+import { useRouter } from "expo-router";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import LottieView from "lottie-react-native";
 import BottomModal from "./BottomModal";
@@ -44,6 +51,8 @@ function getCompletionCopy(score: number, total: number) {
 
 const ChapterQuizBottomSheet = () => {
   const { theme } = useMyTheme();
+  const { alertWarning } = useAlert();
+  const router = useRouter();
   const styles = getStyles(theme);
   const activeQuiz = use$(() => chapterQuizState$.activeQuiz.get());
 
@@ -53,6 +62,10 @@ const ChapterQuizBottomSheet = () => {
   const [hasAnswered, setHasAnswered] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [completionRunId, setCompletionRunId] = useState(0);
+  const [completedAttemptId, setCompletedAttemptId] = useState<string | null>(null);
+  const [voteChoice, setVoteChoice] = useState<null | "up" | "down">(null);
+  const [isFavoriteMarked, setIsFavoriteMarked] = useState(false);
+  const answersRef = useRef<(string | null)[]>([]);
 
   const questions = activeQuiz?.questions || [];
   const currentQuestion = questions[currentIndex];
@@ -72,6 +85,10 @@ const ChapterQuizBottomSheet = () => {
     setHasAnswered(false);
     setIsCompleted(false);
     setCompletionRunId(0);
+    setCompletedAttemptId(null);
+    setVoteChoice(null);
+    setIsFavoriteMarked(false);
+    answersRef.current = new Array(Math.max(total, 0)).fill(null);
   }, [activeQuiz?.chapterKey, total]);
 
   const progressLabel = useMemo(() => {
@@ -90,10 +107,31 @@ const ChapterQuizBottomSheet = () => {
   const onNext = () => {
     if (!hasAnswered) return;
 
+    answersRef.current[currentIndex] = selectedOption;
+
     if (currentIndex >= total - 1) {
-      const finalScore = selectedOption === currentQuestion?.correct ? score : score;
+      const finalScore = score;
       if (activeQuiz) {
         chapterQuizStateHelpers.markChapterCompleted(activeQuiz.chapterKey, finalScore, total);
+        const pass = total > 0 && finalScore / total >= PASS_RATIO;
+        const answersPayload = questions.map((_, i) => ({
+          questionIndex: i,
+          selected: answersRef.current[i] ?? null,
+        }));
+        const attemptId = Crypto.randomUUID();
+        setCompletedAttemptId(attemptId);
+        void chapterQuizLocalDbService.insertAttempt({
+          id: attemptId,
+          chapterKey: activeQuiz.chapterKey,
+          book: activeQuiz.book,
+          chapter: activeQuiz.chapter,
+          score: finalScore,
+          total,
+          completedAt: new Date().toISOString(),
+          questions,
+          answers: answersPayload,
+          pass,
+        });
       }
       setCompletionRunId((r) => r + 1);
       setIsCompleted(true);
@@ -123,7 +161,56 @@ const ChapterQuizBottomSheet = () => {
     setSelectedOption(null);
     setHasAnswered(false);
     setIsCompleted(false);
+    setCompletedAttemptId(null);
+    setVoteChoice(null);
+    setIsFavoriteMarked(false);
   }, []);
+
+  const onVoteUp = useCallback(() => {
+    if (voteChoice) return;
+    setVoteChoice("up");
+    showToast("¡Gracias! Nos alegra que te haya servido.");
+  }, [voteChoice]);
+
+  const onVoteDown = useCallback(async () => {
+    if (voteChoice || !activeQuiz) return;
+    if (!pb.authStore.isValid) {
+      alertWarning(
+        "Inicia sesión",
+        "Para marcar un quiz como poco útil necesitas una cuenta.",
+      );
+      return;
+    }
+    setVoteChoice("down");
+    const result = await submitChapterQuizDownvote(activeQuiz.chapterKey);
+    if (!result.ok) {
+      showToast(result.message);
+      return;
+    }
+    if (result.reachedThreshold) {
+      showToast("Con varios votos negativos este quiz se renovará al generarse de nuevo.");
+    } else {
+      showToast("Gracias por tu opinión");
+    }
+  }, [activeQuiz, alertWarning, voteChoice]);
+
+  const onFavoriteThisAttempt = useCallback(async () => {
+    if (!completedAttemptId) return;
+    const next = !isFavoriteMarked;
+    await chapterQuizLocalDbService.setAttemptFavorite(completedAttemptId, next);
+    setIsFavoriteMarked(next);
+    showToast(next ? "Guardado en Mis Quiz (favoritos)" : "Quitado de favoritos");
+  }, [completedAttemptId, isFavoriteMarked]);
+
+  const onOpenMisQuizDetail = useCallback(() => {
+    if (!completedAttemptId) return;
+    modalState$.closeChapterQuizBottomSheet();
+    chapterQuizStateHelpers.clearActiveQuiz();
+    router.push({
+      pathname: "/chapterQuizHistory",
+      params: { attemptId: completedAttemptId },
+    });
+  }, [completedAttemptId, router]);
 
   const completionCopy = useMemo(
     () => getCompletionCopy(score, total),
@@ -268,7 +355,7 @@ const ChapterQuizBottomSheet = () => {
                 },
               ]}
             >
-              {!didPassQuiz ? (
+              {didPassQuiz ? (
                 <Text style={styles.resultCelebration} accessibilityLabel="Celebración">
                   🎉
                 </Text>
@@ -298,6 +385,84 @@ const ChapterQuizBottomSheet = () => {
               <Text style={[styles.resultFeedbackBody, { color: theme.colors.text + "99" }]}>
                 {completionCopy.subline}
               </Text>
+
+              <Text style={[styles.rateLabel, { color: theme.colors.text + "AA" }]}>
+                ¿Te pareció útil este quiz?
+              </Text>
+              <View style={styles.voteRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.voteButton,
+                    {
+                      borderColor: theme.colors.text + "33",
+                      backgroundColor:
+                        voteChoice === "up" ? "#22c55e33" : theme.colors.card,
+                    },
+                  ]}
+                  onPress={onVoteUp}
+                  disabled={!!voteChoice}
+                  accessibilityLabel="Útil"
+                >
+                  <Icon
+                    name="ThumbsUp"
+                    size={22}
+                    color={voteChoice === "up" ? "#22c55e" : theme.colors.text}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.voteButton,
+                    {
+                      borderColor: theme.colors.text + "33",
+                      backgroundColor:
+                        voteChoice === "down" ? "#ef444433" : theme.colors.card,
+                    },
+                  ]}
+                  onPress={onVoteDown}
+                  disabled={!!voteChoice}
+                  accessibilityLabel="Poco útil"
+                >
+                  <Icon
+                    name="ThumbsDown"
+                    size={22}
+                    color={voteChoice === "down" ? "#ef4444" : theme.colors.text}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={[
+                  styles.favoriteRow,
+                  {
+                    borderColor: theme.colors.text + "22",
+                    backgroundColor: theme.colors.card,
+                  },
+                ]}
+                onPress={onFavoriteThisAttempt}
+                activeOpacity={0.85}
+              >
+                <Icon
+                  name="Heart"
+                  size={20}
+                  color={isFavoriteMarked ? "#f43f5e" : theme.colors.text}
+                  fillColor={isFavoriteMarked ? "#f43f5e" : "none"}
+                />
+                <Text style={[styles.favoriteRowText, { color: theme.colors.text }]}>
+                  {isFavoriteMarked ? "En favoritos en Mis Quiz" : "Guardar en favoritos para repasar"}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.linkToHistory, { borderColor: theme.colors.notification + "55" }]}
+                onPress={onOpenMisQuizDetail}
+                activeOpacity={0.85}
+                disabled={!completedAttemptId}
+              >
+                <Icon name="ListChecks" size={18} color={theme.colors.notification} />
+                <Text style={[styles.linkToHistoryText, { color: theme.colors.notification }]}>
+                  Ver repaso completo en Mis Quiz
+                </Text>
+              </TouchableOpacity>
 
               <View style={styles.resultActions}>
                 <TouchableOpacity
@@ -500,6 +665,57 @@ const getStyles = ({ colors }: TTheme) =>
       textAlign: "center",
       paddingHorizontal: 6,
       maxWidth: 300,
+    },
+    rateLabel: {
+      fontSize: 13,
+      fontWeight: "600",
+      textAlign: "center",
+      marginTop: 10,
+      width: "100%",
+    },
+    voteRow: {
+      flexDirection: "row",
+      gap: 10,
+      justifyContent: "center",
+      marginTop: 10,
+    },
+    voteButton: {
+      borderRadius: 12,
+      borderWidth: 1,
+      paddingVertical: 12,
+      paddingHorizontal: 22,
+    },
+    favoriteRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+      width: "100%",
+      marginTop: 18,
+      paddingVertical: 12,
+      paddingHorizontal: 14,
+      borderRadius: 12,
+      borderWidth: 1,
+    },
+    favoriteRowText: {
+      flex: 1,
+      fontSize: 14,
+      fontWeight: "600",
+    },
+    linkToHistory: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      width: "100%",
+      marginTop: 10,
+      paddingVertical: 12,
+      paddingHorizontal: 14,
+      borderRadius: 12,
+      borderWidth: 1,
+    },
+    linkToHistoryText: {
+      fontSize: 14,
+      fontWeight: "700",
     },
     resultActions: {
       flexDirection: "row",

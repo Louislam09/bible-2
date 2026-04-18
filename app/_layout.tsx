@@ -93,6 +93,7 @@ const screenAnimations: TScreensName = {
   [Screens.AIBibleGuide]: "slide_from_right",
   [Screens.Tutorials]: "slide_from_right",
   [Screens.Highlighted]: "slide_from_right",
+  [Screens.ChapterQuizHistory]: "slide_from_right",
 };
 
 // Memoized SafeContentView to prevent unnecessary re-renders

@@ -3,6 +3,7 @@ import { getAppDatabase } from "@/utils/appDatabase";
 
 const QUIZ_CACHE_TABLE = "chapter_quiz_cache_local";
 const QUIZ_COMPLETION_TABLE = "chapter_quiz_completion_local";
+const QUIZ_ATTEMPTS_TABLE = "chapter_quiz_attempts";
 
 const CREATE_QUIZ_CACHE_TABLE = `
 CREATE TABLE IF NOT EXISTS ${QUIZ_CACHE_TABLE} (
@@ -26,10 +27,64 @@ const CREATE_QUIZ_CACHE_UPDATED_AT_INDEX = `
 CREATE INDEX IF NOT EXISTS idx_chapter_quiz_cache_updated_at
 ON ${QUIZ_CACHE_TABLE}(updated_at);`;
 
+const CREATE_QUIZ_ATTEMPTS_TABLE = `
+CREATE TABLE IF NOT EXISTS ${QUIZ_ATTEMPTS_TABLE} (
+  id TEXT PRIMARY KEY,
+  chapter_key TEXT NOT NULL,
+  book TEXT NOT NULL,
+  chapter INTEGER NOT NULL,
+  score INTEGER NOT NULL,
+  total INTEGER NOT NULL,
+  completed_at TEXT NOT NULL,
+  questions_json TEXT NOT NULL,
+  answers_json TEXT NOT NULL,
+  pass INTEGER NOT NULL DEFAULT 0,
+  is_favorite INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL
+);`;
+
+const CREATE_QUIZ_ATTEMPTS_COMPLETED_AT_INDEX = `
+CREATE INDEX IF NOT EXISTS idx_chapter_quiz_attempts_completed_at
+ON ${QUIZ_ATTEMPTS_TABLE}(completed_at DESC);`;
+
+export type ChapterQuizAnswerEntry = {
+  questionIndex: number;
+  selected: string | null;
+};
+
+export type ChapterQuizAttemptRow = {
+  id: string;
+  chapterKey: string;
+  book: string;
+  chapter: number;
+  score: number;
+  total: number;
+  completedAt: string;
+  questions: Question[];
+  answers: ChapterQuizAnswerEntry[];
+  pass: boolean;
+  isFavorite: boolean;
+};
+
 const parseQuestions = (value: string): Question[] => {
   try {
     const parsed = JSON.parse(value);
     return Array.isArray(parsed) ? (parsed as Question[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+const parseAnswers = (value: string): ChapterQuizAnswerEntry[] => {
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (x): x is ChapterQuizAnswerEntry =>
+        !!x &&
+        typeof x === "object" &&
+        typeof (x as ChapterQuizAnswerEntry).questionIndex === "number",
+    );
   } catch {
     return [];
   }
@@ -45,7 +100,9 @@ class ChapterQuizLocalDbService {
     const db = await getAppDatabase();
     await db.execAsync(CREATE_QUIZ_CACHE_TABLE);
     await db.execAsync(CREATE_QUIZ_COMPLETION_TABLE);
+    await db.execAsync(CREATE_QUIZ_ATTEMPTS_TABLE);
     await db.execAsync(CREATE_QUIZ_CACHE_UPDATED_AT_INDEX);
+    await db.execAsync(CREATE_QUIZ_ATTEMPTS_COMPLETED_AT_INDEX);
     this.initialized = true;
   }
 
@@ -146,6 +203,173 @@ class ChapterQuizLocalDbService {
         completedAt,
         toIso(),
       ]);
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
+  async insertAttempt({
+    id,
+    chapterKey,
+    book,
+    chapter,
+    score,
+    total,
+    completedAt,
+    questions,
+    answers,
+    pass,
+    isFavorite = false,
+  }: {
+    id: string;
+    chapterKey: string;
+    book: string;
+    chapter: number;
+    score: number;
+    total: number;
+    completedAt: string;
+    questions: Question[];
+    answers: ChapterQuizAnswerEntry[];
+    pass: boolean;
+    isFavorite?: boolean;
+  }): Promise<void> {
+    await this.init();
+    const db = await getAppDatabase();
+    const now = toIso();
+    const statement = await db.prepareAsync(
+      `INSERT INTO ${QUIZ_ATTEMPTS_TABLE} (
+        id, chapter_key, book, chapter, score, total, completed_at,
+        questions_json, answers_json, pass, is_favorite, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
+    );
+    try {
+      await statement.executeAsync([
+        id,
+        chapterKey,
+        book,
+        chapter,
+        score,
+        total,
+        completedAt,
+        JSON.stringify(questions),
+        JSON.stringify(answers),
+        pass ? 1 : 0,
+        isFavorite ? 1 : 0,
+        now,
+      ]);
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
+  async getAllAttempts(limit = 500): Promise<ChapterQuizAttemptRow[]> {
+    await this.init();
+    const db = await getAppDatabase();
+    const statement = await db.prepareAsync(
+      `SELECT id, chapter_key, book, chapter, score, total, completed_at,
+              questions_json, answers_json, pass, is_favorite
+       FROM ${QUIZ_ATTEMPTS_TABLE}
+       ORDER BY completed_at DESC
+       LIMIT ?;`
+    );
+    try {
+      const result = await statement.executeAsync([limit]);
+      const rows = (await result.getAllAsync()) as Array<{
+        id: string;
+        chapter_key: string;
+        book: string;
+        chapter: number;
+        score: number;
+        total: number;
+        completed_at: string;
+        questions_json: string;
+        answers_json: string;
+        pass: number;
+        is_favorite: number;
+      }>;
+      return rows.map((row) => ({
+        id: row.id,
+        chapterKey: row.chapter_key,
+        book: row.book,
+        chapter: row.chapter,
+        score: row.score,
+        total: row.total,
+        completedAt: row.completed_at,
+        questions: parseQuestions(row.questions_json),
+        answers: parseAnswers(row.answers_json),
+        pass: row.pass === 1,
+        isFavorite: row.is_favorite === 1,
+      }));
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
+  async getAttemptById(id: string): Promise<ChapterQuizAttemptRow | null> {
+    await this.init();
+    const db = await getAppDatabase();
+    const statement = await db.prepareAsync(
+      `SELECT id, chapter_key, book, chapter, score, total, completed_at,
+              questions_json, answers_json, pass, is_favorite
+       FROM ${QUIZ_ATTEMPTS_TABLE} WHERE id = ? LIMIT 1;`
+    );
+    try {
+      const result = await statement.executeAsync([id]);
+      const rows = (await result.getAllAsync()) as Array<{
+        id: string;
+        chapter_key: string;
+        book: string;
+        chapter: number;
+        score: number;
+        total: number;
+        completed_at: string;
+        questions_json: string;
+        answers_json: string;
+        pass: number;
+        is_favorite: number;
+      }>;
+      const row = rows[0];
+      if (!row) return null;
+      return {
+        id: row.id,
+        chapterKey: row.chapter_key,
+        book: row.book,
+        chapter: row.chapter,
+        score: row.score,
+        total: row.total,
+        completedAt: row.completed_at,
+        questions: parseQuestions(row.questions_json),
+        answers: parseAnswers(row.answers_json),
+        pass: row.pass === 1,
+        isFavorite: row.is_favorite === 1,
+      };
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
+  async setAttemptFavorite(id: string, isFavorite: boolean): Promise<void> {
+    await this.init();
+    const db = await getAppDatabase();
+    const statement = await db.prepareAsync(
+      `UPDATE ${QUIZ_ATTEMPTS_TABLE} SET is_favorite = ?, updated_at = ? WHERE id = ?;`
+    );
+    try {
+      await statement.executeAsync([isFavorite ? 1 : 0, toIso(), id]);
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
+  /** Removes cached questions for a chapter (e.g. after cloud invalidation). */
+  async deleteCachedQuestions(chapterKey: string): Promise<void> {
+    await this.init();
+    const db = await getAppDatabase();
+    const statement = await db.prepareAsync(
+      `DELETE FROM ${QUIZ_CACHE_TABLE} WHERE chapter_key = ?;`
+    );
+    try {
+      await statement.executeAsync([chapterKey]);
     } finally {
       await statement.finalizeAsync();
     }

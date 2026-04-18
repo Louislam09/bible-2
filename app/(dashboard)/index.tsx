@@ -167,6 +167,13 @@ const MainDashboard = () => {
 
   const studyToolItems: IDashboardOption[] = [
     {
+      icon: "ListChecks",
+      label: "Mis Quiz",
+      action: () => router.push("/chapterQuizHistory"),
+      color: "#7dd3c0",
+      isNew: isWithinTimeframe("4w", new Date("2026-04-18")).isActive,
+    },
+    {
       icon: "Highlighter",
       label: "Destacados",
       action: () => navigation?.navigate(Screens.Highlighted),
@@ -249,6 +256,13 @@ const MainDashboard = () => {
       action: () => navigation.navigate(Screens.ChooseGame),
       color: "#75d0fe",
     },
+    // {
+    //   icon: "ListChecks",
+    //   label: "Mis Quiz",
+    //   action: () => router.push("/chapterQuizHistory"),
+    //   color: "#7dd3c0",
+    //   isNew: isWithinTimeframe("4w", new Date("2026-04-18")).isActive,
+    // },
     {
       icon: "Brain",
       label: "Memorizar",

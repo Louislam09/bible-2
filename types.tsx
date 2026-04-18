@@ -63,6 +63,7 @@ export enum Screens {
   AIBibleGuide = "ai-bible-guide",
   Tutorials = "tutorials",
   Highlighted = "highlighted",
+  ChapterQuizHistory = "chapterQuizHistory",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -103,6 +104,7 @@ export const ScreensName: TScreensName = {
   [Screens.AIBibleGuide]: "Guía Bíblica IA",
   [Screens.Tutorials]: "Tutoriales",
   [Screens.Highlighted]: "Destacados",
+  [Screens.ChapterQuizHistory]: "Mis Quiz",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };

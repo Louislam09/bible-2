@@ -42,6 +42,14 @@ export const chapterQuizStateHelpers = {
       [chapterKey]: questions,
     }));
   },
+  clearPrefetchedChapter(chapterKey: string) {
+    chapterQuizState$.prefetchedQuestionsByChapter.set((prev) => {
+      if (!prev[chapterKey]) return prev;
+      const next = { ...prev };
+      delete next[chapterKey];
+      return next;
+    });
+  },
   markChapterCompleted(chapterKey: string, score: number, total: number) {
     const nextValue = {
       score,

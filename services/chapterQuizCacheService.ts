@@ -78,6 +78,25 @@ export const chapterQuizCacheService = {
     }
   },
 
+  async upsertLocalChapterQuestionsOnly({
+    key,
+    book,
+    chapter,
+    questions,
+  }: {
+    key: string;
+    book: string;
+    chapter: number;
+    questions: Question[];
+  }): Promise<void> {
+    await chapterQuizLocalDbService.upsertCachedQuestions({
+      chapterKey: key,
+      book,
+      chapter,
+      questions,
+    });
+  },
+
   async upsertChapterQuestions({
     key,
     book,
@@ -93,12 +112,7 @@ export const chapterQuizCacheService = {
     aiProvider: string;
     model: string;
   }): Promise<void> {
-    await chapterQuizLocalDbService.upsertCachedQuestions({
-      chapterKey: key,
-      book,
-      chapter,
-      questions,
-    });
+    await this.upsertLocalChapterQuestionsOnly({ key, book, chapter, questions });
 
     const payload: Record<string, string | number> = {
       key,

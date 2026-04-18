@@ -1,7 +1,7 @@
 import { storedData$ } from "@/context/LocalstoreContext";
 import { chapterQuizCacheService } from "@/services/chapterQuizCacheService";
 import { aiManager } from "@/services/ai/aiManager";
-import { chapterQuizState$ } from "@/state/chapterQuizState";
+import { chapterQuizState$, chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { Question } from "@/types";
 import { shuffleArray } from "@/utils/shuffleOptions";
 import { use$ } from "@legendapp/state/react";
@@ -204,6 +204,11 @@ const inFlightByChapterKey = new Map<
   Promise<{ chapterKey: string; questions: Question[] }>
 >();
 
+const localRegenInFlightByChapterKey = new Map<
+  string,
+  Promise<{ chapterKey: string; questions: Question[] }>
+>();
+
 // ---------------------------------------------------------------------------
 // Hook
 // ---------------------------------------------------------------------------
@@ -331,5 +336,90 @@ export const useChapterQuizAI = () => {
     [],
   );
 
-  return { loading, error, getQuestionsForChapter };
+  const regenerateChapterQuestionsLocalOnly = useCallback(
+    async ({
+      book,
+      chapter,
+      requestedCount = 10,
+      versesText = "",
+    }: {
+      book: string;
+      chapter: number;
+      requestedCount?: number;
+      versesText?: string;
+    }) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const chapterKey = chapterQuizCacheService.buildChapterKey(book, chapter);
+        chapterQuizStateHelpers.clearPrefetchedChapter(chapterKey);
+
+        let inFlight = localRegenInFlightByChapterKey.get(chapterKey);
+        if (!inFlight) {
+          inFlight = (async () => {
+            try {
+              const prompt = buildPrompt(book, chapter, MAX_CHAPTER_QUESTIONS, versesText);
+
+              const { text: rawText } = await aiManager.chat(
+                [{ role: "user", content: prompt }],
+                { maxTokens: MAX_OUTPUT_TOKENS, jsonMode: true },
+              );
+
+              const generatedQuestions = parseQuestions(rawText, MAX_CHAPTER_QUESTIONS);
+              if (generatedQuestions.length === 0) {
+                throw new Error("No se pudieron generar suficientes preguntas");
+              }
+
+              await chapterQuizCacheService.upsertLocalChapterQuestionsOnly({
+                key: chapterKey,
+                book,
+                chapter,
+                questions: generatedQuestions,
+              });
+
+              return { chapterKey, questions: generatedQuestions };
+            } finally {
+              localRegenInFlightByChapterKey.delete(chapterKey);
+            }
+          })();
+          localRegenInFlightByChapterKey.set(chapterKey, inFlight);
+        }
+
+        const { questions: generatedQuestions } = await inFlight;
+
+        if (generatedQuestions.length < requestedCount) {
+          throw new Error("No se pudieron generar suficientes preguntas");
+        }
+
+        return {
+          chapterKey,
+          questions: shuffleArray(generatedQuestions.slice(0, requestedCount)),
+          source: "localRegen" as const,
+        };
+      } catch (err: unknown) {
+        console.error("[ChapterQuizAI] local regen", err);
+        const anyErr = err as Record<string, unknown>;
+
+        if (anyErr?._noProviders) {
+          setError("No hay proveedores de IA disponibles.");
+        } else if (anyErr?._allProvidersFailed) {
+          const cooldownInfo = anyErr._cooldownInfo as string | undefined;
+          setError(
+            cooldownInfo
+              ? `Todos los proveedores alcanzaron su límite. ${cooldownInfo}.`
+              : "Todos los proveedores fallaron. Reintenta en unos minutos.",
+          );
+        } else {
+          setError("No se pudo regenerar el quiz en este dispositivo.");
+        }
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
+  return { loading, error, getQuestionsForChapter, regenerateChapterQuestionsLocalOnly };
 };

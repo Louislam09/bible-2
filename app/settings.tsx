@@ -28,7 +28,7 @@ import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { settingState$ } from "@/state/settingState";
-import { EThemes, RootStackScreenProps, TTheme } from "@/types";
+import { EThemes, RootStackScreenProps, Screens, TTheme } from "@/types";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -401,6 +401,13 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           action: rateApp,
           extraText: "Valora nuestra aplicación en la tienda",
           color: "gold",
+        },
+        {
+          label: "Mis Quiz",
+          iconName: "ListChecks",
+          action: () => router.push(`/${Screens.ChapterQuizHistory}`),
+          extraText: "Historial, repaso y regenerar quiz solo en este dispositivo",
+          color: theme.colors.notification,
         },
       ],
     },
