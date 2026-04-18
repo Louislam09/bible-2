@@ -1,29 +1,33 @@
 /**
- * Gemini provider — gemini-2.5-flash-lite
+ * Gemini provider — gemini-3-flash-preview (Gemini 3 Flash)
  *
- * Key priority:
- *   1. EXPO_PUBLIC_GEMINI_API_KEY  (app-level key, set in .env — never exposed to users)
- *   2. _userKey                    (advanced override stored in storedData$.googleAIKey)
+ * Key priority (matches useGoogleAI.ts):
+ *   1. _userKey — storedData$.googleAIKey, set via aiManager.setGeminiKey() from settings
+ *   2. EXPO_PUBLIC_GEMINI_API_KEY — .env fallback when the user has not saved a key
  *
- * Free tier: ~20 req/day — https://aistudio.google.com/app/apikey
+ * User key wins so a misconfigured or disabled-project env key does not override a
+ * working AI Studio key the user already configured in the app.
+ *
+ * Free tier quotas: https://aistudio.google.com/app/apikey
  */
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { GEMINI_MODEL } from "@/constants/geminiModel";
 import { AIProvider, ChatMessage, ChatOptions, ONE_DAY_MS, ProviderError } from "../types";
 
-/** Optional user-provided override (advanced). Set via aiManager.setGeminiKey(). */
+/** User key from settings (same source as useGoogleAI). Set via aiManager.setGeminiKey(). */
 let _userKey = "";
 
-/** Returns the active key: app env key takes priority, then user override. */
-const getActiveKey = (): string =>
-  process.env.EXPO_PUBLIC_GEMINI_API_KEY || _userKey;
+const getActiveKey = (): string => {
+  const user = _userKey.trim();
+  if (user) return user;
+  return process.env.EXPO_PUBLIC_GEMINI_API_KEY ?? "";
+};
 
 /**
- * Called by aiManager when storedData$.googleAIKey changes.
- * Only used when no app-level env key is configured.
+ * Called when storedData$.googleAIKey changes (e.g. ai-providers screen, quiz hooks).
  */
 export function setGeminiApiKey(key: string): void {
-  _userKey = key;
+  _userKey = key ?? "";
 }
 
 type GeminiHistory = Array<{
@@ -67,10 +71,16 @@ function mapGeminiError(err: unknown): ProviderError {
     msg.includes("per_day");
   const isRate =
     msg.includes("429") || msg.includes("RESOURCE_EXHAUSTED") || msg.includes("quota");
+  const is403 =
+    msg.includes("[403") ||
+    msg.includes(" 403 ") ||
+    msg.includes("blocked") ||
+    msg.includes("PERMISSION_DENIED");
   const retryMs = isDaily ? ONE_DAY_MS : isRate ? 60_000 : 0;
+  const httpStatus = isRate ? 429 : is403 ? 403 : 500;
   return new ProviderError(
     "gemini",
-    isRate ? 429 : 500,
+    httpStatus,
     isDaily,
     retryMs,
     `[gemini] ${msg.slice(0, 300)}`,
@@ -80,7 +90,7 @@ function mapGeminiError(err: unknown): ProviderError {
 export const geminiProvider: AIProvider = {
   id: "gemini",
   name: "Gemini",
-
+  modelName: GEMINI_MODEL,
   isAvailable: () => !!getActiveKey(),
 
   async chat(messages: ChatMessage[], options: ChatOptions = {}): Promise<string> {

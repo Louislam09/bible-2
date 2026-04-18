@@ -135,6 +135,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       bundleIdentifier: getUniqueIdentifier(),
       infoPlist: {
         UIBackgroundModes: ["location", "fetch", "remote-notification"],
+        ITSAppUsesNonExemptEncryption: false,
       },
     },
     android: {

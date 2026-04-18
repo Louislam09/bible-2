@@ -49,9 +49,9 @@ const PROVIDER_META: Record<
   },
   cerebras: {
     model: CEREBRAS_MODEL,
-    quota: "Límites generosos",
+    quota: "14 400 req/día gratis · 30 RPM",
     description:
-      "Inferencia ultra-rápida en chips propios. Llama 3.3 70B. " +
+      "Inferencia ultra-rápida en chips propios. Qwen-3 235B. " +
       "Clave incluida en la app.",
     url: "https://cloud.cerebras.ai",
     urlLabel: "cloud.cerebras.ai",

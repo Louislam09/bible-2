@@ -30,6 +30,7 @@ export class ProviderError extends Error {
 export interface AIProvider {
   readonly id: string;
   readonly name: string;
+  readonly modelName: string;
   /** Non-streaming completion. Returns the full response text. */
   chat(messages: ChatMessage[], options?: ChatOptions): Promise<string>;
   /** Streaming completion. Calls onChunk for each token. */

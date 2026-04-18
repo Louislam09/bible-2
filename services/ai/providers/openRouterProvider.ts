@@ -21,9 +21,24 @@ const EXTRA_HEADERS = {
 
 const getApiKey = () => process.env.EXPO_PUBLIC_OPENROUTER_API_KEY ?? "";
 
+/**
+ * Sanitize options for OpenRouter free-tier:
+ * - Strip jsonMode: many free models (e.g. gemma-3-4b-it) don't support
+ *   response_format JSON mode and return a 400.
+ * - Cap maxTokens at 4096: requesting more than the routed model's output
+ *   limit causes a silent empty response (HTTP 200 with no content).
+ */
+const OPENROUTER_MAX_TOKENS = 4096;
+const safeOptions = (options?: ChatOptions): ChatOptions => ({
+  ...options,
+  jsonMode: false,
+  maxTokens: Math.min(options?.maxTokens ?? OPENROUTER_MAX_TOKENS, OPENROUTER_MAX_TOKENS),
+});
+
 export const openRouterProvider: AIProvider = {
   id: "openrouter",
   name: "OpenRouter",
+  modelName: OPENROUTER_MODEL,
   isAvailable: () => !!getApiKey(),
   chat: (messages: ChatMessage[], options?: ChatOptions) =>
     openaiCompatChat(
@@ -32,7 +47,7 @@ export const openRouterProvider: AIProvider = {
       getApiKey(),
       OPENROUTER_MODEL,
       messages,
-      options ?? {},
+      safeOptions(options),
       EXTRA_HEADERS,
     ),
   stream: (
@@ -47,7 +62,7 @@ export const openRouterProvider: AIProvider = {
       OPENROUTER_MODEL,
       messages,
       onChunk,
-      options ?? {},
+      safeOptions(options),
       EXTRA_HEADERS,
     ),
 };

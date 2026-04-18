@@ -1,12 +1,18 @@
 /**
  * AIManager — singleton that manages multiple AI providers with
- * automatic fallback and per-provider cooldowns.
+ * round-robin rotation, automatic fallback and per-provider cooldowns.
  *
- * Provider priority (best free tier first):
- *   1. Groq        — 1 000 req/day  (app key via EXPO_PUBLIC_GROQ_API_KEY)
- *   2. Cerebras    — generous limits (app key via EXPO_PUBLIC_CEREBRA_API_KEY)
- *   3. OpenRouter  — 200 req/day    (app key via EXPO_PUBLIC_OPENROUTER_API_KEY)
- *   4. Gemini      — 20 req/day     (user key stored in storedData$.googleAIKey)
+ * Rotation strategy:
+ *   Each request starts from the next provider in the list (round-robin).
+ *   If that provider fails, it falls back to the following ones in order.
+ *   Providers on cooldown (429 rate-limit) are skipped entirely.
+ *   This distributes the daily quota evenly across all providers.
+ *
+ * Providers (app keys — users configure nothing):
+ *   1. Groq        — 1 000 req/day  (EXPO_PUBLIC_GROQ_API_KEY)
+ *   2. Cerebras    — generous limits (EXPO_PUBLIC_CEREBRA_API_KEY)
+ *   3. OpenRouter  — 200 req/day    (EXPO_PUBLIC_OPENROUTER_API_KEY)
+ *   4. Gemini      — 20 req/day     (EXPO_PUBLIC_GEMINI_API_KEY)
  *
  * Adding a new provider: create a file in services/ai/providers/, then
  * add a single line to the `providers` array at the bottom of this file.
@@ -29,6 +35,8 @@ export interface ProviderStatus {
 class AIManager {
   private readonly providers: AIProvider[];
   private readonly cooldowns = new Map<string, number>();
+  /** Index of the provider that will start the next request (round-robin). */
+  private currentIndex = 0;
 
   constructor(providers: AIProvider[]) {
     this.providers = providers;
@@ -73,10 +81,34 @@ class AIManager {
   // Provider availability
   // ---------------------------------------------------------------------------
 
-  private getAvailableProviders(): AIProvider[] {
-    return this.providers.filter(
-      (p) => p.isAvailable() && !this.isOnCooldown(p.id),
+  /**
+   * Returns available providers starting from currentIndex (round-robin),
+   * then advances the index so the next request starts from the following one.
+   * Providers on cooldown or with no key are skipped.
+   */
+  private getProvidersForRequest(): AIProvider[] {
+    const n = this.providers.length;
+    const startIndex = this.currentIndex;
+    this.currentIndex = (this.currentIndex + 1) % n;
+
+    const rotated: AIProvider[] = [];
+    for (let i = 0; i < n; i++) {
+      rotated.push(this.providers[(startIndex + i) % n]!);
+    }
+
+    const available = rotated.filter((p) => p.isAvailable() && !this.isOnCooldown(p.id));
+
+    const nextProvider = this.providers[this.currentIndex];
+    const nextAvailable = this.providers
+      .slice(this.currentIndex)
+      .concat(this.providers.slice(0, this.currentIndex))
+      .find((p) => p.isAvailable() && !this.isOnCooldown(p.id));
+
+    console.log(
+      `[AIManager] round-robin start=${available[0]?.id ?? "none"} | model=${available[0]?.modelName ?? "none"} | queue=[${available.map((p) => p.id).join(" → ")}] | next_request_start=${nextProvider?.id ?? "?"}${nextAvailable && nextAvailable.id !== nextProvider?.id ? ` (skip to ${nextAvailable.id})` : ""}`,
     );
+
+    return available;
   }
 
   /** Returns true when at least one provider is configured and not on cooldown. */
@@ -105,13 +137,13 @@ class AIManager {
    * the next provider.
    */
   async chat(messages: ChatMessage[], options?: ChatOptions): Promise<string> {
-    const available = this.getAvailableProviders();
+    const available = this.getProvidersForRequest();
     const failures: string[] = [];
 
     for (const provider of available) {
       try {
         const result = await provider.chat(messages, options);
-        console.log(`[AIManager] chat provider=${provider.id} ✓`);
+        console.log(`[AIManager] ✓ used=${provider.id}`);
         return result;
       } catch (err) {
         this.handleProviderError(provider.id, err);
@@ -134,13 +166,13 @@ class AIManager {
     onChunk: (text: string) => void,
     options?: ChatOptions,
   ): Promise<void> {
-    const available = this.getAvailableProviders();
+    const available = this.getProvidersForRequest();
     const failures: string[] = [];
 
     for (const provider of available) {
       try {
         await provider.stream(messages, onChunk, options);
-        console.log(`[AIManager] stream provider=${provider.id} ✓`);
+        console.log(`[AIManager] ✓ used=${provider.id}`);
         return;
       } catch (err) {
         this.handleProviderError(provider.id, err);
@@ -191,8 +223,8 @@ class AIManager {
 // To add a new provider: create the file, then add it to this array.
 // ---------------------------------------------------------------------------
 export const aiManager = new AIManager([
-  groqProvider,
-  cerebrasProvider,
-  openRouterProvider,
+  // groqProvider,
+  // cerebrasProvider,
+  // openRouterProvider,
   geminiProvider,
 ]);

@@ -13,6 +13,7 @@ const getApiKey = () => process.env.EXPO_PUBLIC_GROQ_API_KEY ?? "";
 export const groqProvider: AIProvider = {
   id: "groq",
   name: "Groq",
+  modelName: GROQ_MODEL,
   isAvailable: () => !!getApiKey(),
   chat: (messages: ChatMessage[], options?: ChatOptions) =>
     openaiCompatChat(

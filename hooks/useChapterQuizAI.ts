@@ -8,7 +8,7 @@ import { use$ } from "@legendapp/state/react";
 import { useCallback, useEffect, useState } from "react";
 
 const MAX_CHAPTER_QUESTIONS = 20;
-const MAX_OUTPUT_TOKENS = 2500;
+const MAX_OUTPUT_TOKENS = 6000;
 /** Chapters with fewer than this many verses include the full text in the prompt. */
 const VERSE_TEXT_THRESHOLD = 40;
 
@@ -35,37 +35,72 @@ const buildPrompt = (
     ? `Texto del capítulo (Reina Valera 1960):\n${lines.map((l, i) => `${i + 1}. ${l}`).join("\n")}`
     : `Capítulo: ${book} ${chapter}\nBasa las preguntas en tu conocimiento de ese capítulo en la Reina Valera 1960.`;
 
-  return `Eres un generador de cuestionarios bíblicos en español.
-Genera exactamente ${maxQuestions} preguntas de opción múltiple sobre ${book} ${chapter}.
-Usa siempre la traducción Reina Valera 1960 (RV60).
+  return `Eres un generador de cuestionarios bíblicos. Genera EXACTAMENTE ${maxQuestions} preguntas de opción múltiple en español sobre ${book} ${chapter} (Reina Valera 1960).
 
 ${chapterSection}
 
-Formato JSON obligatorio:
+Responde SOLO con JSON válido, sin markdown ni texto adicional. Estructura requerida:
 {
   "questions": [
     {
-      "question": "texto",
-      "options": ["A", "B", "C", "D"],
-      "correct": "A",
-      "reference": "${book} ${chapter}:1",
-      "explanation": "breve explicación",
-      "difficulty": "easy|medium|hard"
+      "question": "<pregunta en español>",
+      "options": ["<opción 1>", "<opción 2>", "<opción 3>", "<opción 4>"],
+      "correct": "<texto exacto de la opción correcta>",
+      "reference": "${book} ${chapter}:<verso>",
+      "explanation": "<explicación breve>",
+      "difficulty": "easy"
     }
   ]
 }
 
 Reglas:
-- Usa español.
-- 4 opciones por pregunta.
-- "correct" debe coincidir exactamente con una opción.
-- Las preguntas deben ser fieles al contenido real de ese capítulo según la Reina Valera 1960.
-- Responde SOLO con JSON válido (sin markdown).`;
+- El array "questions" debe tener EXACTAMENTE ${maxQuestions} elementos.
+- "options" es un array de 4 strings cortos, SIN letras A/B/C/D como prefijos.
+- "correct" es el texto EXACTO de una de las 4 opciones.
+- difficulty puede ser "easy", "medium" o "hard".
+- Cierra correctamente todos los arrays [] y objetos {}.`;
 };
 
 // ---------------------------------------------------------------------------
 // Parsing helpers
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// JSON repair: fixes the most common model mistake where the "options" array
+// is never closed because the model writes the next key inside it:
+//   "options": ["A. text", "correct": "A"  ← missing ] before "correct"
+// Strategy: find each options array that has un-closed bracket and close it.
+// ---------------------------------------------------------------------------
+const repairJson = (text: string): string => {
+  // Close unclosed "options" arrays: replace patterns like
+  // ["item1","item2",...,"correct": with ["item1","item2"...],"correct":
+  // We also handle truncated responses by closing open structures at the end.
+  let repaired = text;
+
+  // Fix: "options": ["opt1", "opt2", ... <missing ]> \n"correct":
+  repaired = repaired.replace(
+    /("options"\s*:\s*\[)((?:"[^"]*"\s*,?\s*)+?)(\s*"correct"\s*:)/g,
+    (_match, open, items, next) => {
+      const trimmed = items.trimEnd().replace(/,\s*$/, "");
+      return `${open}${trimmed}]${next.startsWith(",") ? "" : ","}${next}`;
+    },
+  );
+
+  // Try to close any truncated JSON by adding missing brackets/braces at the end
+  const opens = [...repaired].reduce(
+    (acc, ch) => {
+      if (ch === "{") return { ...acc, braces: acc.braces + 1 };
+      if (ch === "}") return { ...acc, braces: Math.max(0, acc.braces - 1) };
+      if (ch === "[") return { ...acc, brackets: acc.brackets + 1 };
+      if (ch === "]") return { ...acc, brackets: Math.max(0, acc.brackets - 1) };
+      return acc;
+    },
+    { braces: 0, brackets: 0 },
+  );
+
+  repaired += "]".repeat(opens.brackets) + "}".repeat(opens.braces);
+  return repaired;
+};
 
 const cleanJson = (text: string) =>
   text
@@ -113,24 +148,45 @@ const validateQuestion = (item: unknown): Question | null => {
   };
 };
 
+const tryParseQuestions = (text: string): unknown[] => {
+  try {
+    const parsed = JSON.parse(text);
+    if (Array.isArray(parsed?.questions)) return parsed.questions;
+    if (Array.isArray(parsed)) return parsed;
+  } catch {
+    // not valid JSON
+  }
+  return [];
+};
+
 const parseQuestions = (rawText: string, maxQuestions: number): Question[] => {
   const cleaned = cleanJson(rawText);
 
-  let questions: unknown[] = [];
-  try {
-    const parsed = JSON.parse(cleaned);
-    questions = Array.isArray(parsed?.questions) ? parsed.questions : [];
-  } catch {
-    // Try to extract a JSON block if the model added surrounding text
-    const match = cleaned.match(/\{[\s\S]*"questions"[\s\S]*\}/);
+  // Attempt 1: straight parse
+  let questions = tryParseQuestions(cleaned);
+
+  // Attempt 2: repair common model mistakes then parse
+  if (questions.length === 0) {
+    const repaired = repairJson(cleaned);
+    questions = tryParseQuestions(repaired);
+    if (questions.length > 0) {
+      console.log("[parseQuestions] recovered with repairJson");
+    }
+  }
+
+  // Attempt 3: extract the outermost {...} block then repair + parse
+  if (questions.length === 0) {
+    const match = cleaned.match(/\{[\s\S]*"questions"[\s\S]*/);
     if (match) {
-      try {
-        const parsed = JSON.parse(match[0]);
-        questions = Array.isArray(parsed?.questions) ? parsed.questions : [];
-      } catch {
-        /* unparseable */
+      questions = tryParseQuestions(repairJson(match[0]));
+      if (questions.length > 0) {
+        console.log("[parseQuestions] recovered with regex + repairJson");
       }
     }
+  }
+
+  if (questions.length === 0) {
+    console.warn("[parseQuestions] all parse attempts failed. raw[:300]:", cleaned.slice(0, 300));
   }
 
   return questions
@@ -215,7 +271,10 @@ export const useChapterQuizAI = () => {
                 { maxTokens: MAX_OUTPUT_TOKENS, jsonMode: true },
               );
 
+              console.log("[ChapterQuizAI] raw response (first 500):", rawText.slice(0, 500));
+
               const generatedQuestions = parseQuestions(rawText, MAX_CHAPTER_QUESTIONS);
+              console.log("[ChapterQuizAI] parsed questions count:", generatedQuestions.length);
               if (generatedQuestions.length === 0) {
                 throw new Error("No se pudieron generar suficientes preguntas");
               }
