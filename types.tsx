@@ -516,19 +516,27 @@ export enum EBookIndexesAudio {
 }
 
 export enum EThemes {
+  BlackWhite = "#000",
   Blue = "#2a7ac6",
+  Green = "#78b0a4",
+  Purple = "#2032ac",
+  Pink = "#aa2c50",
   Red = "#FF5252",
   Cyan = "#20acb6",
-  Pink = "#aa2c50",
-  Purple = "#2032ac",
   BlueGray = "#8EACBB",
-  Green = "#78b0a4",
   Orange = "#9f463c",
-  BlackWhite = "#000",
   BlueLight = "#3b88bf",
   BlueGreen = "#239db8",
   PinkLight = "#874a69",
 }
+
+export const FEATURED_THEMES: (keyof typeof EThemes)[] = [
+  "BlackWhite",
+  "Blue",
+  "Green",
+  "Purple",
+  "Pink",
+];
 
 export type TSongItem = {
   title: string;

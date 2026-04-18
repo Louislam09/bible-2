@@ -1,5 +1,5 @@
 import { useBibleContext } from "@/context/BibleContext";
-import { EThemes, TTheme } from "@/types";
+import { EThemes, FEATURED_THEMES, TTheme } from "@/types";
 import { FlashList } from "@shopify/flash-list";
 import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
@@ -33,11 +33,16 @@ const SelectThemeList: FC<ISelectThemeList> = ({ selectTheme, theme }) => {
     selectTheme(name);
   };
 
-  const renderItem = ({ item, index }: any) => {
-    const name = Object.keys(EThemes)[index];
+  const featuredThemes = FEATURED_THEMES.map((name) => ({
+    name,
+    color: EThemes[name],
+  }));
+
+  const renderItem = ({ item }: { item: { name: string; color: string } }) => {
+    const { name, color } = item;
     return (
       <TouchableOpacity
-        style={[styles.themeCard, { backgroundColor: item }]}
+        style={[styles.themeCard, { backgroundColor: color }]}
         onPress={() => onItemClick(name)}
       >
         <Text
@@ -60,7 +65,7 @@ const SelectThemeList: FC<ISelectThemeList> = ({ selectTheme, theme }) => {
     <View style={[styles.modalBody, styles.card]}>
       <FlashList
         contentContainerStyle={{ padding: 0 }}
-        data={Object.values(EThemes)}
+        data={featuredThemes}
         renderItem={renderItem}
         numColumns={3}
       />

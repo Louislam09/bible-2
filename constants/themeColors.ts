@@ -5,10 +5,10 @@ let lightBlackAndWhite = {
   colors: {
     primary: "#000000",
     background: "#FFFFFF",
-    surface: "#FFFFFF",
+    surface: "#F4F4F4",
     text: "#000000",
-    secondary: "#652b2b",
-    accent: "#557fbe",
+    secondary: "#B0B0B0",
+    accent: "#3d6dad",
   },
 };
 
@@ -51,11 +51,11 @@ let darkRed = {
 const lightGreen = {
   dark: false,
   colors: {
-    background: "#ebefee",
-    surface: "#ebefee",
-    primary: "#374e49",
-    secondary: "#92b9b2",
-    accent: "#4f877b",
+    background: "#e8efec",
+    surface: "#FFFFFF",
+    primary: "#14221e",
+    secondary: "#6d948a",
+    accent: "#2d6b5e",
   },
 };
 
@@ -73,11 +73,11 @@ const darkGreen = {
 const lightBlue = {
   dark: false,
   colors: {
-    background: "#eff3f6",
-    surface: "#eff3f6",
-    primary: "#2f4f65",
-    secondary: "#85b1d1",
-    accent: "#3b88bf",
+    background: "#e8f0f6",
+    surface: "#FFFFFF",
+    primary: "#0f2433",
+    secondary: "#5c8eb0",
+    accent: "#1e6fa3",
   },
 };
 
@@ -94,11 +94,11 @@ const darkBlue = {
 const lightPurple = {
   dark: false,
   colors: {
-    background: "#e1f6f9",
-    surface: "#e1f6f9",
-    primary: "#156770",
-    secondary: "#719de5",
-    accent: "#2032ac",
+    background: "#d8f0f4",
+    surface: "#FFFFFF",
+    primary: "#062a2e",
+    secondary: "#4a6bb8",
+    accent: "#1a28a0",
   },
 };
 
@@ -171,11 +171,11 @@ const darkCyan = {
 const lightPink = {
   dark: false,
   colors: {
-    background: "#ebf3f9",
-    surface: "#ebf3f9",
-    primary: "#1b4169",
-    secondary: "#da72cc",
-    accent: "#aa2c50",
+    background: "#e1ecf6",
+    surface: "#FFFFFF",
+    primary: "#0f1f33",
+    secondary: "#a85a9a",
+    accent: "#8a1f3d",
   },
 };
 
@@ -323,6 +323,46 @@ const getThemes = (): ThemesObject => {
         colors: mapColors(darkBlackAndWhite),
       },
     },
+    Blue: {
+      LightTheme: {
+        dark: false,
+        colors: mapColors(lightBlue),
+      },
+      DarkTheme: {
+        dark: true,
+        colors: mapColors(darkBlue),
+      },
+    },
+    Green: {
+      LightTheme: {
+        dark: false,
+        colors: mapColors(lightGreen),
+      },
+      DarkTheme: {
+        dark: true,
+        colors: mapColors(darkGreen),
+      },
+    },
+    Purple: {
+      LightTheme: {
+        dark: false,
+        colors: mapColors(lightPurple),
+      },
+      DarkTheme: {
+        dark: true,
+        colors: mapColors(darkPurple),
+      },
+    },
+    Pink: {
+      LightTheme: {
+        dark: false,
+        colors: mapColors(lightPink),
+      },
+      DarkTheme: {
+        dark: true,
+        colors: mapColors(darkPink),
+      },
+    },
     Orange: {
       LightTheme: {
         dark: false,
@@ -353,16 +393,6 @@ const getThemes = (): ThemesObject => {
         colors: mapColors(darkBlueLight),
       },
     },
-    Green: {
-      LightTheme: {
-        dark: false,
-        colors: mapColors(lightGreen),
-      },
-      DarkTheme: {
-        dark: true,
-        colors: mapColors(darkGreen),
-      },
-    },
     Red: {
       LightTheme: {
         dark: false,
@@ -373,16 +403,6 @@ const getThemes = (): ThemesObject => {
         colors: mapColors(darkRed),
       },
     },
-    Purple: {
-      LightTheme: {
-        dark: false,
-        colors: mapColors(lightPurple),
-      },
-      DarkTheme: {
-        dark: true,
-        colors: mapColors(darkPurple),
-      },
-    },
     BlueGreen: {
       LightTheme: {
         dark: false,
@@ -391,16 +411,6 @@ const getThemes = (): ThemesObject => {
       DarkTheme: {
         dark: true,
         colors: mapColors(darkBlueGreen),
-      },
-    },
-    Pink: {
-      LightTheme: {
-        dark: false,
-        colors: mapColors(lightPink),
-      },
-      DarkTheme: {
-        dark: true,
-        colors: mapColors(darkPink),
       },
     },
     PinkLight: {
@@ -421,16 +431,6 @@ const getThemes = (): ThemesObject => {
       DarkTheme: {
         dark: true,
         colors: mapColors(darkBlueGray),
-      },
-    },
-    Blue: {
-      LightTheme: {
-        dark: false,
-        colors: mapColors(lightBlue),
-      },
-      DarkTheme: {
-        dark: true,
-        colors: mapColors(darkBlue),
       },
     },
   };

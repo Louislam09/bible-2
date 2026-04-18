@@ -7,7 +7,7 @@ import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { useMyTheme } from "@/context/ThemeContext";
 import { getFontCss } from "@/hooks/useLoadFonts";
 import { modalState$ } from "@/state/modalState";
-import { EThemes, TFont, TTheme } from "@/types";
+import { EThemes, FEATURED_THEMES, TFont, TTheme } from "@/types";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
@@ -39,9 +39,9 @@ const colorNames: Record<string, string> = {
 const getThemeColors = (themeSchema: string) => {
   const themes = getThemes();
 
-  return Object.entries(EThemes).map(([name, hexColor]) => {
-    const themeName = name as keyof typeof themes;
-    const { DarkTheme, LightTheme } = themes[themeName];
+  return FEATURED_THEMES.map((name) => {
+    const hexColor = EThemes[name];
+    const { DarkTheme, LightTheme } = themes[name];
     const theme = { dark: DarkTheme, light: LightTheme };
     const currentTheme = theme[themeSchema as keyof typeof theme];
 

@@ -1,5 +1,5 @@
 import { useMyTheme } from "@/context/ThemeContext";
-import { EThemes, TTheme } from "@/types";
+import { EThemes, FEATURED_THEMES, TTheme } from "@/types";
 import React, { useCallback, useState } from "react";
 import {
   SafeAreaView,
@@ -42,15 +42,11 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({
   initialColor,
 }) => {
   const getColosTheme = useCallback(() => {
-    return Object.values(EThemes).map((color, index) => {
-      const name = Object.keys(EThemes)[index];
-
-      return {
-        label: colorNames[name],
-        color: color,
-        value: name,
-      };
-    });
+    return FEATURED_THEMES.map((name) => ({
+      label: colorNames[name],
+      color: EThemes[name],
+      value: name,
+    }));
   }, []);
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
