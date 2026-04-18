@@ -1,0 +1,717 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.sec{margin-bottom:2.5rem}
+.lbl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;padding:0 2px}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:10px}
+.ls{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg)}
+.bar{height:3px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden}
+.bf{height:100%;border-radius:99px}
+.pill{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px}
+.n{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.s{font-size:10px;color:var(--color-text-tertiary)}
+</style>
+
+<h2 class="sr-only">Ten more card design variants 21–30 for Bible book quiz progress, in grid and list layouts</h2>
+
+<div style="padding:1rem 0 2rem">
+
+<!-- ══ V21: Pill progress track ══ -->
+<div class="sec">
+<div class="lbl">Variant 21 — Pill progress track</div>
+<div class="g">
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div style="width:30px;height:30px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#534AB7">Gn</div>
+        <div><div class="n">Génesis</div><div class="s">50 capítulos</div></div>
+      </div>
+      <div style="font-size:18px;font-weight:500;color:#534AB7">42%</div>
+    </div>
+    <div style="display:flex;gap:2px;margin-bottom:10px">
+      <div style="flex:42;height:8px;background:#7F77DD;border-radius:99px 0 0 99px"></div>
+      <div style="flex:16;height:8px;background:#CECBF6"></div>
+      <div style="flex:42;height:8px;background:var(--color-background-secondary);border-radius:0 99px 99px 0"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between">
+      <div style="display:flex;gap:8px">
+        <span style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--color-text-tertiary)"><span style="width:6px;height:6px;border-radius:50%;background:#7F77DD;display:inline-block"></span>12 ok</span>
+        <span style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--color-text-tertiary)"><span style="width:6px;height:6px;border-radius:50%;background:#CECBF6;display:inline-block"></span>9 prog</span>
+      </div>
+      <span class="s">hace 2 días</span>
+    </div>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div style="width:30px;height:30px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#085041">Ex</div>
+        <div><div class="n">Éxodo</div><div class="s">40 capítulos</div></div>
+      </div>
+      <div style="font-size:18px;font-weight:500;color:#0F6E56">75%</div>
+    </div>
+    <div style="display:flex;gap:2px;margin-bottom:10px">
+      <div style="flex:75;height:8px;background:#1D9E75;border-radius:99px 0 0 99px"></div>
+      <div style="flex:10;height:8px;background:#9FE1CB"></div>
+      <div style="flex:15;height:8px;background:var(--color-background-secondary);border-radius:0 99px 99px 0"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between">
+      <div style="display:flex;gap:8px">
+        <span style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--color-text-tertiary)"><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;display:inline-block"></span>30 ok</span>
+        <span style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--color-text-tertiary)"><span style="width:6px;height:6px;border-radius:50%;background:#9FE1CB;display:inline-block"></span>4 prog</span>
+      </div>
+      <span class="s">hoy</span>
+    </div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <div style="width:28px;height:28px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#534AB7;flex-shrink:0">Gn</div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="n">Génesis</span><span style="font-size:12px;font-weight:500;color:#534AB7">42%</span></div>
+      <div style="display:flex;gap:1px;height:6px">
+        <div style="flex:42;background:#7F77DD;border-radius:99px 0 0 99px"></div>
+        <div style="flex:16;background:#CECBF6"></div>
+        <div style="flex:42;background:var(--color-background-secondary);border-radius:0 99px 99px 0"></div>
+      </div>
+      <div class="s" style="margin-top:3px">12 ok · 9 prog · 37 intentos</div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <div style="width:28px;height:28px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#085041;flex-shrink:0">Ex</div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="n">Éxodo</span><span style="font-size:12px;font-weight:500;color:#0F6E56">75%</span></div>
+      <div style="display:flex;gap:1px;height:6px">
+        <div style="flex:75;background:#1D9E75;border-radius:99px 0 0 99px"></div>
+        <div style="flex:10;background:#9FE1CB"></div>
+        <div style="flex:15;background:var(--color-background-secondary);border-radius:0 99px 99px 0"></div>
+      </div>
+      <div class="s" style="margin-top:3px">30 ok · 4 prog · 52 intentos</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V22: Score card with grade letter ══ -->
+<div class="sec">
+<div class="lbl">Variant 22 — Grade letter</div>
+<div class="g">
+  <div class="card" style="padding:14px 16px;display:flex;gap:14px;align-items:flex-start">
+    <div style="width:48px;height:56px;border-radius:var(--border-radius-md);background:#FAEEDA;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+      <div style="font-size:24px;font-weight:500;color:#854F0B;line-height:1">C</div>
+      <div style="font-size:9px;color:#BA7517">42%</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div class="n" style="margin-bottom:1px">Génesis</div>
+      <div class="s" style="margin-bottom:8px">Gn · 50 capítulos</div>
+      <div class="bar" style="margin-bottom:5px"><div class="bf" style="width:42%;background:#EF9F27"></div></div>
+      <div style="display:flex;gap:6px">
+        <span class="pill" style="background:#FAEEDA;color:#854F0B">12 ok</span>
+        <span class="pill" style="background:#F1EFE8;color:#5F5E5A">9 prog</span>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="padding:14px 16px;display:flex;gap:14px;align-items:flex-start">
+    <div style="width:48px;height:56px;border-radius:var(--border-radius-md);background:#E1F5EE;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+      <div style="font-size:24px;font-weight:500;color:#085041;line-height:1">B</div>
+      <div style="font-size:9px;color:#0F6E56">75%</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div class="n" style="margin-bottom:1px">Éxodo</div>
+      <div class="s" style="margin-bottom:8px">Ex · 40 capítulos</div>
+      <div class="bar" style="margin-bottom:5px"><div class="bf" style="width:75%;background:#1D9E75"></div></div>
+      <div style="display:flex;gap:6px">
+        <span class="pill" style="background:#E1F5EE;color:#085041">30 ok</span>
+        <span class="pill" style="background:#F1EFE8;color:#5F5E5A">4 prog</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:10px">
+    <div style="width:36px;height:36px;border-radius:var(--border-radius-md);background:#FAEEDA;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+      <div style="font-size:18px;font-weight:500;color:#854F0B;line-height:1">C</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Génesis</span><span class="s">12 ok · 9 prog · Gn 12</span></div>
+      <div class="bar"><div class="bf" style="width:42%;background:#EF9F27"></div></div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:10px">
+    <div style="width:36px;height:36px;border-radius:var(--border-radius-md);background:#E1F5EE;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+      <div style="font-size:18px;font-weight:500;color:#085041;line-height:1">B</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Éxodo</span><span class="s">30 ok · 4 prog · Ex 30</span></div>
+      <div class="bar"><div class="bf" style="width:75%;background:#1D9E75"></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V23: Inline SVG arc ══ -->
+<div class="sec">
+<div class="lbl">Variant 23 — Half-arc gauge</div>
+<div class="g">
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px">
+      <span class="pill" style="background:#FAECE7;color:#712B13">Gn</span>
+      <span class="n">Génesis</span>
+      <span class="s" style="margin-left:auto">50 cap.</span>
+    </div>
+    <svg width="100%" height="60" viewBox="0 0 160 70" style="display:block;margin-bottom:8px">
+      <path d="M16,62 A68,68 0 0,1 144,62" fill="none" stroke="#F1EFE8" stroke-width="10" stroke-linecap="round"/>
+      <path d="M16,62 A68,68 0 0,1 144,62" fill="none" stroke="#F0997B" stroke-width="10" stroke-linecap="round" stroke-dasharray="107 214" stroke-dashoffset="0"/>
+      <text x="80" y="58" text-anchor="middle" font-size="20" font-weight="500" fill="#993C1D">42%</text>
+    </svg>
+    <div style="display:flex;justify-content:space-between" class="s"><span>12 ok · 9 prog</span><span>hace 2 días</span></div>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px">
+      <span class="pill" style="background:#E1F5EE;color:#085041">Ex</span>
+      <span class="n">Éxodo</span>
+      <span class="s" style="margin-left:auto">40 cap.</span>
+    </div>
+    <svg width="100%" height="60" viewBox="0 0 160 70" style="display:block;margin-bottom:8px">
+      <path d="M16,62 A68,68 0 0,1 144,62" fill="none" stroke="#E1F5EE" stroke-width="10" stroke-linecap="round"/>
+      <path d="M16,62 A68,68 0 0,1 144,62" fill="none" stroke="#1D9E75" stroke-width="10" stroke-linecap="round" stroke-dasharray="160 214" stroke-dashoffset="0"/>
+      <text x="80" y="58" text-anchor="middle" font-size="20" font-weight="500" fill="#0F6E56">75%</text>
+    </svg>
+    <div style="display:flex;justify-content:space-between" class="s"><span>30 ok · 4 prog</span><span>hoy</span></div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <svg width="44" height="28" viewBox="0 0 88 44" style="flex-shrink:0">
+      <path d="M8,38 A36,36 0 0,1 80,38" fill="none" stroke="#F1EFE8" stroke-width="8" stroke-linecap="round"/>
+      <path d="M8,38 A36,36 0 0,1 80,38" fill="none" stroke="#F0997B" stroke-width="8" stroke-linecap="round" stroke-dasharray="47 113" stroke-dashoffset="0"/>
+      <text x="44" y="35" text-anchor="middle" font-size="13" font-weight="500" fill="#993C1D">42%</text>
+    </svg>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span class="n">Génesis</span><span class="s">Gn 12 · hace 2 días</span></div>
+      <div class="s">50 cap · 12 ok · 9 prog · 37 intentos</div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <svg width="44" height="28" viewBox="0 0 88 44" style="flex-shrink:0">
+      <path d="M8,38 A36,36 0 0,1 80,38" fill="none" stroke="#E1F5EE" stroke-width="8" stroke-linecap="round"/>
+      <path d="M8,38 A36,36 0 0,1 80,38" fill="none" stroke="#1D9E75" stroke-width="8" stroke-linecap="round" stroke-dasharray="85 113" stroke-dashoffset="0"/>
+      <text x="44" y="35" text-anchor="middle" font-size="13" font-weight="500" fill="#0F6E56">75%</text>
+    </svg>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span class="n">Éxodo</span><span class="s">Ex 30 · hoy</span></div>
+      <div class="s">40 cap · 30 ok · 4 prog · 52 intentos</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V24: Ticker / scoreboard ══ -->
+<div class="sec">
+<div class="lbl">Variant 24 — Scoreboard ticker</div>
+<div class="g">
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="background:#2C2C2A;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;font-weight:500;color:#D3D1C7;background:#444441;padding:2px 8px;border-radius:99px">Gn</span>
+        <span style="font-size:13px;font-weight:500;color:#F1EFE8">Génesis</span>
+      </div>
+      <span style="font-size:22px;font-weight:500;color:#EF9F27;line-height:1">42</span>
+    </div>
+    <div style="padding:10px 14px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+        <div style="text-align:center;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">12</div>
+          <div class="s">ok</div>
+        </div>
+        <div style="text-align:center;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">9</div>
+          <div class="s">prog</div>
+        </div>
+        <div style="text-align:center;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">37</div>
+          <div class="s">int.</div>
+        </div>
+      </div>
+      <div class="bar"><div class="bf" style="width:42%;background:#EF9F27"></div></div>
+    </div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="background:#2C2C2A;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;font-weight:500;color:#D3D1C7;background:#444441;padding:2px 8px;border-radius:99px">Ex</span>
+        <span style="font-size:13px;font-weight:500;color:#F1EFE8">Éxodo</span>
+      </div>
+      <span style="font-size:22px;font-weight:500;color:#5DCAA5;line-height:1">75</span>
+    </div>
+    <div style="padding:10px 14px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">
+        <div style="text-align:center;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">30</div>
+          <div class="s">ok</div>
+        </div>
+        <div style="text-align:center;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">4</div>
+          <div class="s">prog</div>
+        </div>
+        <div style="text-align:center;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">52</div>
+          <div class="s">int.</div>
+        </div>
+      </div>
+      <div class="bar"><div class="bf" style="width:75%;background:#1D9E75"></div></div>
+    </div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="display:flex;overflow:hidden">
+    <div style="background:#2C2C2A;width:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border-radius:var(--border-radius-lg) 0 0 var(--border-radius-lg)">
+      <div style="font-size:20px;font-weight:500;color:#EF9F27;line-height:1">42</div>
+      <div style="font-size:9px;color:#888780">pts</div>
+    </div>
+    <div style="flex:1;padding:10px 14px;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Génesis</span><span class="s">Gn · 50 cap</span></div>
+      <div class="bar" style="margin-bottom:4px"><div class="bf" style="width:42%;background:#EF9F27"></div></div>
+      <div class="s">12 ok · 9 prog · 37 intentos · hace 2 días</div>
+    </div>
+  </div>
+  <div class="card" style="display:flex;overflow:hidden">
+    <div style="background:#2C2C2A;width:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border-radius:var(--border-radius-lg) 0 0 var(--border-radius-lg)">
+      <div style="font-size:20px;font-weight:500;color:#5DCAA5;line-height:1">75</div>
+      <div style="font-size:9px;color:#888780">pts</div>
+    </div>
+    <div style="flex:1;padding:10px 14px;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Éxodo</span><span class="s">Ex · 40 cap</span></div>
+      <div class="bar" style="margin-bottom:4px"><div class="bf" style="width:75%;background:#1D9E75"></div></div>
+      <div class="s">30 ok · 4 prog · 52 intentos · hoy</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V25: Two-tone diagonal split ══ -->
+<div class="sec">
+<div class="lbl">Variant 25 — Diagonal split</div>
+<div class="g">
+  <div class="card" style="overflow:hidden;padding:0">
+    <div style="display:flex;min-height:80px">
+      <div style="flex:42;background:#EEEDFE;padding:14px 12px;display:flex;flex-direction:column;justify-content:space-between;clip-path:polygon(0 0,100% 0,88% 100%,0 100%)">
+        <div style="font-size:10px;font-weight:500;color:#534AB7">aprobado</div>
+        <div style="font-size:26px;font-weight:500;color:#3C3489;line-height:1">42<span style="font-size:12px">%</span></div>
+      </div>
+      <div style="flex:58;background:var(--color-background-secondary);padding:14px 12px 14px 20px;display:flex;flex-direction:column;justify-content:space-between">
+        <div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Génesis</div>
+        <div class="s">Gn · 50 cap.</div>
+      </div>
+    </div>
+    <div style="padding:8px 14px 10px;border-top:.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between">
+      <span class="s">12 ok · 9 prog · 37 int.</span>
+      <span class="s">hace 2 días</span>
+    </div>
+  </div>
+  <div class="card" style="overflow:hidden;padding:0">
+    <div style="display:flex;min-height:80px">
+      <div style="flex:75;background:#E1F5EE;padding:14px 12px;display:flex;flex-direction:column;justify-content:space-between;clip-path:polygon(0 0,100% 0,88% 100%,0 100%)">
+        <div style="font-size:10px;font-weight:500;color:#0F6E56">aprobado</div>
+        <div style="font-size:26px;font-weight:500;color:#085041;line-height:1">75<span style="font-size:12px">%</span></div>
+      </div>
+      <div style="flex:25;background:var(--color-background-secondary);padding:14px 12px 14px 20px;display:flex;flex-direction:column;justify-content:space-between">
+        <div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Éxodo</div>
+        <div class="s">Ex · 40 cap.</div>
+      </div>
+    </div>
+    <div style="padding:8px 14px 10px;border-top:.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between">
+      <span class="s">30 ok · 4 prog · 52 int.</span>
+      <span class="s">hoy</span>
+    </div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:0;overflow:hidden">
+    <div style="background:#EEEDFE;padding:8px 14px 8px 12px;border-radius:var(--border-radius-md);margin-right:12px;flex-shrink:0;text-align:center">
+      <div style="font-size:16px;font-weight:500;color:#3C3489;line-height:1">42%</div>
+      <div style="font-size:9px;color:#7F77DD">Gn</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Génesis</span><span class="s">50 cap · hace 2 días</span></div>
+      <div class="bar"><div class="bf" style="width:42%;background:#7F77DD"></div></div>
+      <div class="s" style="margin-top:3px">12 ok · 9 prog · 37 intentos</div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:0;overflow:hidden">
+    <div style="background:#E1F5EE;padding:8px 14px 8px 12px;border-radius:var(--border-radius-md);margin-right:12px;flex-shrink:0;text-align:center">
+      <div style="font-size:16px;font-weight:500;color:#085041;line-height:1">75%</div>
+      <div style="font-size:9px;color:#1D9E75">Ex</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Éxodo</span><span class="s">40 cap · hoy</span></div>
+      <div class="bar"><div class="bf" style="width:75%;background:#1D9E75"></div></div>
+      <div class="s" style="margin-top:3px">30 ok · 4 prog · 52 intentos</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V26: Step ladder ══ -->
+<div class="sec">
+<div class="lbl">Variant 26 — Step ladder</div>
+<div class="g">
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span class="pill" style="background:#FBEAF0;color:#72243E">Gn</span>
+        <span class="n">Génesis</span>
+      </div>
+      <span class="s">50 cap.</span>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:3px;height:40px;margin-bottom:8px">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:9px;color:var(--color-text-tertiary)">ok</div>
+        <div style="width:100%;background:#D4537E;border-radius:3px 3px 0 0" style="height:24px"></div>
+        <div style="width:100%;height:24px;background:#D4537E;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:9px;color:var(--color-text-tertiary)">prog</div>
+        <div style="width:100%;height:16px;background:#ED93B1;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:9px;color:var(--color-text-tertiary)">pend.</div>
+        <div style="width:100%;height:30px;background:var(--color-background-secondary);border-radius:3px 3px 0 0;border:.5px solid var(--color-border-tertiary)"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;border-top:.5px solid var(--color-border-tertiary);padding-top:6px">
+      <div style="display:flex;gap:10px">
+        <span style="font-size:11px;font-weight:500;color:#D4537E">12</span>
+        <span style="font-size:11px;font-weight:500;color:#ED93B1">9</span>
+        <span style="font-size:11px;font-weight:500;color:var(--color-text-tertiary)">29</span>
+      </div>
+      <span class="s">42% · hace 2 días</span>
+    </div>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span class="pill" style="background:#E1F5EE;color:#085041">Ex</span>
+        <span class="n">Éxodo</span>
+      </div>
+      <span class="s">40 cap.</span>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:3px;height:40px;margin-bottom:8px">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:9px;color:var(--color-text-tertiary)">ok</div>
+        <div style="width:100%;height:36px;background:#1D9E75;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:9px;color:var(--color-text-tertiary)">prog</div>
+        <div style="width:100%;height:10px;background:#9FE1CB;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:9px;color:var(--color-text-tertiary)">pend.</div>
+        <div style="width:100%;height:14px;background:var(--color-background-secondary);border-radius:3px 3px 0 0;border:.5px solid var(--color-border-tertiary)"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;border-top:.5px solid var(--color-border-tertiary);padding-top:6px">
+      <div style="display:flex;gap:10px">
+        <span style="font-size:11px;font-weight:500;color:#1D9E75">30</span>
+        <span style="font-size:11px;font-weight:500;color:#9FE1CB">4</span>
+        <span style="font-size:11px;font-weight:500;color:var(--color-text-tertiary)">6</span>
+      </div>
+      <span class="s">75% · hoy</span>
+    </div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <div style="display:flex;align-items:flex-end;gap:2px;height:28px;flex-shrink:0">
+      <div style="width:10px;height:20px;background:#D4537E;border-radius:2px 2px 0 0"></div>
+      <div style="width:10px;height:13px;background:#ED93B1;border-radius:2px 2px 0 0"></div>
+      <div style="width:10px;height:24px;background:var(--color-background-secondary);border-radius:2px 2px 0 0;border:.5px solid var(--color-border-tertiary)"></div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Génesis</span><span style="font-size:12px;font-weight:500;color:#D4537E">42%</span></div>
+      <div class="bar"><div class="bf" style="width:42%;background:#D4537E"></div></div>
+      <div class="s" style="margin-top:3px">12 ok · 9 prog · 29 pend · 37 intentos</div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <div style="display:flex;align-items:flex-end;gap:2px;height:28px;flex-shrink:0">
+      <div style="width:10px;height:26px;background:#1D9E75;border-radius:2px 2px 0 0"></div>
+      <div style="width:10px;height:8px;background:#9FE1CB;border-radius:2px 2px 0 0"></div>
+      <div style="width:10px;height:10px;background:var(--color-background-secondary);border-radius:2px 2px 0 0;border:.5px solid var(--color-border-tertiary)"></div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Éxodo</span><span style="font-size:12px;font-weight:500;color:#0F6E56">75%</span></div>
+      <div class="bar"><div class="bf" style="width:75%;background:#1D9E75"></div></div>
+      <div class="s" style="margin-top:3px">30 ok · 4 prog · 6 pend · 52 intentos</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V27: Floating label bar ══ -->
+<div class="sec">
+<div class="lbl">Variant 27 — Floating label bar</div>
+<div class="g">
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:14px">
+      <span class="pill" style="background:#E6F1FB;color:#0C447C">Gn</span>
+      <span class="n">Génesis</span>
+      <span class="s" style="margin-left:auto">50 capítulos</span>
+    </div>
+    <div style="position:relative;margin-bottom:6px">
+      <div style="height:16px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden">
+        <div style="width:42%;height:100%;background:#85B7EB;border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px">
+          <span style="font-size:10px;font-weight:500;color:#042C53">42%</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:16px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden;margin-bottom:10px">
+      <div style="width:18%;height:100%;background:#B5D4F4;border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px">
+        <span style="font-size:10px;font-weight:500;color:#0C447C">9</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between" class="s"><span>37 intentos · Gn 12</span><span>hace 2 días</span></div>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:14px">
+      <span class="pill" style="background:#EAF3DE;color:#27500A">Ex</span>
+      <span class="n">Éxodo</span>
+      <span class="s" style="margin-left:auto">40 capítulos</span>
+    </div>
+    <div style="height:16px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden;margin-bottom:6px">
+      <div style="width:75%;height:100%;background:#97C459;border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px">
+        <span style="font-size:10px;font-weight:500;color:#173404">75%</span>
+      </div>
+    </div>
+    <div style="height:16px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden;margin-bottom:10px">
+      <div style="width:10%;height:100%;background:#C0DD97;border-radius:99px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between" class="s"><span>52 intentos · Ex 30</span><span>hoy</span></div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <span class="pill" style="background:#E6F1FB;color:#0C447C;white-space:nowrap">Gn</span>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="n">Génesis</span><span class="s">hace 2 días</span></div>
+      <div style="height:14px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden">
+        <div style="width:42%;height:100%;background:#85B7EB;border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px">
+          <span style="font-size:10px;font-weight:500;color:#042C53">42%</span>
+        </div>
+      </div>
+      <div class="s" style="margin-top:3px">12 ok · 9 prog · 37 intentos</div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <span class="pill" style="background:#EAF3DE;color:#27500A;white-space:nowrap">Ex</span>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="n">Éxodo</span><span class="s">hoy</span></div>
+      <div style="height:14px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden">
+        <div style="width:75%;height:100%;background:#97C459;border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px">
+          <span style="font-size:10px;font-weight:500;color:#173404">75%</span>
+        </div>
+      </div>
+      <div class="s" style="margin-top:3px">30 ok · 4 prog · 52 intentos</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V28: Checklist style ══ -->
+<div class="sec">
+<div class="lbl">Variant 28 — Checklist</div>
+<div class="g">
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span class="pill" style="background:#FAECE7;color:#712B13">Gn</span>
+        <span class="n">Génesis</span>
+      </div>
+      <span style="font-size:14px;font-weight:500;color:#D85A30">42%</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:14px;height:14px;border-radius:3px;background:#D85A30;flex-shrink:0;display:flex;align-items:center;justify-content:center"><div style="width:7px;height:5px;border-left:1.5px solid #FAECE7;border-bottom:1.5px solid #FAECE7;transform:rotate(-45deg) translate(1px,-1px)"></div></div>
+        <div style="flex:1;height:3px;background:#F0997B;border-radius:99px"></div>
+        <span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">12 aprobados</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:14px;height:14px;border-radius:3px;background:var(--color-background-secondary);border:.5px solid var(--color-border-secondary);flex-shrink:0"></div>
+        <div style="flex:1;height:3px;background:#FAC775;border-radius:99px"></div>
+        <span style="font-size:11px;color:var(--color-text-secondary)">9 en progreso</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:14px;height:14px;border-radius:3px;background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);flex-shrink:0"></div>
+        <div style="flex:1;height:3px;background:var(--color-background-secondary);border-radius:99px"></div>
+        <span style="font-size:11px;color:var(--color-text-tertiary)">29 sin intentar</span>
+      </div>
+    </div>
+    <div class="s">37 intentos · Gn 12 · hace 2 días</div>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span class="pill" style="background:#E1F5EE;color:#085041">Ex</span>
+        <span class="n">Éxodo</span>
+      </div>
+      <span style="font-size:14px;font-weight:500;color:#0F6E56">75%</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:14px;height:14px;border-radius:3px;background:#1D9E75;flex-shrink:0;display:flex;align-items:center;justify-content:center"><div style="width:7px;height:5px;border-left:1.5px solid #E1F5EE;border-bottom:1.5px solid #E1F5EE;transform:rotate(-45deg) translate(1px,-1px)"></div></div>
+        <div style="flex:1;height:3px;background:#1D9E75;border-radius:99px"></div>
+        <span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">30 aprobados</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:14px;height:14px;border-radius:3px;background:var(--color-background-secondary);border:.5px solid var(--color-border-secondary);flex-shrink:0"></div>
+        <div style="flex:1;height:3px;background:#9FE1CB;border-radius:99px"></div>
+        <span style="font-size:11px;color:var(--color-text-secondary)">4 en progreso</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:14px;height:14px;border-radius:3px;background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);flex-shrink:0"></div>
+        <div style="flex:1;height:3px;background:var(--color-background-secondary);border-radius:99px"></div>
+        <span style="font-size:11px;color:var(--color-text-tertiary)">6 sin intentar</span>
+      </div>
+    </div>
+    <div class="s">52 intentos · Ex 30 · hoy</div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">
+      <div style="width:12px;height:12px;border-radius:2px;background:#D85A30;display:flex;align-items:center;justify-content:center"><div style="width:6px;height:4px;border-left:1.5px solid #FAECE7;border-bottom:1.5px solid #FAECE7;transform:rotate(-45deg) translate(1px,-1px)"></div></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:var(--color-background-secondary);border:.5px solid var(--color-border-secondary)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary)"></div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Génesis</span><span style="font-size:12px;font-weight:500;color:#D85A30">42%</span></div>
+      <div class="bar"><div class="bf" style="width:42%;background:#F0997B"></div></div>
+      <div class="s" style="margin-top:3px">12 ok · 9 prog · 29 pend · 37 int.</div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">
+      <div style="width:12px;height:12px;border-radius:2px;background:#1D9E75;display:flex;align-items:center;justify-content:center"><div style="width:6px;height:4px;border-left:1.5px solid #E1F5EE;border-bottom:1.5px solid #E1F5EE;transform:rotate(-45deg) translate(1px,-1px)"></div></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:var(--color-background-secondary);border:.5px solid var(--color-border-secondary)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary)"></div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="n">Éxodo</span><span style="font-size:12px;font-weight:500;color:#0F6E56">75%</span></div>
+      <div class="bar"><div class="bf" style="width:75%;background:#1D9E75"></div></div>
+      <div class="s" style="margin-top:3px">30 ok · 4 prog · 6 pend · 52 int.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V29: Newspaper / serif headline ══ -->
+<div class="sec">
+<div class="lbl">Variant 29 — Serif headline</div>
+<div class="g">
+  <div class="card" style="padding:14px 16px">
+    <div style="font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.06em;margin-bottom:4px">GÉNESIS · Gn · 50 cap.</div>
+    <div style="font-family:var(--font-serif);font-size:28px;color:var(--color-text-primary);line-height:1;margin-bottom:2px">42%</div>
+    <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:10px;font-style:italic">capítulos aprobados</div>
+    <div style="height:1px;background:var(--color-border-tertiary);margin-bottom:8px"></div>
+    <div style="display:flex;justify-content:space-between" class="s"><span>12 ok · 9 prog · 37 int.</span><span>hace 2 días</span></div>
+    <div class="bar" style="margin-top:8px"><div class="bf" style="width:42%;background:var(--color-text-primary)"></div></div>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div style="font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.06em;margin-bottom:4px">ÉXODO · Ex · 40 cap.</div>
+    <div style="font-family:var(--font-serif);font-size:28px;color:var(--color-text-primary);line-height:1;margin-bottom:2px">75%</div>
+    <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:10px;font-style:italic">capítulos aprobados</div>
+    <div style="height:1px;background:var(--color-border-tertiary);margin-bottom:8px"></div>
+    <div style="display:flex;justify-content:space-between" class="s"><span>30 ok · 4 prog · 52 int.</span><span>hoy</span></div>
+    <div class="bar" style="margin-top:8px"><div class="bf" style="width:75%;background:var(--color-text-primary)"></div></div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:14px">
+    <div style="flex-shrink:0;border-right:.5px solid var(--color-border-tertiary);padding-right:14px;text-align:center">
+      <div style="font-family:var(--font-serif);font-size:22px;color:var(--color-text-primary);line-height:1">42%</div>
+      <div style="font-size:9px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.05em">GÉNESIS</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div class="bar" style="margin-bottom:5px"><div class="bf" style="width:42%;background:var(--color-text-primary)"></div></div>
+      <div class="s">12 ok · 9 prog · 37 intentos · Gn 12 · hace 2 días</div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:14px">
+    <div style="flex-shrink:0;border-right:.5px solid var(--color-border-tertiary);padding-right:14px;text-align:center">
+      <div style="font-family:var(--font-serif);font-size:22px;color:var(--color-text-primary);line-height:1">75%</div>
+      <div style="font-size:9px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.05em">ÉXODO</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div class="bar" style="margin-bottom:5px"><div class="bf" style="width:75%;background:var(--color-text-primary)"></div></div>
+      <div class="s">30 ok · 4 prog · 52 intentos · Ex 30 · hoy</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ V30: Comparison / before-after ══ -->
+<div class="sec">
+<div class="lbl">Variant 30 — Progress vs. remaining</div>
+<div class="g">
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span class="pill" style="background:#EEEDFE;color:#3C3489">Gn</span>
+        <span class="n">Génesis</span>
+      </div>
+      <span class="s">50 cap.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:42fr 58fr;gap:2px;height:36px;border-radius:var(--border-radius-md);overflow:hidden;margin-bottom:8px">
+      <div style="background:#7F77DD;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:11px;font-weight:500;color:#EEEDFE">42%</span>
+      </div>
+      <div style="background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center">
+        <span style="font-size:11px;color:var(--color-text-tertiary)">58% pend.</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between" class="s"><span>12 ok · 9 prog · 37 int.</span><span>hace 2 días</span></div>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span class="pill" style="background:#E1F5EE;color:#085041">Ex</span>
+        <span class="n">Éxodo</span>
+      </div>
+      <span class="s">40 cap.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:75fr 25fr;gap:2px;height:36px;border-radius:var(--border-radius-md);overflow:hidden;margin-bottom:8px">
+      <div style="background:#1D9E75;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:11px;font-weight:500;color:#E1F5EE">75%</span>
+      </div>
+      <div style="background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center">
+        <span style="font-size:11px;color:var(--color-text-tertiary)">25%</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between" class="s"><span>30 ok · 4 prog · 52 int.</span><span>hoy</span></div>
+  </div>
+</div>
+<div class="ls">
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <span class="pill" style="background:#EEEDFE;color:#3C3489;white-space:nowrap">Gn</span>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="n">Génesis</span><span class="s">12 ok · 9 prog · hace 2 días</span></div>
+      <div style="display:grid;grid-template-columns:42fr 58fr;gap:2px;height:20px;border-radius:99px;overflow:hidden">
+        <div style="background:#7F77DD;display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:500;color:#EEEDFE">42%</span></div>
+        <div style="background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;color:var(--color-text-tertiary)">58%</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="padding:10px 14px;display:flex;align-items:center;gap:12px">
+    <span class="pill" style="background:#E1F5EE;color:#085041;white-space:nowrap">Ex</span>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="n">Éxodo</span><span class="s">30 ok · 4 prog · hoy</span></div>
+      <div style="display:grid;grid-template-columns:75fr 25fr;gap:2px;height:20px;border-radius:99px;overflow:hidden">
+        <div style="background:#1D9E75;display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:500;color:#E1F5EE">75%</span></div>
+        <div style="background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;color:var(--color-text-tertiary)">25%</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>

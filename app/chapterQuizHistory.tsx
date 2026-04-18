@@ -1,16 +1,15 @@
 import ChapterQuizBottomSheet from "@/components/ChapterQuizBottomSheet";
+import { PressableScale } from "@/components/animations/pressable-scale";
 import {
   singleScreenHeader,
   type SingleScreenHeaderProps,
 } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import { AnimatedView } from "@/components/quizHistory/AnimatedView";
-import { BookCard } from "@/components/quizHistory/BookCard";
 import {
-  ChapterCell,
-  type ChapterCellState,
-} from "@/components/quizHistory/ChapterCell";
-import { HistoryHeader } from "@/components/quizHistory/HistoryHeader";
+  QuizHistoryBooksWebView,
+  QuizHistoryChaptersWebView,
+} from "@/components/quizHistory/QuizHistoryListWebViews";
 import {
   RADIUS,
   SP,
@@ -40,11 +39,14 @@ import { bibleState$ } from "@/state/bibleState";
 import { chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { modalState$ } from "@/state/modalState";
 import { Screens } from "@/types";
+import type { QuizHistoryBooksLayout } from "@/constants/quizHistoryWebViewHtml";
+import { headerIconSize } from "@/constants/size";
 import { computeChapterQuizMetrics } from "@/utils/quizHistory";
 import { showToast } from "@/utils/showToast";
 import { shuffleArray } from "@/utils/shuffleOptions";
 import { use$ } from "@legendapp/state/react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, {
   Fragment,
@@ -56,7 +58,6 @@ import React, {
 } from "react";
 import {
   BackHandler,
-  FlatList,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -72,6 +73,42 @@ type ViewState =
 
 type BooksFilter = "started" | "all";
 
+const QuizHistoryBooksLayoutHeaderToggle: React.FC<{
+  layout: QuizHistoryBooksLayout;
+  onChange: (next: QuizHistoryBooksLayout) => void;
+  activeColor: string;
+  mutedColor: string;
+}> = ({ layout, onChange, activeColor, mutedColor }) => (
+  <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginRight: 4 }}>
+    <PressableScale
+      onPress={() => {
+        void Haptics.selectionAsync();
+        onChange("list");
+      }}
+    >
+      <Icon
+        name="LayoutList"
+        size={headerIconSize}
+        color={layout === "list" ? activeColor : mutedColor}
+        strokeWidth={layout === "list" ? 2.25 : 1.5}
+      />
+    </PressableScale>
+    <PressableScale
+      onPress={() => {
+        void Haptics.selectionAsync();
+        onChange("grid");
+      }}
+    >
+      <Icon
+        name="LayoutGrid"
+        size={headerIconSize}
+        color={layout === "grid" ? activeColor : mutedColor}
+        strokeWidth={layout === "grid" ? 2.25 : 1.5}
+      />
+    </PressableScale>
+  </View>
+);
+
 const ChapterQuizHistoryScreen = () => {
   const { theme } = useMyTheme();
   const router = useRouter();
@@ -84,6 +121,7 @@ const ChapterQuizHistoryScreen = () => {
   const [viewState, setViewState] = useState<ViewState>({ kind: "books" });
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [booksFilter, setBooksFilter] = useState<BooksFilter>("started");
+  const [booksLayout, setBooksLayout] = useState<QuizHistoryBooksLayout>("list");
   const [reviewAttempt, setReviewAttempt] =
     useState<ChapterQuizAttemptRow | null>(null);
   const [userDownvotedChapterKeys, setUserDownvotedChapterKeys] = useState<
@@ -385,20 +423,38 @@ const ChapterQuizHistoryScreen = () => {
             ? `${reviewAttempt.book} ${reviewAttempt.chapter}`
             : "Repasar";
 
+    const mutedHeaderIcon = `${theme.colors.text}99`;
+
     return {
       theme,
       title,
       titleIcon: viewState.kind === "books" ? "ListChecks" : "BookOpen",
       titleIconColor: theme.colors.notification,
       goBack: headerGoBack,
-      headerRightProps: {
-        headerRightIcon: "RefreshCw",
-        style: { display: "none" },
-        headerRightIconColor: theme.colors.notification,
-        disabled: true,
-      },
+      headerRightProps:
+        viewState.kind === "books"
+          ? {
+              RightComponent: () => (
+                <QuizHistoryBooksLayoutHeaderToggle
+                  layout={booksLayout}
+                  onChange={setBooksLayout}
+                  activeColor={theme.colors.notification}
+                  mutedColor={mutedHeaderIcon}
+                />
+              ),
+              headerRightIcon: "RefreshCw",
+              headerRightIconColor: theme.colors.notification,
+              disabled: false,
+            }
+          : {
+              headerRightIcon: "RefreshCw",
+              style: { display: "none" },
+              headerRightIconColor: theme.colors.notification,
+              disabled: true,
+            },
     };
   }, [
+    booksLayout,
     headerGoBack,
     reviewAttempt,
     theme,
@@ -417,10 +473,13 @@ const ChapterQuizHistoryScreen = () => {
           {viewState.kind === "books" ? (
             <AnimatedView key="books" direction={direction}>
               <BooksView
+                direction={direction}
                 surfaces={surfaces}
                 metrics={metrics}
                 bookSummaries={bookSummaries}
+                indexByBook={indexByBook}
                 filter={booksFilter}
+                booksLayout={booksLayout}
                 onFilterChange={setBooksFilter}
                 onPressBook={openBook}
               />
@@ -431,6 +490,7 @@ const ChapterQuizHistoryScreen = () => {
               direction={direction}
             >
               <ChaptersView
+                direction={direction}
                 surfaces={surfaces}
                 book={viewState.book}
                 summary={
@@ -438,7 +498,10 @@ const ChapterQuizHistoryScreen = () => {
                 }
                 attemptIndex={indexByBook.get(viewState.book) ?? null}
                 onPressChapter={(chapter) => openChapter(viewState.book, chapter)}
-                onLongPressChapter={handleChapterLongPress}
+                onLongPressAttemptId={(attemptId) => {
+                  const row = attempts.find((a) => a.id === attemptId);
+                  if (row) handleChapterLongPress(row);
+                }}
               />
             </AnimatedView>
           ) : reviewAttempt ? (
@@ -469,216 +532,29 @@ const ChapterQuizHistoryScreen = () => {
   );
 };
 
-/* ───────────────────────── Books View ───────────────────────── */
+/* ───────────────────────── Books / chapters (WebView lists) ───────────────────────── */
 
 const BooksView: React.FC<{
+  direction: "forward" | "backward";
   surfaces: ReturnType<typeof getSurfaces>;
   metrics: ReturnType<typeof computeChapterQuizMetrics>;
   bookSummaries: BookSummary[];
+  indexByBook: Map<string, ChapterAttemptIndex>;
   filter: BooksFilter;
+  booksLayout: QuizHistoryBooksLayout;
   onFilterChange: (f: BooksFilter) => void;
   onPressBook: (book: string) => void;
-}> = ({ surfaces, metrics, bookSummaries, filter, onFilterChange, onPressBook }) => {
-  const visible = useMemo(() => {
-    if (filter === "started") {
-      return bookSummaries.filter((b) => b.hasAnyAttempt);
-    }
-    return bookSummaries;
-  }, [bookSummaries, filter]);
-
-  const startedCount = useMemo(
-    () => bookSummaries.filter((b) => b.hasAnyAttempt).length,
-    [bookSummaries],
-  );
-
-  return (
-    <FlatList
-      data={visible}
-      keyExtractor={(item) => item.book}
-      renderItem={({ item }) => (
-        <BookCard summary={item} surfaces={surfaces} onPress={onPressBook} />
-      )}
-      contentContainerStyle={styles.listContent}
-      showsVerticalScrollIndicator={false}
-      ListHeaderComponent={
-        <View style={styles.booksHeader}>
-          <HistoryHeader metrics={metrics} surfaces={surfaces} />
-          <View style={styles.filterRow}>
-            <FilterChip
-              label={`Iniciados${startedCount > 0 ? ` · ${startedCount}` : ""}`}
-              active={filter === "started"}
-              onPress={() => onFilterChange("started")}
-              surfaces={surfaces}
-            />
-            <FilterChip
-              label="Todos"
-              active={filter === "all"}
-              onPress={() => onFilterChange("all")}
-              surfaces={surfaces}
-            />
-          </View>
-        </View>
-      }
-      ListEmptyComponent={
-        <View style={styles.empty}>
-          <Icon
-            name="ListChecks"
-            color={surfaces.softText}
-            size={36}
-            strokeWidth={1.5}
-          />
-          <Text style={[styles.emptyText, { color: surfaces.muted }]}>
-            Aún no has completado ningún quiz.{"\n"}
-            Comienza a leer y prueba tu conocimiento.
-          </Text>
-        </View>
-      }
-    />
-  );
-};
-
-const FilterChip: React.FC<{
-  label: string;
-  active: boolean;
-  onPress: () => void;
-  surfaces: ReturnType<typeof getSurfaces>;
-}> = ({ label, active, onPress, surfaces }) => (
-  <Pressable onPress={onPress} hitSlop={6}>
-    <View
-      style={[
-        styles.chip,
-        {
-          borderColor: active ? surfaces.accent : surfaces.border,
-          backgroundColor: active ? surfaces.accentSoft : "transparent",
-        },
-      ]}
-    >
-      <Text
-        style={[
-          styles.chipText,
-          { color: active ? surfaces.accent : surfaces.muted },
-        ]}
-      >
-        {label}
-      </Text>
-    </View>
-  </Pressable>
-);
-
-/* ───────────────────────── Chapters View ───────────────────────── */
+}> = (props) => <QuizHistoryBooksWebView {...props} />;
 
 const ChaptersView: React.FC<{
+  direction: "forward" | "backward";
   surfaces: ReturnType<typeof getSurfaces>;
   book: string;
   summary: BookSummary | null;
   attemptIndex: ChapterAttemptIndex | null;
   onPressChapter: (chapter: number) => void;
-  onLongPressChapter: (row: ChapterQuizAttemptRow) => void;
-}> = ({
-  surfaces,
-  book,
-  summary,
-  attemptIndex,
-  onPressChapter,
-  onLongPressChapter,
-}) => {
-    const total = summary?.totalChapters ?? 0;
-    const passed = summary?.passedChapters ?? 0;
-    const completed = summary?.completedChapters ?? 0;
-    const percent = summary?.percent ?? 0;
-
-    const chapters = useMemo(
-      () => Array.from({ length: total }, (_, i) => i + 1),
-      [total],
-    );
-
-    return (
-      <ScrollView
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.chaptersHead}>
-          <Text style={[styles.chaptersTitle, { color: surfaces.text }]}>
-            {book}
-          </Text>
-          <Text style={[styles.chaptersSub, { color: surfaces.muted }]}>
-            {`${passed} de ${total} aprobados`}
-            {completed > passed ? `  ·  ${completed - passed} en proceso` : ""}
-            {`  ·  ${percent}%`}
-          </Text>
-        </View>
-        <View
-          style={[
-            styles.divider,
-            { backgroundColor: surfaces.border, marginBottom: SP.lg },
-          ]}
-        />
-
-        <View style={styles.grid}>
-          {chapters.map((c) => {
-            const best = attemptIndex?.bestByChapter.get(c);
-            let state: ChapterCellState = { kind: "not_started" };
-            if (best) {
-              state = best.pass
-                ? {
-                  kind: "passed",
-                  score: best.score,
-                  total: best.total,
-                  attemptId: best.id,
-                }
-                : {
-                  kind: "failed",
-                  score: best.score,
-                  total: best.total,
-                  attemptId: best.id,
-                };
-            }
-            return (
-              <ChapterCell
-                key={c}
-                chapter={c}
-                state={state}
-                surfaces={surfaces}
-                onPress={() => onPressChapter(c)}
-                onLongPress={best ? () => onLongPressChapter(best) : undefined}
-              />
-            );
-          })}
-        </View>
-
-        {/* Tiny legend */}
-        <View style={styles.legend}>
-          <LegendDot color={surfaces.accent} label="Aprobado" surfaces={surfaces} />
-          <LegendDot color={surfaces.fail} label="En proceso" surfaces={surfaces} />
-          <LegendDot
-            color={surfaces.borderStrong}
-            label="Sin iniciar"
-            surfaces={surfaces}
-            hollow
-          />
-        </View>
-      </ScrollView>
-    );
-  };
-
-const LegendDot: React.FC<{
-  color: string;
-  label: string;
-  surfaces: ReturnType<typeof getSurfaces>;
-  hollow?: boolean;
-}> = ({ color, label, surfaces, hollow }) => (
-  <View style={styles.legendItem}>
-    <View
-      style={[
-        styles.legendDot,
-        hollow
-          ? { borderColor: color, borderWidth: 1, backgroundColor: "transparent" }
-          : { backgroundColor: color },
-      ]}
-    />
-    <Text style={[styles.legendText, { color: surfaces.muted }]}>{label}</Text>
-  </View>
-);
+  onLongPressAttemptId: (attemptId: string) => void;
+}> = (props) => <QuizHistoryChaptersWebView {...props} />;
 
 /* ───────────────────────── Review View ───────────────────────── */
 
@@ -992,76 +868,9 @@ const styles = StyleSheet.create({
     paddingTop: SP.lg,
     paddingBottom: SP.xxl + SP.md,
   },
-  booksHeader: {
-    marginBottom: SP.lg,
-  },
-  filterRow: {
-    flexDirection: "row",
-    gap: SP.sm,
-    marginTop: SP.md,
-  },
-  chip: {
-    borderWidth: 1,
-    paddingHorizontal: SP.md,
-    paddingVertical: SP.sm - 1,
-    borderRadius: RADIUS.pill,
-  },
-  chipText: {
-    fontSize: 12,
-    fontWeight: "600",
-  },
-  empty: {
-    alignItems: "center",
-    paddingVertical: SP.xxl + SP.md,
-    gap: SP.md,
-  },
-  emptyText: {
-    fontSize: 14,
-    textAlign: "center",
-    lineHeight: 22,
-    fontWeight: "500",
-  },
-  chaptersHead: {
-    marginBottom: SP.md,
-  },
-  chaptersTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    letterSpacing: -0.5,
-    marginBottom: 4,
-  },
-  chaptersSub: {
-    fontSize: 13,
-    fontWeight: "500",
-  },
   divider: {
     height: StyleSheet.hairlineWidth,
     width: "100%",
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 10,
-  },
-  legend: {
-    flexDirection: "row",
-    gap: SP.lg,
-    marginTop: SP.xl,
-    flexWrap: "wrap",
-  },
-  legendItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: SP.sm - 2,
-  },
-  legendDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  legendText: {
-    fontSize: 11,
-    fontWeight: "500",
   },
   reviewHead: {
     flexDirection: "row",
