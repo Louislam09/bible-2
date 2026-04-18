@@ -105,7 +105,7 @@ const useBibleAIChatCompletion = (): UseBibleAIChatCompletionReturn => {
 
       try {
         const messages = buildMessages(conversationHistory);
-        const text = await aiManager.chat(messages, {
+        const { text } = await aiManager.chat(messages, {
           maxTokens: 8192,
           temperature: 0.3,
         });

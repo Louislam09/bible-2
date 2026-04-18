@@ -17,7 +17,14 @@
  * Adding a new provider: create a file in services/ai/providers/, then
  * add a single line to the `providers` array at the bottom of this file.
  */
-import { AIProvider, ChatMessage, ChatOptions, ONE_DAY_MS, ProviderError } from "./types";
+import {
+  AIChatResult,
+  AIProvider,
+  ChatMessage,
+  ChatOptions,
+  ONE_DAY_MS,
+  ProviderError,
+} from "./types";
 import { groqProvider } from "./providers/groqProvider";
 import { cerebrasProvider } from "./providers/cerebrasProvider";
 import { openRouterProvider } from "./providers/openRouterProvider";
@@ -136,15 +143,25 @@ class AIManager {
    * Automatically applies cooldowns on rate-limit errors and falls back to
    * the next provider.
    */
-  async chat(messages: ChatMessage[], options?: ChatOptions): Promise<string> {
+  async chat(messages: ChatMessage[], options?: ChatOptions): Promise<AIChatResult> {
     const available = this.getProvidersForRequest();
     const failures: string[] = [];
 
     for (const provider of available) {
       try {
-        const result = await provider.chat(messages, options);
-        console.log(`[AIManager] ✓ used=${provider.id}`);
-        return result;
+        const startedAt = performance.now();
+        const text = await provider.chat(messages, options);
+        const elapsedMs = performance.now() - startedAt;
+        const minutes = elapsedMs / 60_000;
+        const seconds = elapsedMs / 1000;
+        console.log(
+          `[AIManager] ✓ used=${provider.id} | model=${provider.modelName} | latency=${minutes.toFixed(4)} min (${seconds.toFixed(1)} s)`,
+        );
+        return {
+          text,
+          providerId: provider.id,
+          modelName: provider.modelName,
+        };
       } catch (err) {
         this.handleProviderError(provider.id, err);
         failures.push(
@@ -171,8 +188,14 @@ class AIManager {
 
     for (const provider of available) {
       try {
+        const startedAt = performance.now();
         await provider.stream(messages, onChunk, options);
-        console.log(`[AIManager] ✓ used=${provider.id}`);
+        const elapsedMs = performance.now() - startedAt;
+        const minutes = elapsedMs / 60_000;
+        const seconds = elapsedMs / 1000;
+        console.log(
+          `[AIManager] ✓ used=${provider.id} | latency=${minutes.toFixed(4)} min (${seconds.toFixed(1)} s)`,
+        );
         return;
       } catch (err) {
         this.handleProviderError(provider.id, err);

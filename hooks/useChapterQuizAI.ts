@@ -264,7 +264,7 @@ export const useChapterQuizAI = () => {
             try {
               const prompt = buildPrompt(book, chapter, MAX_CHAPTER_QUESTIONS, versesText);
 
-              const rawText = await aiManager.chat(
+              const { text: rawText, providerId, modelName } = await aiManager.chat(
                 [
                   { role: "user", content: prompt },
                 ],
@@ -284,6 +284,8 @@ export const useChapterQuizAI = () => {
                 book,
                 chapter,
                 questions: generatedQuestions,
+                aiProvider: providerId,
+                model: modelName,
               });
 
               return { chapterKey, questions: generatedQuestions };

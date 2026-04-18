@@ -4,6 +4,10 @@ import { Question } from "@/types";
 
 const QUIZ_CACHE_COLLECTION = "chapter_quiz_cache";
 
+/** Must match PocketBase `chapter_quiz_cache` field names (admin → collection). */
+const PB_FIELD_AI_PROVIDER = "aiProvider";
+const PB_FIELD_MODEL = "model";
+
 /** No TTL: chapter quiz rows stay valid until replaced by a new upsert. */
 const CACHE_MAX_AGE_MS = Infinity;
 
@@ -31,6 +35,8 @@ type CacheRecord = {
   chapter?: number;
   questions?: Question[] | string;
   updated?: string;
+  aiProvider?: string;
+  model?: string;
 };
 
 export const chapterQuizCacheService = {
@@ -77,11 +83,15 @@ export const chapterQuizCacheService = {
     book,
     chapter,
     questions,
+    aiProvider,
+    model,
   }: {
     key: string;
     book: string;
     chapter: number;
     questions: Question[];
+    aiProvider: string;
+    model: string;
   }): Promise<void> {
     await chapterQuizLocalDbService.upsertCachedQuestions({
       chapterKey: key,
@@ -90,11 +100,13 @@ export const chapterQuizCacheService = {
       questions,
     });
 
-    const payload = {
+    const payload: Record<string, string | number> = {
       key,
       book,
       chapter,
       questions: JSON.stringify(questions),
+      [PB_FIELD_AI_PROVIDER]: aiProvider,
+      [PB_FIELD_MODEL]: model,
     };
 
     try {

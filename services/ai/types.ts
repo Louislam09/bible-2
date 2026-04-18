@@ -14,6 +14,13 @@ export interface ChatOptions {
   jsonMode?: boolean;
 }
 
+/** Result of a successful non-streaming chat (includes which provider answered). */
+export interface AIChatResult {
+  text: string;
+  providerId: string;
+  modelName: string;
+}
+
 export class ProviderError extends Error {
   constructor(
     public readonly providerId: string,

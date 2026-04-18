@@ -12,4 +12,5 @@
  *    https://aistudio.google.com/plan_information
  */
 // export const GEMINI_MODEL = "gemini-3-flash-preview";
+// export const GEMINI_MODEL = "gemma-3-1b-it";
 export const GEMINI_MODEL = "gemma-4-26b-a4b-it";
