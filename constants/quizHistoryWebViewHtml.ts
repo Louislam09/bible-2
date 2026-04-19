@@ -560,7 +560,7 @@ export function buildQuizHistoryBooksHtml(payload: {
   .v7-book-name { font-size: 14px; font-weight: 700; color: ${surfaces.text}; letter-spacing: -0.28px; margin-bottom: 3px; }
   .v7-meta { font-size: 11px; font-weight: 500; color: ${surfaces.muted}; margin-bottom: 10px; line-height: 1.35; }
   .v7-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 4px; }
-  .v7-cell { background: ${surfaces.base}; border: 1px solid ${surfaces.borderStrong}; border-radius: 10px; padding: 8px 6px; text-align: center; }
+  .v7-cell { background: ${surfaces.borderStrong}; border: 1px solid ${surfaces.borderStrong}; border-radius: 10px; padding: 8px 6px; text-align: center; }
   .v7-cell-val { font-size: 14px; font-weight: 800; color: ${surfaces.text}; letter-spacing: -0.35px; }
   .v7-cell-lbl { font-size: 9px; font-weight: 600; color: ${surfaces.muted}; margin-top: 3px; text-transform: lowercase; }
   .v7-bar-track { height: 4px; border-radius: 99px; background: ${surfaces.borderStrong}; overflow: hidden; margin-top: 8px; }

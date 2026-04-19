@@ -1,5 +1,4 @@
 import ChapterQuizBottomSheet from "@/components/ChapterQuizBottomSheet";
-import { PressableScale } from "@/components/animations/pressable-scale";
 import {
   singleScreenHeader,
   type SingleScreenHeaderProps,
@@ -10,6 +9,7 @@ import {
   ChapterQuizDetailView,
   type ChapterQuizSizeOption,
 } from "@/components/quizHistory/ChapterQuizDetailView";
+import { QuizHistoryBooksSettingsModal } from "@/components/quizHistory/QuizHistoryBooksSettingsModal";
 import {
   QuizHistoryBooksWebView,
   QuizHistoryChaptersWebView,
@@ -49,6 +49,10 @@ import { bibleState$ } from "@/state/bibleState";
 import { chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { modalState$ } from "@/state/modalState";
 import { Screens } from "@/types";
+import {
+  parseQuizHistoryBookCardVariant,
+  type QuizHistoryBookCardVariant,
+} from "@/constants/quizHistoryBookCardVariant";
 import type { QuizHistoryBooksLayout } from "@/constants/quizHistoryWebViewHtml";
 import { headerIconSize } from "@/constants/size";
 import { computeChapterQuizMetrics } from "@/utils/quizHistory";
@@ -93,42 +97,6 @@ type ViewState =
 
 type BooksFilter = "started" | "all";
 
-const QuizHistoryBooksLayoutHeaderToggle: React.FC<{
-  layout: QuizHistoryBooksLayout;
-  onChange: (next: QuizHistoryBooksLayout) => void;
-  activeColor: string;
-  mutedColor: string;
-}> = ({ layout, onChange, activeColor, mutedColor }) => (
-  <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginRight: 4 }}>
-    <PressableScale
-      onPress={() => {
-        void Haptics.selectionAsync();
-        onChange("list");
-      }}
-    >
-      <Icon
-        name="LayoutList"
-        size={headerIconSize}
-        color={layout === "list" ? activeColor : mutedColor}
-        strokeWidth={layout === "list" ? 2.25 : 1.5}
-      />
-    </PressableScale>
-    <PressableScale
-      onPress={() => {
-        void Haptics.selectionAsync();
-        onChange("grid");
-      }}
-    >
-      <Icon
-        name="LayoutGrid"
-        size={headerIconSize}
-        color={layout === "grid" ? activeColor : mutedColor}
-        strokeWidth={layout === "grid" ? 2.25 : 1.5}
-      />
-    </PressableScale>
-  </View>
-);
-
 const ChapterQuizHistoryScreen = () => {
   const { theme } = useMyTheme();
   const router = useRouter();
@@ -138,6 +106,11 @@ const ChapterQuizHistoryScreen = () => {
   const surfaces = useMemo(() => getSurfaces(theme), [theme]);
   const { allBibleLoaded, getBibleServices } = useDBContext();
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  const quizHistoryBookCardVariant = use$(() =>
+    parseQuizHistoryBookCardVariant(
+      storedData$.quizHistoryBookCardVariant.get(),
+    ),
+  );
   const { getQuestionsForChapter } = useChapterQuizAI();
 
   const [attempts, setAttempts] = useState<ChapterQuizAttemptRow[]>([]);
@@ -145,7 +118,8 @@ const ChapterQuizHistoryScreen = () => {
   const [viewState, setViewState] = useState<ViewState>({ kind: "books" });
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [booksFilter, setBooksFilter] = useState<BooksFilter>("started");
-  const [booksLayout, setBooksLayout] = useState<QuizHistoryBooksLayout>("list");
+  const [booksLayout, setBooksLayout] = useState<QuizHistoryBooksLayout>("grid");
+  const [booksSettingsOpen, setBooksSettingsOpen] = useState(false);
   const [reviewAttempt, setReviewAttempt] =
     useState<ChapterQuizAttemptRow | null>(null);
   const [userDownvotedChapterKeys, setUserDownvotedChapterKeys] = useState<
@@ -574,8 +548,6 @@ const ChapterQuizHistoryScreen = () => {
               ? `${reviewAttempt.book} ${reviewAttempt.chapter}`
               : "Repasar";
 
-    const mutedHeaderIcon = `${theme.colors.text}99`;
-
     return {
       theme,
       title,
@@ -587,12 +559,20 @@ const ChapterQuizHistoryScreen = () => {
         viewState.kind === "books"
           ? {
               RightComponent: () => (
-                <QuizHistoryBooksLayoutHeaderToggle
-                  layout={booksLayout}
-                  onChange={setBooksLayout}
-                  activeColor={theme.colors.notification}
-                  mutedColor={mutedHeaderIcon}
-                />
+                <Pressable
+                  onPress={() => {
+                    void Haptics.selectionAsync();
+                    setBooksSettingsOpen(true);
+                  }}
+                  style={{ marginRight: 4, padding: 6 }}
+                  hitSlop={12}
+                >
+                  <Icon
+                    name="Settings"
+                    size={headerIconSize}
+                    color={theme.colors.notification}
+                  />
+                </Pressable>
               ),
               headerRightIcon: "RefreshCw",
               headerRightIconColor: theme.colors.notification,
@@ -605,13 +585,7 @@ const ChapterQuizHistoryScreen = () => {
               disabled: true,
             },
     };
-  }, [
-    booksLayout,
-    headerGoBack,
-    reviewAttempt,
-    theme,
-    viewState,
-  ]);
+  }, [headerGoBack, reviewAttempt, theme, viewState]);
 
   return (
     <Fragment>
@@ -632,6 +606,7 @@ const ChapterQuizHistoryScreen = () => {
                 indexByBook={indexByBook}
                 filter={booksFilter}
                 booksLayout={booksLayout}
+                cardVariant={quizHistoryBookCardVariant}
                 onFilterChange={setBooksFilter}
                 onPressBook={openBook}
               />
@@ -705,6 +680,13 @@ const ChapterQuizHistoryScreen = () => {
             </AnimatedView>
           ) : null}
         </ThemedView>
+        <QuizHistoryBooksSettingsModal
+          visible={booksSettingsOpen}
+          onClose={() => setBooksSettingsOpen(false)}
+          surfaces={surfaces}
+          booksLayout={booksLayout}
+          onBooksLayoutChange={setBooksLayout}
+        />
         {isChapterQuizOpen ? <ChapterQuizBottomSheet /> : null}
       </ScreenWithAnimation>
     </Fragment>
@@ -721,6 +703,7 @@ const BooksView: React.FC<{
   indexByBook: Map<string, ChapterAttemptIndex>;
   filter: BooksFilter;
   booksLayout: QuizHistoryBooksLayout;
+  cardVariant: QuizHistoryBookCardVariant;
   onFilterChange: (f: BooksFilter) => void;
   onPressBook: (book: string) => void;
 }> = (props) => <QuizHistoryBooksWebView {...props} />;

@@ -1,3 +1,7 @@
+import {
+  QUIZ_HISTORY_BOOK_CARD_VARIANT,
+  type QuizHistoryBookCardVariant,
+} from "@/constants/quizHistoryBookCardVariant";
 import { StorageKeys } from "@/constants/StorageKeys";
 import { pb } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
@@ -111,6 +115,8 @@ type StoreState = {
       completedAt: string;
     }
   >;
+  /** Mis Quiz → estilo de tarjeta por libro (WebView) */
+  quizHistoryBookCardVariant: QuizHistoryBookCardVariant;
 };
 
 const initialContext: StoreState = {
@@ -169,6 +175,7 @@ const initialContext: StoreState = {
   aiBibleThreads: [],
   aiBibleActiveThreadId: "",
   chapterQuizCompletedByChapter: {},
+  quizHistoryBookCardVariant: QUIZ_HISTORY_BOOK_CARD_VARIANT,
 };
 
 export const storedData$ = observable(initialContext);
