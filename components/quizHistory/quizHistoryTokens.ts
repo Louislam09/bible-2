@@ -17,6 +17,7 @@ export type QuizSurfaces = ReturnType<typeof getSurfaces>;
 export function getSurfaces(theme: TTheme) {
   const text = theme.colors.text;
   const accent = theme.colors.notification;
+  const pass = PASS_COLOR_FALLBACK;
   return {
     base: theme.colors.background,
     card: theme.colors.card,
@@ -30,5 +31,8 @@ export function getSurfaces(theme: TTheme) {
     accentSofter: accent + "08",
     fail: FAIL_COLOR,
     failSoft: FAIL_COLOR + "14",
+    /** Distinct “passed challenge” (retos completados) — not the same as brand accent. */
+    pass,
+    passSoft: pass + "22",
   };
 }
