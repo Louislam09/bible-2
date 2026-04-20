@@ -32,6 +32,7 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
 import {
+  isChapterQuizLoginRequiredError,
   isChapterQuizOfflineError,
   useChapterQuizAI,
 } from "@/hooks/useChapterQuizAI";
@@ -346,7 +347,21 @@ const ChapterQuizHistoryScreen = () => {
         });
         modalState$.openChapterQuizBottomSheet();
       } catch (e) {
-        if (isChapterQuizOfflineError(e)) {
+        if (isChapterQuizLoginRequiredError(e)) {
+          alert({
+            type: "warning",
+            title: "Inicio de sesión requerido",
+            message:
+              "Debes iniciar sesión para generar preguntas nuevas. Si ya hay un quiz guardado para este capítulo, se usará sin cuenta.",
+            buttons: [
+              { text: "Cancelar", style: "cancel" },
+              {
+                text: "Iniciar sesión",
+                onPress: () => navigation.navigate(Screens.Login),
+              },
+            ],
+          });
+        } else if (isChapterQuizOfflineError(e)) {
           alert({
             type: "offline",
             title: "Sin conexión",
@@ -370,6 +385,7 @@ const ChapterQuizHistoryScreen = () => {
       currentBibleVersion,
       getBibleServices,
       getQuestionsForChapter,
+      navigation,
       viewState,
     ],
   );

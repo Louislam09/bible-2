@@ -16,6 +16,7 @@ import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 import LottieView from "lottie-react-native";
+import Reference from "@/components/Reference";
 import BottomModal from "./BottomModal";
 import { Text, View } from "./Themed";
 
@@ -70,6 +71,9 @@ const ChapterQuizBottomSheet = () => {
   const answersRef = useRef<(string | null)[]>([]);
   const isCompletedRef = useRef(false);
   const lastQuizRef = useRef<ActiveChapterQuiz | null>(null);
+  const referenceAnchorRef = useRef(null);
+  const [referencePopoverVisible, setReferencePopoverVisible] = useState(false);
+  const [referenceForPopover, setReferenceForPopover] = useState<string | null>(null);
 
   const questions = activeQuiz?.questions || [];
   const currentQuestion = questions[currentIndex];
@@ -112,6 +116,11 @@ const ChapterQuizBottomSheet = () => {
       activeQuiz.requestedCount,
     );
   }, [activeQuiz?.chapterKey, activeQuiz?.requestedCount, total]);
+
+  useEffect(() => {
+    setReferencePopoverVisible(false);
+    setReferenceForPopover(null);
+  }, [currentIndex]);
 
   const finalizeQuizDismiss = useCallback(() => {
     modalState$.isChapterQuizOpen.set(false);
@@ -371,7 +380,28 @@ const ChapterQuizBottomSheet = () => {
                   {selectedOption === currentQuestion.correct ? "Correcto" : "Incorrecto"}
                 </Text>
                 {currentQuestion.reference ? (
-                  <Text style={styles.feedbackText}>Referencia: {currentQuestion.reference}</Text>
+                  <>
+                    <View style={styles.referenceRow}>
+                      <Text style={styles.referenceLabel}>Referencia: </Text>
+                      <TouchableOpacity
+                        ref={referenceAnchorRef}
+                        onPress={() => {
+                          setReferenceForPopover(currentQuestion.reference ?? null);
+                          setReferencePopoverVisible(true);
+                        }}
+                        accessibilityRole="button"
+                        accessibilityLabel={`Ver texto bíblico: ${currentQuestion.reference}`}
+                      >
+                        <Text style={styles.referenceLink}>{currentQuestion.reference}</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Reference
+                      references={referenceForPopover}
+                      onClose={() => setReferencePopoverVisible(false)}
+                      isVisible={referencePopoverVisible}
+                      target={referenceAnchorRef}
+                    />
+                  </>
                 ) : null}
                 {currentQuestion.explanation ? (
                   <Text style={styles.feedbackText}>{currentQuestion.explanation}</Text>
@@ -621,6 +651,22 @@ const getStyles = ({ colors }: TTheme) =>
     feedbackText: {
       color: colors.text,
       fontSize: 13,
+    },
+    referenceRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      gap: 4,
+    },
+    referenceLabel: {
+      color: colors.text,
+      fontSize: 13,
+      fontWeight: "700",
+    },
+    referenceLink: {
+      color: colors.notification,
+      fontSize: 13,
+      fontWeight: "600",
     },
     primaryButton: {
       marginTop: 8,

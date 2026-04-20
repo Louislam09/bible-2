@@ -274,7 +274,7 @@ const LoginScreen = () => {
             >
               <Text style={styles.registerText}>
                 ¿No tienes una cuenta?{" "}
-                <Text style={styles.linkText}>Regístrate</Text>
+                <Text style={styles.linkText}>Crea una cuenta</Text>
               </Text>
             </TouchableOpacity>
 

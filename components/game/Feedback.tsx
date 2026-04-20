@@ -1,7 +1,7 @@
 import { AnswerResult } from '@/types';
 import React, { useMemo, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Reference from './Reference';
+import Reference from '@/components/Reference';
 
 type TypeTHeme = 'Card' | 'GameConsole' | 'Neon' | 'Medieval'
 

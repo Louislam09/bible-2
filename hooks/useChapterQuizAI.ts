@@ -33,6 +33,20 @@ function throwChapterQuizOfflineError(): never {
   throw err;
 }
 
+/** Thrown when AI generation is required but there is no logged-in user. */
+export const CHAPTER_QUIZ_LOGIN_REQUIRED = "CHAPTER_QUIZ_LOGIN_REQUIRED";
+
+export function isChapterQuizLoginRequiredError(err: unknown): boolean {
+  if (err === null || typeof err !== "object") return false;
+  return (err as { code?: string }).code === CHAPTER_QUIZ_LOGIN_REQUIRED;
+}
+
+function throwChapterQuizLoginRequiredError(): never {
+  const err = new Error("Se requiere iniciar sesión para generar el quiz.");
+  (err as { code?: string }).code = CHAPTER_QUIZ_LOGIN_REQUIRED;
+  throw err;
+}
+
 const MAX_CHAPTER_QUESTIONS = 20;
 const MAX_OUTPUT_TOKENS = 6000;
 /** Chapters with fewer than this many verses include the full text in the prompt. */
@@ -305,6 +319,10 @@ export const useChapterQuizAI = () => {
           throwChapterQuizOfflineError();
         }
 
+        if (!storedData$.user.get()) {
+          throwChapterQuizLoginRequiredError();
+        }
+
         // 3. Generate with AI (deduplication guard)
         let inFlight = inFlightByChapterKey.get(chapterKey);
         if (!inFlight) {
@@ -364,19 +382,21 @@ export const useChapterQuizAI = () => {
         };
       } catch (err: unknown) {
         console.error("[ChapterQuizAI]", err);
-        const anyErr = err as Record<string, unknown>;
+        if (!isChapterQuizLoginRequiredError(err)) {
+          const anyErr = err as Record<string, unknown>;
 
-        if (anyErr?._noProviders) {
-          setError("No hay proveedores de IA disponibles.");
-        } else if (anyErr?._allProvidersFailed) {
-          const cooldownInfo = anyErr._cooldownInfo as string | undefined;
-          setError(
-            cooldownInfo
-              ? `Todos los proveedores alcanzaron su límite. ${cooldownInfo}.`
-              : "Todos los proveedores fallaron. Reintenta en unos minutos.",
-          );
-        } else {
-          setError("No se pudo preparar el quiz de este capítulo.");
+          if (anyErr?._noProviders) {
+            setError("No hay proveedores de IA disponibles.");
+          } else if (anyErr?._allProvidersFailed) {
+            const cooldownInfo = anyErr._cooldownInfo as string | undefined;
+            setError(
+              cooldownInfo
+                ? `Todos los proveedores alcanzaron su límite. ${cooldownInfo}.`
+                : "Todos los proveedores fallaron. Reintenta en unos minutos.",
+            );
+          } else {
+            setError("No se pudo preparar el quiz de este capítulo.");
+          }
         }
         throw err;
       } finally {
@@ -404,6 +424,10 @@ export const useChapterQuizAI = () => {
       try {
         const chapterKey = chapterQuizCacheService.buildChapterKey(book, chapter);
         chapterQuizStateHelpers.clearPrefetchedChapter(chapterKey);
+
+        if (!storedData$.user.get()) {
+          throwChapterQuizLoginRequiredError();
+        }
 
         if (!isOnlineRef.current) {
           throwChapterQuizOfflineError();
@@ -460,19 +484,21 @@ export const useChapterQuizAI = () => {
         };
       } catch (err: unknown) {
         console.error("[ChapterQuizAI] local regen", err);
-        const anyErr = err as Record<string, unknown>;
+        if (!isChapterQuizLoginRequiredError(err)) {
+          const anyErr = err as Record<string, unknown>;
 
-        if (anyErr?._noProviders) {
-          setError("No hay proveedores de IA disponibles.");
-        } else if (anyErr?._allProvidersFailed) {
-          const cooldownInfo = anyErr._cooldownInfo as string | undefined;
-          setError(
-            cooldownInfo
-              ? `Todos los proveedores alcanzaron su límite. ${cooldownInfo}.`
-              : "Todos los proveedores fallaron. Reintenta en unos minutos.",
-          );
-        } else {
-          setError("No se pudo regenerar el quiz en este dispositivo.");
+          if (anyErr?._noProviders) {
+            setError("No hay proveedores de IA disponibles.");
+          } else if (anyErr?._allProvidersFailed) {
+            const cooldownInfo = anyErr._cooldownInfo as string | undefined;
+            setError(
+              cooldownInfo
+                ? `Todos los proveedores alcanzaron su límite. ${cooldownInfo}.`
+                : "Todos los proveedores fallaron. Reintenta en unos minutos.",
+            );
+          } else {
+            setError("No se pudo regenerar el quiz en este dispositivo.");
+          }
         }
         throw err;
       } finally {

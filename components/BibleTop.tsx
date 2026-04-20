@@ -9,6 +9,7 @@ import { audioState$ } from "@/hooks/useAudioPlayer";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { useHaptics } from "@/hooks/useHaptics";
 import {
+  isChapterQuizLoginRequiredError,
   isChapterQuizOfflineError,
   useChapterQuizAI,
 } from "@/hooks/useChapterQuizAI";
@@ -19,7 +20,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { modalState$ } from "@/state/modalState";
 import { tourState$ } from "@/state/tourState";
-import { EBibleVersions, IBookVerse, IFavoriteVerse } from "@/types";
+import { EBibleVersions, IBookVerse, IFavoriteVerse, Screens } from "@/types";
 import copyToClipboard, { formatForImageQuote } from "@/utils/copyToClipboard";
 import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
 import { getChapterTextRaw, getVerseTextRaw } from "@/utils/getVerseTextRaw";
@@ -27,7 +28,7 @@ import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import BottomModal from "@/components/BottomModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 import { useAlert } from "@/context/AlertContext";
@@ -46,6 +47,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
   const { theme } = useMyTheme();
   const haptics = useHaptics();
   const router = useRouter();
+  const navigation = useNavigation();
   const { alert, alertWarning } = useAlert();
   const { orientation, selectBibleVersion, toggleFavoriteVerse } = useBibleContext();
   const { addVerse } = useMemorization();
@@ -220,7 +222,21 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
         quizCountSheetRef.current?.dismiss();
         modalState$.openChapterQuizBottomSheet();
       } catch (e) {
-        if (isChapterQuizOfflineError(e)) {
+        if (isChapterQuizLoginRequiredError(e)) {
+          alert({
+            type: "warning",
+            title: "Inicio de sesión requerido",
+            message:
+              "Debes iniciar sesión para generar preguntas nuevas. Si ya hay un quiz guardado para este capítulo, se usará sin cuenta.",
+            buttons: [
+              { text: "Cancelar", style: "cancel" },
+              {
+                text: "Iniciar sesión",
+                onPress: () => navigation.navigate(Screens.Login),
+              },
+            ],
+          });
+        } else if (isChapterQuizOfflineError(e)) {
           alert({
             type: "offline",
             title: "Sin conexión",
@@ -242,9 +258,9 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
       chapter,
       chapterData,
       getQuestionsForChapter,
-      router,
       alert,
       alertWarning,
+      navigation,
     ]
   );
 

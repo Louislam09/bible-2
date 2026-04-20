@@ -1,11 +1,13 @@
 import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from '@/constants/BookNames';
 import { GET_SINGLE_OR_MULTIPLE_VERSES } from '@/constants/queries';
 import { useDBContext } from '@/context/databaseContext';
+import { useMyTheme } from '@/context/ThemeContext';
+import { TTheme } from '@/types';
 import { parseBibleReferences } from '@/utils/extractVersesInfo';
 import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
 import { groupBy } from '@/utils/groupBy';
 import { FlashList } from '@shopify/flash-list';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Popover from 'react-native-popover-view';
 
@@ -17,6 +19,8 @@ interface IReference {
 }
 
 const Reference = ({ target, isVisible, onClose, references }: IReference) => {
+    const { theme } = useMyTheme();
+    const styles = useMemo(() => getStyles(theme), [theme]);
     const [items, setItems] = useState<any[]>([]);
     const { executeSql, myBibleDB } = useDBContext();
 
@@ -75,7 +79,7 @@ const Reference = ({ target, isVisible, onClose, references }: IReference) => {
     const RenderItem = ({ item, index }: any) => {
         return (
             <Text style={styles.verseBody}>
-                <Text style={{ color: '#63B3ED' }}>{item?.verse}</Text> {getVerseTextRaw(item?.text || '')}
+                <Text style={styles.verseNumber}>{item?.verse}</Text> {getVerseTextRaw(item?.text || '')}
             </Text>
         );
     };
@@ -121,45 +125,45 @@ const Reference = ({ target, isVisible, onClose, references }: IReference) => {
 
 export default Reference;
 
-const styles = StyleSheet.create({
-    popoverContainer: {
-        backgroundColor: '#2D3748',
-        borderRadius: 10,
-        padding: 0,
-    },
-    contentContainerStyle: {
-        backgroundColor: '#2D3748',
-        paddingVertical: 20,
-        paddingHorizontal: 15,
-    },
-    container: {
-        width: 350,
-        maxWidth: '100%',
-        height: 400,
-        borderRadius: 10,
-        overflow: 'hidden',
-        backgroundColor: '#2D3748',
-    },
-    itemContainer: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#4A5568',
-        paddingBottom: 10,
-        marginBottom: 10,
-    },
-    verseBody: {
-        color: '#E2E8F0',
-        fontSize: 16,
-        lineHeight: 22,
-        marginTop: 10,
-    },
-    cardTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#63B3ED',
-        backgroundColor: '#2D3748',
-        textAlign: 'center',
-        marginBottom: 5,
-        borderRadius: 10,
-        paddingVertical: 15,
-    },
-});
+const getStyles = ({ colors }: TTheme) =>
+    StyleSheet.create({
+        popoverContainer: {
+            backgroundColor: colors.card,
+            borderRadius: 10,
+            padding: 0,
+            borderWidth: StyleSheet.hairlineWidth,
+            borderColor: colors.border,
+        },
+        contentContainerStyle: {
+            backgroundColor: colors.card,
+            paddingVertical: 20,
+            paddingHorizontal: 15,
+        },
+        container: {
+            width: 350,
+            maxWidth: '100%',
+            height: 400,
+            borderRadius: 10,
+            overflow: 'hidden',
+            backgroundColor: colors.card,
+        },
+        verseBody: {
+            color: colors.text,
+            fontSize: 16,
+            lineHeight: 22,
+            marginTop: 10,
+        },
+        verseNumber: {
+            color: colors.notification,
+        },
+        cardTitle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: colors.notification,
+            backgroundColor: colors.card,
+            textAlign: 'center',
+            marginBottom: 5,
+            borderRadius: 10,
+            paddingVertical: 15,
+        },
+    });
