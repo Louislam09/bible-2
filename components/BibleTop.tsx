@@ -8,7 +8,10 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { audioState$ } from "@/hooks/useAudioPlayer";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { useHaptics } from "@/hooks/useHaptics";
-import { useChapterQuizAI } from "@/hooks/useChapterQuizAI";
+import {
+  isChapterQuizOfflineError,
+  useChapterQuizAI,
+} from "@/hooks/useChapterQuizAI";
 import { aiManager } from "@/services/ai/aiManager";
 import { chapterQuizCacheService } from "@/services/chapterQuizCacheService";
 import { chapterQuizLocalDbService } from "@/services/chapterQuizLocalDbService";
@@ -43,7 +46,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
   const { theme } = useMyTheme();
   const haptics = useHaptics();
   const router = useRouter();
-  const { alertWarning } = useAlert();
+  const { alert, alertWarning } = useAlert();
   const { orientation, selectBibleVersion, toggleFavoriteVerse } = useBibleContext();
   const { addVerse } = useMemorization();
   const isPortrait = orientation === "PORTRAIT";
@@ -216,13 +219,33 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
 
         quizCountSheetRef.current?.dismiss();
         modalState$.openChapterQuizBottomSheet();
-      } catch (error) {
-        alertWarning("Error", "No se pudo preparar el quiz. Intenta nuevamente.");
+      } catch (e) {
+        if (isChapterQuizOfflineError(e)) {
+          alert({
+            type: "offline",
+            title: "Sin conexión",
+            message:
+              "No hay internet y este capítulo no tiene un quiz guardado en el dispositivo. Conéctate para generarlo, o abre un capítulo en el que ya hayas jugado o descargado preguntas.",
+          });
+        } else {
+          alertWarning(
+            "Error",
+            "No se pudo preparar el quiz. Intenta nuevamente.",
+          );
+        }
       } finally {
         setIsGeneratingQuiz(false);
       }
     },
-    [book, chapter, chapterData, getQuestionsForChapter, router, alertWarning]
+    [
+      book,
+      chapter,
+      chapterData,
+      getQuestionsForChapter,
+      router,
+      alert,
+      alertWarning,
+    ]
   );
 
   const headerStyle = useAnimatedStyle(() => ({

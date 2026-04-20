@@ -1,10 +1,13 @@
-import Icon from "@/components/Icon";
 import {
   FAIL_COLOR,
   RADIUS,
   SP,
   type QuizSurfaces,
 } from "@/components/quizHistory/quizHistoryTokens";
+import {
+  QuizQuickAction,
+  QuizQuickActionsRow,
+} from "@/components/quizHistory/QuizQuickAction";
 import { Text } from "@/components/Themed";
 import type {
   ChapterQuizAttemptRow,
@@ -12,19 +15,20 @@ import type {
 } from "@/services/chapterQuizLocalDbService";
 import {
   CHAPTER_QUIZ_SIZE_OPTIONS,
-  type ChapterQuizSizeOption,
+  countCompletedChallengesForChapter,
   getChallengeStateForQuizSize,
   hasSessionForQuizSize,
+  type ChapterQuizSizeOption,
 } from "@/utils/quizChapterChallenges";
 import { formatRelativeDate } from "@/utils/quizHistory";
 import React, { useMemo } from "react";
 import {
   ActivityIndicator,
   Dimensions,
+  Pressable,
+  View as RNView,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
-  View as RNView,
 } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
@@ -32,11 +36,13 @@ export type { ChapterQuizChallengeState, ChapterQuizSizeOption } from "@/utils/q
 export {
   CHAPTER_QUIZ_SIZE_OPTIONS,
   getChallengeStateForQuizSize,
-  hasSessionForQuizSize,
+  hasSessionForQuizSize
 };
 
 type Props = {
   surfaces: QuizSurfaces;
+  book: string;
+  chapter: number;
   chapterKey: string;
   attempts: ChapterQuizAttemptRow[];
   sessions: ChapterQuizSessionRow[];
@@ -44,10 +50,16 @@ type Props = {
   onPressSize: (size: ChapterQuizSizeOption) => void;
   onPressAttempt: (row: ChapterQuizAttemptRow) => void;
   onReadChapter: () => void;
+  /** Same “best” attempt as chapter grid long-press (highest score ratio). */
+  onToggleFavoriteBest: (attemptId: string) => void;
+  onRetryFailedBest: (attemptId: string) => void;
+  onDeleteBestAttempt: (attemptId: string) => void;
 };
 
 export const ChapterQuizDetailView: React.FC<Props> = ({
   surfaces,
+  book,
+  chapter,
   chapterKey,
   attempts,
   sessions,
@@ -55,7 +67,23 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
   onPressSize,
   onPressAttempt,
   onReadChapter,
+  onToggleFavoriteBest,
+  onRetryFailedBest,
+  onDeleteBestAttempt,
 }) => {
+  const bestAttempt = useMemo(() => {
+    let best: ChapterQuizAttemptRow | null = null;
+    let bestRatio = -1;
+    for (const a of attempts) {
+      const r = a.total > 0 ? a.score / a.total : 0;
+      if (r > bestRatio) {
+        bestRatio = r;
+        best = a;
+      }
+    }
+    return best;
+  }, [attempts]);
+
   const sortedAttempts = useMemo(
     () =>
       [...attempts].sort(
@@ -65,6 +93,19 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
     [attempts],
   );
 
+  const headSubline = useMemo(() => {
+    const n = attempts.length;
+    const completed = countCompletedChallengesForChapter(attempts, book, chapter);
+    const intentos =
+      n === 0
+        ? "Sin intentos aún"
+        : n === 1
+          ? "1 intento"
+          : `${n} intentos`;
+    return `${intentos} · ${completed}/4 retos del capítulo`;
+  }, [attempts, book, chapter]);
+
+
   const tileW =
     (Dimensions.get("window").width - SP.lg * 2 - SP.md) / 2 - 1;
 
@@ -73,6 +114,58 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
       contentContainerStyle={styles.listContent}
       showsVerticalScrollIndicator={false}
     >
+      <RNView style={styles.detailHead}>
+        <Text style={[styles.detailTitle, { color: surfaces.text }]}>
+          {book} {chapter}
+        </Text>
+        <Text style={[styles.detailSub, { color: surfaces.muted }]}>
+          {headSubline}
+        </Text>
+      </RNView>
+      <RNView
+        style={[styles.headDivider, { backgroundColor: surfaces.border }]}
+      />
+
+      <QuizQuickActionsRow>
+        <QuizQuickAction
+          icon="BookOpen"
+          label="Leer capítulo"
+          onPress={onReadChapter}
+          surfaces={surfaces}
+        />
+
+        {bestAttempt ? (
+          <>
+            <QuizQuickAction
+              icon={bestAttempt.isFavorite ? "Star" : "StarOff"}
+              label={
+                bestAttempt.isFavorite
+                  ? "Quitar favorito"
+                  : "Guardar favorito"
+              }
+              onPress={() => onToggleFavoriteBest(bestAttempt.id)}
+              surfaces={surfaces}
+              active={bestAttempt.isFavorite}
+            />
+            <QuizQuickAction
+              icon="RotateCcw"
+              label="Reintentar falladas"
+              onPress={() => onRetryFailedBest(bestAttempt.id)}
+              surfaces={surfaces}
+            />
+            <QuizQuickAction
+              icon="Trash2"
+              label="Eliminar"
+              onPress={() => onDeleteBestAttempt(bestAttempt.id)}
+              surfaces={surfaces}
+              danger
+            />
+
+          </>
+        ) : null}
+      </QuizQuickActionsRow>
+
+
       <Text style={[styles.sectionLabel, { color: surfaces.muted }]}>
         RETOS
       </Text>
@@ -87,32 +180,31 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
           const palette =
             state === "completed"
               ? {
-                  bg: surfaces.accentSoft,
-                  border: surfaces.accent,
-                  label: "Completado",
-                  labelColor: surfaces.accent,
-                }
+                bg: surfaces.accentSoft,
+                border: surfaces.accent,
+                label: "Completado",
+                labelColor: surfaces.accent,
+              }
               : state === "in_progress"
                 ? {
-                    bg: surfaces.failSoft,
-                    border: FAIL_COLOR + "55",
-                    label: "En progreso",
-                    labelColor: surfaces.fail,
-                  }
+                  bg: surfaces.failSoft,
+                  border: FAIL_COLOR + "55",
+                  label: "En progreso",
+                  labelColor: surfaces.fail,
+                }
                 : {
-                    bg: "transparent",
-                    border: surfaces.borderStrong,
-                    label: "Sin empezar",
-                    labelColor: surfaces.muted,
-                  };
+                  bg: "transparent",
+                  border: surfaces.borderStrong,
+                  label: "Sin empezar",
+                  labelColor: surfaces.muted,
+                };
 
           return (
-            <TouchableOpacity
+            <Pressable
               key={size}
-              activeOpacity={0.85}
               disabled={loading || loadingQuizSize !== null}
               onPress={() => onPressSize(size)}
-              style={[
+              style={({ pressed }) => [
                 styles.tile,
                 {
                   width: tileW,
@@ -120,6 +212,7 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
                   borderColor: palette.border,
                   backgroundColor: palette.bg,
                   borderRadius: RADIUS.card,
+                  opacity: pressed ? 0.88 : 1,
                 },
               ]}
             >
@@ -143,27 +236,10 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
                   </Text>
                 </>
               )}
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </RNView>
-
-      <TouchableOpacity
-        activeOpacity={0.85}
-        onPress={onReadChapter}
-        style={[
-          styles.readRow,
-          {
-            borderColor: surfaces.border,
-            borderRadius: RADIUS.button,
-          },
-        ]}
-      >
-        <Icon name="BookOpen" size={16} color={surfaces.muted} />
-        <Text style={[styles.readLabel, { color: surfaces.text }]}>
-          Leer capítulo en la Biblia
-        </Text>
-      </TouchableOpacity>
 
       <Text
         style={[
@@ -181,16 +257,16 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
         sortedAttempts.map((row) => {
           const ratio = row.total > 0 ? row.score / row.total : 0;
           return (
-            <TouchableOpacity
+            <Pressable
               key={row.id}
-              activeOpacity={0.85}
               onPress={() => onPressAttempt(row)}
-              style={[
+              style={({ pressed }) => [
                 styles.attemptCard,
                 {
                   borderColor: surfaces.border,
                   backgroundColor: surfaces.card,
                   borderRadius: RADIUS.card,
+                  opacity: pressed ? 0.92 : 1,
                 },
               ]}
             >
@@ -213,7 +289,7 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
                 </RNView>
                 <MiniRing ratio={ratio} pass={row.pass} surfaces={surfaces} />
               </RNView>
-            </TouchableOpacity>
+            </Pressable>
           );
         })
       )}
@@ -280,6 +356,25 @@ const styles = StyleSheet.create({
     paddingTop: SP.lg,
     paddingBottom: SP.xxl + SP.md,
   },
+  detailHead: {
+    marginBottom: SP.md,
+  },
+  detailTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    letterSpacing: -0.5,
+    marginBottom: 4,
+  },
+  detailSub: {
+    fontSize: 13,
+    fontWeight: "500",
+    lineHeight: 18,
+  },
+  headDivider: {
+    height: StyleSheet.hairlineWidth,
+    width: "100%",
+    marginBottom: SP.lg,
+  },
   sectionLabel: {
     fontSize: 10,
     fontWeight: "600",
@@ -315,18 +410,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "600",
     marginTop: SP.sm,
-  },
-  readRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: SP.sm,
-    paddingVertical: SP.md - 1,
-    paddingHorizontal: SP.md,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
-  readLabel: {
-    fontSize: 13,
-    fontWeight: "600",
   },
   emptyHint: {
     fontSize: 13,

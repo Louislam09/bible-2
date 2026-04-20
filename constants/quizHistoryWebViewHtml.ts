@@ -31,6 +31,27 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+/** Linear mix #RRGGBB → #RRGGBB (t=0 → a, t=1 → b). */
+function mixHex(a: string, b: string, t: number): string {
+  const parse = (hex: string) => {
+    const n = hex.trim().replace("#", "");
+    if (n.length !== 6) return [0, 0, 0] as const;
+    return [
+      parseInt(n.slice(0, 2), 16),
+      parseInt(n.slice(2, 4), 16),
+      parseInt(n.slice(4, 6), 16),
+    ] as const;
+  };
+  const u = Math.max(0, Math.min(1, t));
+  const [ar, ag, ab] = parse(a);
+  const [br, bg, bb] = parse(b);
+  const r = Math.round(ar + (br - ar) * u);
+  const g = Math.round(ag + (bg - ag) * u);
+  const bl = Math.round(ab + (bb - ab) * u);
+  const h = (n: number) => n.toString(16).padStart(2, "0");
+  return `#${h(r)}${h(g)}${h(bl)}`;
+}
+
 function safeJsonForScript(obj: unknown): string {
   return JSON.stringify(obj).replace(/</g, "\\u003c");
 }
@@ -732,7 +753,6 @@ export function buildQuizHistoryChaptersHtml(payload: {
   cells: Array<{
     chapter: number;
     state: "pass" | "fail" | "none";
-    attemptId: string | null;
     ratio: number;
   }>;
 }): string {
@@ -743,22 +763,28 @@ export function buildQuizHistoryChaptersHtml(payload: {
     (completed > passed ? `  ·  ${completed - passed} en proceso` : "") +
     `  ·  ${percent}%`;
 
+  const ringR = 24;
+  const ringCirc = 2 * Math.PI * ringR;
+
   const grid = cells
     .map((c) => {
       const cls =
         c.state === "pass" ? "cell pass" : c.state === "fail" ? "cell fail" : "cell none";
-      const circ = 2 * Math.PI * 24;
-      const dash = circ * Math.max(0, Math.min(1, c.ratio));
+      const rClamped = Math.max(0, Math.min(1, c.ratio));
+      const ringColor = mixHex(surfaces.statProg, surfaces.statOk, rClamped);
+      const finalOffset = ringCirc * (1 - rClamped);
       const ring =
-        c.ratio > 0
+        rClamped > 0
           ? `<svg class="ring" viewBox="0 0 58 58" width="58" height="58" aria-hidden="true">
-            <circle cx="29" cy="29" r="24" fill="none" stroke="${surfaces.border}" stroke-width="2"/>
-            <circle cx="29" cy="29" r="24" fill="none" stroke="${c.state === "pass" ? surfaces.accent : surfaces.fail
-          }" stroke-width="2" stroke-dasharray="${dash} ${circ - dash}" transform="rotate(-90 29 29)" stroke-linecap="round"/>
+            <circle cx="29" cy="29" r="${ringR}" fill="none" stroke="${surfaces.border}" stroke-width="2"/>
+            <circle cx="29" cy="29" r="${ringR}" fill="none" stroke="${ringColor}" stroke-width="2"
+              stroke-dasharray="${ringCirc} ${ringCirc}" stroke-dashoffset="${ringCirc}"
+              transform="rotate(-90 29 29)" stroke-linecap="round">
+              <animate attributeName="stroke-dashoffset" from="${ringCirc}" to="${finalOffset}" dur="0.75s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.25 0.1 0.25 1"/>
+            </circle>
           </svg>`
           : "";
-      const att = c.attemptId ? encodeURIComponent(c.attemptId) : "";
-      return `<button type="button" class="${cls}" data-chapter="${c.chapter}" data-attempt="${att}">
+      return `<button type="button" class="${cls}" data-chapter="${c.chapter}">
         ${ring}
         <span class="cell-num">${c.chapter}</span>
       </button>`;
@@ -816,27 +842,32 @@ export function buildQuizHistoryChaptersHtml(payload: {
   }
   document.querySelectorAll(".cell").forEach(function(btn) {
     var ch = parseInt(btn.getAttribute("data-chapter"), 10);
-    var raw = btn.getAttribute("data-attempt") || "";
-    var aid = raw ? decodeURIComponent(raw) : "";
-    var t = null;
-    var longFired = false;
-    btn.addEventListener("touchstart", function() {
-      longFired = false;
-      t = setTimeout(function() {
-        t = null;
-        longFired = true;
-        if (aid) post({ type: "longPressChapter", attemptId: aid });
-      }, 450);
+    var startX = 0;
+    var startY = 0;
+    var moved = false;
+    var MOVE_PX = 12;
+    btn.addEventListener("touchstart", function(e) {
+      moved = false;
+      if (e.touches && e.touches[0]) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+    btn.addEventListener("touchmove", function(e) {
+      if (e.touches && e.touches[0]) {
+        var dx = Math.abs(e.touches[0].clientX - startX);
+        var dy = Math.abs(e.touches[0].clientY - startY);
+        if (dx > MOVE_PX || dy > MOVE_PX) moved = true;
+      }
     }, { passive: true });
     btn.addEventListener("touchend", function() {
-      if (t) { clearTimeout(t); t = null; }
-      if (!longFired) post({ type: "selectChapter", chapter: ch });
+      if (moved) return;
+      post({ type: "selectChapter", chapter: ch });
     });
     btn.addEventListener("touchcancel", function() {
-      if (t) { clearTimeout(t); t = null; }
+      moved = true;
     });
     btn.addEventListener("click", function() {
-      if (longFired) { longFired = false; return; }
       if ("ontouchstart" in window) return;
       post({ type: "selectChapter", chapter: ch });
     });

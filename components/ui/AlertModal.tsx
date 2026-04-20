@@ -5,7 +5,7 @@ import type { icons } from 'lucide-react-native';
 import { useMyTheme } from '@/context/ThemeContext';
 import { TTheme } from '@/types';
 
-export type AlertType = 'info' | 'error' | 'success' | 'warning';
+export type AlertType = 'info' | 'error' | 'success' | 'warning' | 'offline';
 
 export type AlertButton = {
     text: string;
@@ -57,6 +57,12 @@ const getTypeStyles = (type: AlertType, isDark: boolean) => {
             iconColor: isDark ? '#60a5fa' : '#2563eb',
             iconBg: isDark ? '#1e3a8a40' : '#dbeafe',
             titleColor: isDark ? '#60a5fa' : '#2563eb',
+        },
+        offline: {
+            icon: 'WifiOff' as keyof typeof icons,
+            iconColor: isDark ? '#94a3b8' : '#64748b',
+            iconBg: isDark ? '#33415540' : '#f1f5f9',
+            titleColor: isDark ? '#e2e8f0' : '#475569',
         },
     };
 

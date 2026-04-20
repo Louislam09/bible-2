@@ -19,6 +19,10 @@ import {
   SP,
   getSurfaces,
 } from "@/components/quizHistory/quizHistoryTokens";
+import {
+  QuizQuickAction,
+  QuizQuickActionsRow,
+} from "@/components/quizHistory/QuizQuickAction";
 import { QuizReviewItem } from "@/components/quizHistory/QuizReviewItem";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View as ThemedView } from "@/components/Themed";
@@ -27,7 +31,10 @@ import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
-import { useChapterQuizAI } from "@/hooks/useChapterQuizAI";
+import {
+  isChapterQuizOfflineError,
+  useChapterQuizAI,
+} from "@/hooks/useChapterQuizAI";
 import {
   useQuizProgress,
   type BookSummary,
@@ -102,7 +109,7 @@ const ChapterQuizHistoryScreen = () => {
   const router = useRouter();
   const navigation = useNavigation<any>();
   const params = useLocalSearchParams<{ attemptId?: string | string[] }>();
-  const { alertWarning, confirm, actionSheet } = useAlert();
+  const { alert, alertWarning, confirm } = useAlert();
   const surfaces = useMemo(() => getSurfaces(theme), [theme]);
   const { allBibleLoaded, getBibleServices } = useDBContext();
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
@@ -338,16 +345,26 @@ const ChapterQuizHistoryScreen = () => {
           questions: result.questions,
         });
         modalState$.openChapterQuizBottomSheet();
-      } catch {
-        alertWarning(
-          "Error",
-          "No se pudo preparar el quiz. Intenta nuevamente.",
-        );
+      } catch (e) {
+        if (isChapterQuizOfflineError(e)) {
+          alert({
+            type: "offline",
+            title: "Sin conexión",
+            message:
+              "No hay internet y este capítulo no tiene un quiz guardado en el dispositivo. Conéctate para generarlo, o abre un capítulo en el que ya hayas jugado o descargado preguntas.",
+          });
+        } else {
+          alertWarning(
+            "Error",
+            "No se pudo preparar el quiz. Intenta nuevamente.",
+          );
+        }
       } finally {
         setLoadingQuizSize(null);
       }
     },
     [
+      alert,
       alertWarning,
       allBibleLoaded,
       currentBibleVersion,
@@ -510,32 +527,6 @@ const ChapterQuizHistoryScreen = () => {
     [],
   );
 
-  const handleChapterLongPress = useCallback(
-    (row: ChapterQuizAttemptRow) => {
-      actionSheet(
-        `${row.book} ${row.chapter}`,
-        row.pass ? "Aprobado" : "En proceso",
-        [
-          {
-            text: row.isFavorite ? "Quitar de favoritos" : "Guardar en favoritos",
-            onPress: () => void handleToggleFavorite(row.id),
-          },
-          {
-            text: "Reintentar falladas",
-            onPress: () => void handleRetryFailed(row.id),
-          },
-          {
-            text: "Eliminar intento",
-            style: "destructive",
-            onPress: () => handleDeleteAttempt(row.id),
-          },
-          { text: "Cancelar", style: "cancel", onPress: () => { } },
-        ],
-      );
-    },
-    [actionSheet, handleToggleFavorite, handleRetryFailed, handleDeleteAttempt],
-  );
-
   const screenOptions: SingleScreenHeaderProps = useMemo(() => {
     const title =
       viewState.kind === "books"
@@ -623,14 +614,9 @@ const ChapterQuizHistoryScreen = () => {
                 summary={
                   bookSummaries.find((b) => b.book === viewState.book) ?? null
                 }
-                attemptIndex={indexByBook.get(viewState.book) ?? null}
                 attempts={attemptsForChaptersList}
                 quizSessions={quizSessions}
                 onPressChapter={(chapter) => openChapter(viewState.book, chapter)}
-                onLongPressAttemptId={(attemptId) => {
-                  const row = attempts.find((a) => a.id === attemptId);
-                  if (row) handleChapterLongPress(row);
-                }}
               />
             </AnimatedView>
           ) : viewState.kind === "chapterDetail" ? (
@@ -640,6 +626,8 @@ const ChapterQuizHistoryScreen = () => {
             >
               <ChapterQuizDetailView
                 surfaces={surfaces}
+                book={viewState.book}
+                chapter={viewState.chapter}
                 chapterKey={chapterQuizCacheService.buildChapterKey(
                   viewState.book,
                   viewState.chapter,
@@ -656,6 +644,9 @@ const ChapterQuizHistoryScreen = () => {
                   })
                 }
                 onReadChapter={handleReadChapterFromDetail}
+                onToggleFavoriteBest={(id) => void handleToggleFavorite(id)}
+                onRetryFailedBest={(id) => void handleRetryFailed(id)}
+                onDeleteBestAttempt={handleDeleteAttempt}
               />
             </AnimatedView>
           ) : reviewAttempt ? (
@@ -713,11 +704,9 @@ const ChaptersView: React.FC<{
   surfaces: ReturnType<typeof getSurfaces>;
   book: string;
   summary: BookSummary | null;
-  attemptIndex: ChapterAttemptIndex | null;
   attempts: ChapterQuizAttemptRow[];
   quizSessions: ChapterQuizSessionRow[];
   onPressChapter: (chapter: number) => void;
-  onLongPressAttemptId: (attemptId: string) => void;
 }> = (props) => <QuizHistoryChaptersWebView {...props} />;
 
 /* ───────────────────────── Review View ───────────────────────── */
@@ -795,22 +784,22 @@ const ReviewView: React.FC<{
         />
 
         {/* Quick row of small actions */}
-        <View style={styles.reviewQuickRow}>
-          <QuickAction
-            icon={attempt.isFavorite ? "Star" : "Star"}
+        <QuizQuickActionsRow>
+          <QuizQuickAction
+            icon="Star"
             label={attempt.isFavorite ? "Guardado" : "Guardar"}
             active={attempt.isFavorite}
             onPress={onToggleFavorite}
             surfaces={surfaces}
           />
-          <QuickAction
+          <QuizQuickAction
             icon="Trash2"
             label="Eliminar"
             onPress={onDelete}
             surfaces={surfaces}
             danger
           />
-        </View>
+        </QuizQuickActionsRow>
 
         {attempt.questions.map((q, idx) => (
           <QuizReviewItem
@@ -994,37 +983,6 @@ const DangerButton: React.FC<{
   </TouchableOpacity>
 );
 
-const QuickAction: React.FC<{
-  icon: any;
-  label: string;
-  onPress: () => void;
-  surfaces: ReturnType<typeof getSurfaces>;
-  active?: boolean;
-  danger?: boolean;
-}> = ({ icon, label, onPress, surfaces, active, danger }) => {
-  const color = danger
-    ? surfaces.fail
-    : active
-      ? surfaces.accent
-      : surfaces.muted;
-  return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={onPress}
-      style={[
-        styles.quickAction,
-        {
-          borderColor: surfaces.border,
-          borderRadius: RADIUS.pill,
-        },
-      ]}
-    >
-      <Icon name={icon} size={13} color={color} fillColor={active ? color : "none"} />
-      <Text style={[styles.quickActionText, { color }]}>{label}</Text>
-    </TouchableOpacity>
-  );
-};
-
 const styles = StyleSheet.create({
   container: { flex: 1 },
   listContent: {
@@ -1052,23 +1010,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "500",
     lineHeight: 18,
-  },
-  reviewQuickRow: {
-    flexDirection: "row",
-    gap: SP.sm,
-    marginBottom: SP.lg,
-  },
-  quickAction: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingHorizontal: SP.md,
-    paddingVertical: SP.sm - 1,
-    borderWidth: 1,
-  },
-  quickActionText: {
-    fontSize: 12,
-    fontWeight: "600",
   },
   reviewActions: {
     marginTop: SP.md,

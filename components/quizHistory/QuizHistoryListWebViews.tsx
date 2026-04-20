@@ -270,21 +270,17 @@ export const QuizHistoryChaptersWebView: React.FC<{
   surfaces: Surfaces;
   book: string;
   summary: BookSummary | null;
-  attemptIndex: ChapterAttemptIndex | null;
   attempts: ChapterQuizAttemptRow[];
   quizSessions: ChapterQuizSessionRow[];
   onPressChapter: (chapter: number) => void;
-  onLongPressAttemptId: (attemptId: string) => void;
   direction: "forward" | "backward";
 }> = ({
   surfaces,
   book,
   summary,
-  attemptIndex,
   attempts,
   quizSessions,
   onPressChapter,
-  onLongPressAttemptId,
   direction,
 }) => {
     const { width: windowWidth } = useWindowDimensions();
@@ -316,7 +312,6 @@ export const QuizHistoryChaptersWebView: React.FC<{
         const chapterKey = chapterQuizCacheService.buildChapterKey(book, c);
         const completedN = countCompletedChallengesForChapter(attempts, book, c);
         const ratio = completedN / 4;
-        const best = attemptIndex?.bestByChapter.get(c);
         const hasAnyAttempt = attempts.some(
           (a) => a.book === book && a.chapter === c,
         );
@@ -332,11 +327,10 @@ export const QuizHistoryChaptersWebView: React.FC<{
         return {
           chapter: c,
           state,
-          attemptId: best?.id ?? null,
           ratio,
         };
       });
-    }, [attempts, attemptIndex, book, chapters, quizSessions]);
+    }, [attempts, book, chapters, quizSessions]);
 
     const html = useMemo(
       () =>
@@ -373,14 +367,11 @@ export const QuizHistoryChaptersWebView: React.FC<{
           if (msg.type === "selectChapter" && typeof msg.chapter === "number") {
             onPressChapter(msg.chapter);
           }
-          if (msg.type === "longPressChapter" && msg.attemptId) {
-            onLongPressAttemptId(msg.attemptId);
-          }
         } catch {
           /* ignore */
         }
       },
-      [onPressChapter, onLongPressAttemptId],
+      [onPressChapter],
     );
 
     return (

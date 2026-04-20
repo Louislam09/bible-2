@@ -1,11 +1,37 @@
+import { useNetwork } from "@/context/NetworkProvider";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { chapterQuizCacheService } from "@/services/chapterQuizCacheService";
 import { aiManager } from "@/services/ai/aiManager";
 import { chapterQuizState$, chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { Question } from "@/types";
 import { shuffleArray } from "@/utils/shuffleOptions";
+import NetInfo from "@react-native-community/netinfo";
 import { use$ } from "@legendapp/state/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+/** Matches NetInfo semantics used across the app (see NetworkProvider). */
+function isNetStateOnline(state: {
+  isConnected: boolean | null;
+  isInternetReachable: boolean | null;
+}): boolean {
+  return (
+    state.isConnected === true && state.isInternetReachable !== false
+  );
+}
+
+/** Thrown when quiz needs network (generate / sync) but device is offline with no usable cache. */
+export const CHAPTER_QUIZ_OFFLINE_CODE = "CHAPTER_QUIZ_OFFLINE";
+
+export function isChapterQuizOfflineError(err: unknown): boolean {
+  if (err === null || typeof err !== "object") return false;
+  return (err as { code?: string }).code === CHAPTER_QUIZ_OFFLINE_CODE;
+}
+
+function throwChapterQuizOfflineError(): never {
+  const err = new Error("Sin conexión");
+  (err as { code?: string }).code = CHAPTER_QUIZ_OFFLINE_CODE;
+  throw err;
+}
 
 const MAX_CHAPTER_QUESTIONS = 20;
 const MAX_OUTPUT_TOKENS = 6000;
@@ -216,6 +242,19 @@ const localRegenInFlightByChapterKey = new Map<
 export const useChapterQuizAI = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const netInfo = useNetwork();
+  /** Updated on every NetInfo change (provider listener) + one-time fetch on mount. */
+  const isOnlineRef = useRef(true);
+
+  useEffect(() => {
+    isOnlineRef.current = isNetStateOnline(netInfo);
+  }, [netInfo]);
+
+  useEffect(() => {
+    void NetInfo.fetch().then((s) => {
+      isOnlineRef.current = isNetStateOnline(s);
+    });
+  }, []);
 
   // Keep Gemini user-key override in sync with the manager
   const googleAIKey = use$(() => storedData$.googleAIKey.get());
@@ -262,11 +301,18 @@ export const useChapterQuizAI = () => {
           };
         }
 
+        if (!isOnlineRef.current) {
+          throwChapterQuizOfflineError();
+        }
+
         // 3. Generate with AI (deduplication guard)
         let inFlight = inFlightByChapterKey.get(chapterKey);
         if (!inFlight) {
           inFlight = (async () => {
             try {
+              if (!isOnlineRef.current) {
+                throwChapterQuizOfflineError();
+              }
               const prompt = buildPrompt(book, chapter, MAX_CHAPTER_QUESTIONS, versesText);
 
               const { text: rawText, providerId, modelName } = await aiManager.chat(
@@ -299,6 +345,10 @@ export const useChapterQuizAI = () => {
             }
           })();
           inFlightByChapterKey.set(chapterKey, inFlight);
+        }
+
+        if (!isOnlineRef.current) {
+          throwChapterQuizOfflineError();
         }
 
         const { questions: generatedQuestions } = await inFlight;
@@ -355,10 +405,17 @@ export const useChapterQuizAI = () => {
         const chapterKey = chapterQuizCacheService.buildChapterKey(book, chapter);
         chapterQuizStateHelpers.clearPrefetchedChapter(chapterKey);
 
+        if (!isOnlineRef.current) {
+          throwChapterQuizOfflineError();
+        }
+
         let inFlight = localRegenInFlightByChapterKey.get(chapterKey);
         if (!inFlight) {
           inFlight = (async () => {
             try {
+              if (!isOnlineRef.current) {
+                throwChapterQuizOfflineError();
+              }
               const prompt = buildPrompt(book, chapter, MAX_CHAPTER_QUESTIONS, versesText);
 
               const { text: rawText } = await aiManager.chat(
@@ -384,6 +441,10 @@ export const useChapterQuizAI = () => {
             }
           })();
           localRegenInFlightByChapterKey.set(chapterKey, inFlight);
+        }
+
+        if (!isOnlineRef.current) {
+          throwChapterQuizOfflineError();
         }
 
         const { questions: generatedQuestions } = await inFlight;
