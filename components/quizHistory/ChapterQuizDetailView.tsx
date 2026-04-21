@@ -349,74 +349,73 @@ const ChallengeTile: React.FC<{
   return (
     <Animated.View
       entering={entering}
-      style={[
-        animStyle,
-        {
-          width: tileW,
-          minHeight: 132,
-        },
-      ]}
+      style={{
+        width: tileW,
+        minHeight: 132,
+      }}
     >
-      <Pressable
-        disabled={loading || disabled}
-        onPress={onPress}
-        onPressIn={() => {
-          if (loading || disabled) return;
-          scale.value = withTiming(0.97, {
-            duration: PRESS_IN_MS,
-            easing: Easing.out(Easing.quad),
-          });
-        }}
-        onPressOut={() => {
-          scale.value = withTiming(1, {
-            duration: PRESS_OUT_MS,
-            easing: Easing.out(Easing.quad),
-          });
-        }}
-        style={({ pressed }) => [
-          styles.tile,
-          {
-            width: "100%",
-            minHeight: 132,
-            borderColor: palette.border,
-            backgroundColor: palette.bg,
-            borderWidth: palette.borderWidth,
-            borderRadius: RADIUS.card,
-            opacity: pressed && !loading && !disabled ? 0.92 : disabled && !loading ? 0.55 : 1,
-          },
-        ]}
-      >
-        {loading ? (
-          <ActivityIndicator color={surfaces.accent} />
-        ) : (
-          <>
-            {palette.showCheck ? (
-              <RNView style={styles.tileCheckCorner} pointerEvents="none">
-                <Icon
-                  name="CircleCheck"
-                  size={22}
-                  color={surfaces.pass}
-                  strokeWidth={2.2}
-                />
-              </RNView>
-            ) : null}
-            <Text style={[styles.tileNum, { color: surfaces.text }]}>
-              {size}
-            </Text>
-            <Text style={[styles.tileSub, { color: surfaces.muted }]}>
-              preguntas
-            </Text>
-            <Text
-              style={[
-                styles.tileState,
-                { color: palette.labelColor },
-              ]}
-            >
-              {palette.label}
-            </Text>
-          </>
-        )}
-      </Pressable>
+      <Animated.View style={[animStyle, { width: "100%", minHeight: 132 }]}>
+        <Pressable
+          disabled={loading || disabled}
+          onPress={onPress}
+          onPressIn={() => {
+            if (loading || disabled) return;
+            scale.value = withTiming(0.97, {
+              duration: PRESS_IN_MS,
+              easing: Easing.out(Easing.quad),
+            });
+          }}
+          onPressOut={() => {
+            scale.value = withTiming(1, {
+              duration: PRESS_OUT_MS,
+              easing: Easing.out(Easing.quad),
+            });
+          }}
+          style={({ pressed }) => [
+            styles.tile,
+            {
+              width: "100%",
+              minHeight: 132,
+              borderColor: palette.border,
+              backgroundColor: palette.bg,
+              borderWidth: palette.borderWidth,
+              borderRadius: RADIUS.card,
+              opacity: pressed && !loading && !disabled ? 0.92 : disabled && !loading ? 0.55 : 1,
+            },
+          ]}
+        >
+          {loading ? (
+            <ActivityIndicator color={surfaces.accent} />
+          ) : (
+            <>
+              {palette.showCheck ? (
+                <RNView style={styles.tileCheckCorner} pointerEvents="none">
+                  <Icon
+                    name="CircleCheck"
+                    size={22}
+                    color={surfaces.pass}
+                    strokeWidth={2.2}
+                  />
+                </RNView>
+              ) : null}
+              <Text style={[styles.tileNum, { color: surfaces.text }]}>
+                {size}
+              </Text>
+              <Text style={[styles.tileSub, { color: surfaces.muted }]}>
+                preguntas
+              </Text>
+              <Text
+                style={[
+                  styles.tileState,
+                  { color: palette.labelColor },
+                ]}
+              >
+                {palette.label}
+              </Text>
+            </>
+          )}
+        </Pressable>
+      </Animated.View>
     </Animated.View>
   );
 };

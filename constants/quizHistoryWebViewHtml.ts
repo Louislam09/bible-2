@@ -828,12 +828,13 @@ export function buildQuizHistoryChaptersHtml(payload: {
     <div class="sub">${escapeHtml(sub)}</div>
   </div>
   <div class="divider"></div>
-  <div class="grid">${grid}</div>
   <div class="legend">
     <div class="leg"><span class="dot" style="background:${surfaces.accent}"></span> 4/4 retos</div>
     <div class="leg"><span class="dot" style="background:${surfaces.fail}"></span> Retos en progreso</div>
     <div class="leg"><span class="dot hollow"></span> Sin iniciar</div>
   </div>
+  <div class="divider"></div>
+  <div class="grid">${grid}</div>
 </div>
 <script>
 (function(){

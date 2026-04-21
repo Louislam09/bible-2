@@ -10,7 +10,6 @@ import Animated, {
   withTiming,
   withSpring,
   withRepeat,
-  withSequence,
   Easing,
   runOnJS,
 } from "react-native-reanimated";
@@ -62,14 +61,11 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
 
   useEffect(() => {
     if (isVisible) {
-      // Loop opacity animation when visible
+      // Loop opacity 0→1→0 (avoid withSequence — not always available in UI worklets)
       opacity.value = withRepeat(
-        withSequence(
-          withTiming(1, { duration }),
-          withTiming(0, { duration })
-        ),
-        -1, // infinite loop
-        false
+        withTiming(1, { duration }),
+        -1,
+        true,
       );
     } else {
       // Entrance animation
@@ -91,14 +87,10 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
     }
 
     if ((icon || imageSource) && !animationSource) {
-      // Bounce animation
       bounceValue.value = withRepeat(
-        withSequence(
-          withTiming(-10, { duration: 500 }),
-          withTiming(0, { duration: 500 })
-        ),
-        -1, // infinite loop
-        false
+        withTiming(-10, { duration: 500 }),
+        -1,
+        true,
       );
     }
   }, [icon, imageSource, animationSource, duration, isVisible]);

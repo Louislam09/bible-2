@@ -36,7 +36,6 @@ import Animated, {
     useSharedValue,
     withDelay,
     withRepeat,
-    withSequence,
     withSpring,
     withTiming
 } from "react-native-reanimated";
@@ -123,14 +122,10 @@ const AnimatedIconContainer = ({ theme, loading }: { theme: TTheme; loading: boo
 
     useEffect(() => {
         if (loading) {
-            // Blink animation while loading
             opacity.value = withRepeat(
-                withSequence(
-                    withTiming(0.3, { duration: 600 }),
-                    withTiming(1, { duration: 600 })
-                ),
-                -1, // infinite repeat
-                false
+                withTiming(0.3, { duration: 600 }),
+                -1,
+                true,
             );
         } else {
             opacity.value = withTiming(1, { duration: 200 });
@@ -313,32 +308,20 @@ const AnimatedLoadingIndicator = ({ theme }: { theme: TTheme }) => {
             stiffness: 50,
         });
 
-        // Animate dots in loop using withRepeat
         dot1.value = withRepeat(
-            withSequence(
-                withDelay(0, withTiming(1, { duration: 400 })),
-                withTiming(0, { duration: 400 })
-            ),
-            -1, // infinite repeat
-            false
+            withTiming(1, { duration: 400 }),
+            -1,
+            true,
         );
 
-        dot2.value = withRepeat(
-            withSequence(
-                withDelay(200, withTiming(1, { duration: 400 })),
-                withTiming(0, { duration: 400 })
-            ),
-            -1,
-            false
+        dot2.value = withDelay(
+            200,
+            withRepeat(withTiming(1, { duration: 400 }), -1, true),
         );
 
-        dot3.value = withRepeat(
-            withSequence(
-                withDelay(400, withTiming(1, { duration: 400 })),
-                withTiming(0, { duration: 400 })
-            ),
-            -1,
-            false
+        dot3.value = withDelay(
+            400,
+            withRepeat(withTiming(1, { duration: 400 }), -1, true),
         );
     }, []);
 

@@ -1,4 +1,9 @@
 import Icon from "@/components/Icon";
+import {
+  RADIUS,
+  SP,
+  getSurfaces,
+} from "@/components/quizHistory/quizHistoryTokens";
 import { useAlert } from "@/context/AlertContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
@@ -13,8 +18,31 @@ import { shuffleArray } from "@/utils/shuffleOptions";
 import { use$ } from "@legendapp/state/react";
 import * as Crypto from "expo-crypto";
 import { useRouter } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View as RNView,
+  type LayoutChangeEvent,
+} from "react-native";
+import Animated, {
+  Easing,
+  FadeIn,
+  useAnimatedProps,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import Svg, { Path } from "react-native-svg";
 import LottieView from "lottie-react-native";
 import Reference from "@/components/Reference";
 import BottomModal from "./BottomModal";
@@ -24,6 +52,386 @@ const confettiSource = require("../assets/lottie/confetti_animation.json");
 
 /** Same bar as "Muy bien" / completion tiers: 70%+ counts as pass. */
 const PASS_RATIO = 0.7;
+
+const VIEW_TRANS_MS = 220;
+
+/** Full border draw around the row; starts at bottom-right; icon after (ms). */
+const OPTION_BORDER_TRACE_MS = 820;
+const OPTION_TRACE_STROKE = 2;
+/** Inward (concave) corner scallops — matches the “plaque” outline when selected. */
+const OPTION_PLAQUE_NOTCH = 11;
+const AnimatedPath = Animated.createAnimatedComponent(Path);
+
+function optionPlaqueNotchClamp(W: number, H: number): number {
+  if (W <= 0 || H <= 0) return 0;
+  return Math.min(OPTION_PLAQUE_NOTCH, W / 2 - 1, H / 2 - 1);
+}
+
+/** Closed plaque with concave corners; perimeter = 2(W+H) - 8n + 2πn. */
+function optionPlaquePathD(W: number, H: number, n: number): string {
+  if (W <= 0 || H <= 0 || n <= 0) return "";
+  const nn = Math.min(n, W / 2 - 0.01, H / 2 - 0.01);
+  return [
+    `M ${nn} 0`,
+    `L ${W - nn} 0`,
+    `A ${nn} ${nn} 0 0 0 ${W} ${nn}`,
+    `L ${W} ${H - nn}`,
+    `A ${nn} ${nn} 0 0 0 ${W - nn} ${H}`,
+    `L ${nn} ${H}`,
+    `A ${nn} ${nn} 0 0 0 0 ${H - nn}`,
+    `L 0 ${nn}`,
+    `A ${nn} ${nn} 0 0 0 ${nn} 0`,
+    "Z",
+  ].join(" ");
+}
+
+/** Same plaque; trace starts at bottom-right (BR arc last in draw order). */
+function optionPlaqueTracePathD(W: number, H: number, n: number): string {
+  if (W <= 0 || H <= 0 || n <= 0) return "";
+  const nn = Math.min(n, W / 2 - 0.01, H / 2 - 0.01);
+  return [
+    `M ${W - nn} ${H}`,
+    `L ${nn} ${H}`,
+    `A ${nn} ${nn} 0 0 0 0 ${H - nn}`,
+    `L 0 ${nn}`,
+    `A ${nn} ${nn} 0 0 0 ${nn} 0`,
+    `L ${W - nn} 0`,
+    `A ${nn} ${nn} 0 0 0 ${W} ${nn}`,
+    `L ${W} ${H - nn}`,
+    `A ${nn} ${nn} 0 0 0 ${W - nn} ${H}`,
+    "Z",
+  ].join(" ");
+}
+
+const STEPPER_SEGMENT_H = 5;
+
+/** Segmented stepper (Duolingo-style): completed = accent, current = soft accent, rest = muted track. */
+const QuizStepper: React.FC<{
+  total: number;
+  currentIndex: number;
+  hasAnswered: boolean;
+  surfaces: ReturnType<typeof getSurfaces>;
+}> = ({ total, currentIndex, hasAnswered, surfaces }) => {
+  if (total <= 0) return null;
+  return (
+    <RNView style={{ width: "100%", marginTop: SP.sm }}>
+      <RNView
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: SP.xs,
+        }}
+      >
+        {Array.from({ length: total }, (_, i) => {
+          const completed =
+            i < currentIndex || (i === currentIndex && hasAnswered);
+          const current = i === currentIndex && !hasAnswered;
+          const backgroundColor = completed
+            ? surfaces.accent
+            : current
+              ? surfaces.accent + "55"
+              : surfaces.border;
+          return (
+            <RNView
+              key={i}
+              style={{
+                flex: 1,
+                height: STEPPER_SEGMENT_H,
+                borderRadius: RADIUS.pill,
+                backgroundColor,
+              }}
+            />
+          );
+        })}
+      </RNView>
+      <RNView
+        style={{
+          height: StyleSheet.hairlineWidth,
+          width: "100%",
+          marginTop: SP.sm,
+          backgroundColor: surfaces.border,
+        }}
+      />
+    </RNView>
+  );
+};
+
+const QuizOptionRow: React.FC<{
+  option: string;
+  optionIndex: number;
+  isSelected: boolean;
+  isCorrect: boolean;
+  isWrongSelection: boolean;
+  hasAnswered: boolean;
+  disabled: boolean;
+  surfaces: ReturnType<typeof getSurfaces>;
+  styles: ReturnType<typeof getStyles>;
+  onPress: () => void;
+}> = ({
+  option,
+  optionIndex,
+  isSelected,
+  isCorrect,
+  isWrongSelection,
+  hasAnswered,
+  disabled,
+  surfaces,
+  styles,
+  onPress,
+}) => {
+  const pressed = useSharedValue(0);
+  const traceProgress = useSharedValue(0);
+  const iconReveal = useSharedValue(0);
+  const layoutW = useSharedValue(0);
+  const layoutH = useSharedValue(0);
+  const [traceBox, setTraceBox] = useState({ w: 0, h: 0 });
+
+  const shouldRevealAnim = hasAnswered && (isCorrect || isWrongSelection);
+  const traceColor = isCorrect ? surfaces.accent : surfaces.fail;
+
+  const onOptionLayout = (e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    layoutW.value = width;
+    layoutH.value = height;
+    setTraceBox({ w: width, h: height });
+  };
+
+  useLayoutEffect(() => {
+    if (!shouldRevealAnim) {
+      traceProgress.value = 0;
+      iconReveal.value = 0;
+      return;
+    }
+    if (traceBox.w <= 0 || traceBox.h <= 0) return;
+    traceProgress.value = 0;
+    iconReveal.value = 0;
+    traceProgress.value = withTiming(
+      1,
+      {
+        duration: OPTION_BORDER_TRACE_MS,
+        easing: Easing.inOut(Easing.cubic),
+      },
+      (finished) => {
+        if (finished) {
+          iconReveal.value = withTiming(1, {
+            duration: 260,
+            easing: Easing.out(Easing.cubic),
+          });
+        }
+      },
+    );
+  }, [
+    shouldRevealAnim,
+    traceBox.w,
+    traceBox.h,
+    traceProgress,
+    iconReveal,
+  ]);
+
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 - pressed.value * 0.02 }],
+    opacity: 1 - pressed.value * 0.05,
+  }));
+
+  const tracePathProps = useAnimatedProps(() => {
+    const w = layoutW.value;
+    const h = layoutH.value;
+    if (w <= 1 || h <= 1) {
+      return { strokeDashoffset: 0, strokeDasharray: "0 1" };
+    }
+    const sw = OPTION_TRACE_STROKE;
+    const innerW = w - sw;
+    const innerH = h - sw;
+    const n = Math.min(
+      OPTION_PLAQUE_NOTCH,
+      innerW / 2 - 1,
+      innerH / 2 - 1,
+    );
+    const p = 2 * (innerW + innerH) - 8 * n + 2 * Math.PI * n;
+    const t = traceProgress.value;
+    return {
+      strokeDasharray: `${p} ${p}`,
+      strokeDashoffset: p * (1 - t),
+    };
+  });
+
+  const iconAnimStyle = useAnimatedStyle(() => ({
+    opacity: iconReveal.value,
+    transform: [{ scale: 0.72 + iconReveal.value * 0.28 }],
+  }));
+
+  const focused = isSelected && !hasAnswered;
+  const dimmed =
+    hasAnswered && !isCorrect && !isWrongSelection && !focused;
+
+  const plaquePaint = useMemo(() => {
+    const hideStroke = shouldRevealAnim;
+    if (hasAnswered && isWrongSelection) {
+      return {
+        fill: surfaces.failSoft,
+        stroke: hideStroke ? "transparent" : surfaces.fail + "55",
+        strokeWidth: hideStroke ? 0 : 1.5,
+      };
+    }
+    if (hasAnswered && isCorrect) {
+      return {
+        fill: surfaces.accentSoft,
+        stroke: hideStroke ? "transparent" : surfaces.accent,
+        strokeWidth: hideStroke ? 0 : 1.5,
+      };
+    }
+    if (focused) {
+      return {
+        fill: surfaces.accentSoft,
+        stroke: hideStroke ? "transparent" : surfaces.accent,
+        strokeWidth: hideStroke ? 0 : 1.5,
+      };
+    }
+    return {
+      fill: surfaces.card,
+      stroke: hideStroke ? "transparent" : surfaces.borderStrong,
+      strokeWidth: hideStroke ? 0 : 1,
+    };
+  }, [
+    shouldRevealAnim,
+    focused,
+    hasAnswered,
+    isCorrect,
+    isWrongSelection,
+    surfaces,
+  ]);
+
+  const plaqueD =
+    traceBox.w > 0 && traceBox.h > 0
+      ? optionPlaquePathD(
+          traceBox.w,
+          traceBox.h,
+          optionPlaqueNotchClamp(traceBox.w, traceBox.h),
+        )
+      : "";
+
+  return (
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      onPressIn={() => {
+        if (disabled) return;
+        pressed.value = withTiming(1, { duration: 90 });
+      }}
+      onPressOut={() => {
+        pressed.value = withTiming(0, { duration: 140 });
+      }}
+    >
+      <RNView
+        style={styles.optionRowOuter}
+        onLayout={onOptionLayout}
+      >
+        <Animated.View
+          style={[
+            styles.optionRowShell,
+            dimmed && styles.optionRowDimmed,
+            animStyle,
+          ]}
+        >
+          {plaqueD ? (
+            <Svg
+              width={traceBox.w}
+              height={traceBox.h}
+              style={StyleSheet.absoluteFillObject}
+              pointerEvents="none"
+            >
+              <Path
+                d={plaqueD}
+                fill={plaquePaint.fill}
+                stroke={plaquePaint.stroke}
+                strokeWidth={plaquePaint.strokeWidth}
+                strokeLinejoin="round"
+              />
+            </Svg>
+          ) : null}
+          <RNView style={styles.optionRowContent}>
+            <RNView
+              style={[
+                styles.optionChip,
+                focused && styles.optionChipFocused,
+                hasAnswered && isCorrect && styles.optionChipCorrect,
+                hasAnswered && isWrongSelection && styles.optionChipWrong,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.optionChipLabel,
+                  { color: surfaces.muted },
+                  focused && { color: surfaces.accent },
+                  hasAnswered && isCorrect && { color: surfaces.accent },
+                  hasAnswered && isWrongSelection && { color: surfaces.fail },
+                  dimmed && { color: surfaces.softText },
+                ]}
+              >
+                {optionIndex + 1}
+              </Text>
+            </RNView>
+            <Text
+              style={[
+                styles.optionRowText,
+                dimmed && styles.optionRowTextDimmed,
+              ]}
+              numberOfLines={5}
+            >
+              {option}
+            </Text>
+            {hasAnswered && isCorrect ? (
+              <Animated.View style={iconAnimStyle}>
+                <Icon
+                  name="Check"
+                  size={18}
+                  color={surfaces.accent}
+                  strokeWidth={2.2}
+                />
+              </Animated.View>
+            ) : null}
+            {hasAnswered && isWrongSelection ? (
+              <Animated.View style={iconAnimStyle}>
+                <Icon
+                  name="X"
+                  size={18}
+                  color={surfaces.fail}
+                  strokeWidth={2.2}
+                />
+              </Animated.View>
+            ) : null}
+          </RNView>
+        </Animated.View>
+        {shouldRevealAnim && traceBox.w > 0 && traceBox.h > 0 ? (
+          <Svg
+            width={traceBox.w}
+            height={traceBox.h}
+            style={StyleSheet.absoluteFillObject}
+            pointerEvents="none"
+          >
+            <AnimatedPath
+              d={optionPlaqueTracePathD(
+                traceBox.w - OPTION_TRACE_STROKE,
+                traceBox.h - OPTION_TRACE_STROKE,
+                optionPlaqueNotchClamp(
+                  traceBox.w - OPTION_TRACE_STROKE,
+                  traceBox.h - OPTION_TRACE_STROKE,
+                ),
+              )}
+              transform={`translate(${OPTION_TRACE_STROKE / 2},${OPTION_TRACE_STROKE / 2})`}
+              stroke={traceColor}
+              strokeWidth={OPTION_TRACE_STROKE}
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              animatedProps={tracePathProps}
+            />
+          </Svg>
+        ) : null}
+      </RNView>
+    </Pressable>
+  );
+};
 
 function getCompletionCopy(score: number, total: number) {
   if (total <= 0) {
@@ -55,6 +463,7 @@ const ChapterQuizBottomSheet = () => {
   const { theme } = useMyTheme();
   const { alertWarning, confirm } = useAlert();
   const router = useRouter();
+  const surfaces = useMemo(() => getSurfaces(theme), [theme]);
   const styles = getStyles(theme);
   const activeQuiz = use$(() => chapterQuizState$.activeQuiz.get());
 
@@ -339,44 +748,72 @@ const ChapterQuizBottomSheet = () => {
         ) : null}
 
         {!isCompleted && (
-          <>
+          <RNView style={styles.quizHeader}>
             <Text style={styles.title}>
               {activeQuiz.book} {activeQuiz.chapter}
             </Text>
             <Text style={styles.progress}>{progressLabel}</Text>
-          </>
+            <QuizStepper
+              total={total}
+              currentIndex={currentIndex}
+              hasAnswered={hasAnswered}
+              surfaces={surfaces}
+            />
+          </RNView>
         )}
 
         {!isCompleted && currentQuestion && (
           <>
-            <Text style={styles.question}>{currentQuestion.question}</Text>
-            <View style={styles.optionsContainer}>
-              {currentQuestion.options.map((option) => {
+            <Animated.View
+              key={`question-${currentIndex}`}
+              entering={FadeIn.duration(VIEW_TRANS_MS).easing(
+                Easing.out(Easing.quad),
+              )}
+            >
+              <RNView collapsable={false} style={styles.questionSection}>
+                <Text style={styles.questionKicker}>Pregunta</Text>
+                <Text style={styles.question}>{currentQuestion.question}</Text>
+              </RNView>
+            </Animated.View>
+            <RNView style={styles.optionsContainer}>
+              {currentQuestion.options.map((option, optionIndex) => {
                 const isSelected = selectedOption === option;
                 const isCorrect = hasAnswered && option === currentQuestion.correct;
                 const isWrongSelection =
                   hasAnswered && isSelected && option !== currentQuestion.correct;
 
                 return (
-                  <TouchableOpacity
-                    key={option}
-                    style={[
-                      styles.optionButton,
-                      isCorrect && styles.optionCorrect,
-                      isWrongSelection && styles.optionWrong,
-                    ]}
-                    onPress={() => onSelectOption(option)}
-                    disabled={hasAnswered}
-                  >
-                    <Text style={styles.optionText}>{option}</Text>
-                  </TouchableOpacity>
+                  <RNView key={`${currentIndex}-${option}`}>
+                    <QuizOptionRow
+                      option={option}
+                      optionIndex={optionIndex}
+                      isSelected={isSelected}
+                      isCorrect={!!isCorrect}
+                      isWrongSelection={!!isWrongSelection}
+                      hasAnswered={hasAnswered}
+                      disabled={hasAnswered}
+                      surfaces={surfaces}
+                      styles={styles}
+                      onPress={() => onSelectOption(option)}
+                    />
+                  </RNView>
                 );
               })}
-            </View>
+            </RNView>
 
             {hasAnswered && (
               <View style={styles.feedbackBox}>
-                <Text style={styles.feedbackTitle}>
+                <Text
+                  style={[
+                    styles.feedbackTitle,
+                    {
+                      color:
+                        selectedOption === currentQuestion.correct
+                          ? surfaces.accent
+                          : surfaces.fail,
+                    },
+                  ]}
+                >
                   {selectedOption === currentQuestion.correct ? "Correcto" : "Incorrecto"}
                 </Text>
                 {currentQuestion.reference ? (
@@ -578,79 +1015,143 @@ const ChapterQuizBottomSheet = () => {
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
-  StyleSheet.create({
+const getStyles = (theme: TTheme) => {
+  const s = getSurfaces(theme);
+  return StyleSheet.create({
     bottomSheet: {
-      backgroundColor: colors.background,
+      backgroundColor: s.base,
     },
     container: {
       flex: 1,
-      padding: 16,
-      gap: 12,
+      padding: SP.lg,
+      gap: SP.md,
     },
     containerCompleted: {
       justifyContent: "center",
       paddingTop: 4,
       paddingBottom: 20,
     },
+    quizHeader: {
+      width: "100%",
+    },
     title: {
-      fontSize: 20,
+      fontSize: 22,
       fontWeight: "700",
-      color: colors.text,
+      letterSpacing: -0.5,
+      color: s.text,
       textAlign: "center",
     },
     progress: {
       fontSize: 13,
-      color: colors.text + "BB",
+      fontWeight: "500",
+      color: s.muted,
       textAlign: "center",
+      marginTop: 2,
+    },
+    questionSection: {
+      width: "100%",
+      marginTop: SP.sm,
+      paddingBottom: SP.xs,
+    },
+    questionKicker: {
+      fontSize: 10,
+      fontWeight: "600",
+      letterSpacing: 0.65,
+      textTransform: "uppercase",
+      color: s.muted,
+      marginBottom: 6,
     },
     question: {
       fontSize: 18,
-      fontWeight: "600",
-      color: colors.text,
-      marginTop: 8,
+      fontWeight: "700",
+      letterSpacing: -0.35,
+      lineHeight: 26,
+      color: s.text,
     },
     optionsContainer: {
-      gap: 8,
-      marginTop: 6,
+      gap: 10,
+      marginTop: SP.md,
     },
-    optionButton: {
+    optionRowOuter: {
+      width: "100%",
+      position: "relative",
+      shadowColor: "#000000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: theme.dark ? 0.42 : 0.12,
+      shadowRadius: 12,
+      elevation: 6,
+    },
+    optionRowShell: {
+      position: "relative",
+      minHeight: 56,
+      overflow: "visible",
+    },
+    optionRowContent: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: SP.md,
+      minHeight: 56,
+      paddingVertical: 14,
+      paddingHorizontal: SP.md,
+    },
+    optionRowDimmed: {
+      opacity: 0.48,
+    },
+    optionChip: {
+      width: 32,
+      height: 32,
       borderRadius: 10,
-      borderWidth: 1,
-      borderColor: colors.text + "33",
-      paddingVertical: 10,
-      paddingHorizontal: 12,
-      backgroundColor: colors.card,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: s.accentSofter,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: s.border,
     },
-    optionCorrect: {
-      borderColor: "#22c55e",
-      backgroundColor: "#22c55e22",
+    optionChipFocused: {
+      borderColor: s.accent,
+      backgroundColor: s.accentSoft,
     },
-    optionWrong: {
-      borderColor: "#ef4444",
-      backgroundColor: "#ef444422",
+    optionChipCorrect: {
+      borderColor: s.accent,
+      backgroundColor: s.accentSoft,
     },
-    optionText: {
-      color: colors.text,
+    optionChipWrong: {
+      borderColor: s.fail + "55",
+      backgroundColor: s.failSoft,
+    },
+    optionChipLabel: {
+      fontSize: 14,
+      fontWeight: "700",
+      letterSpacing: -0.2,
+    },
+    optionRowText: {
+      flex: 1,
+      color: s.text,
       fontSize: 15,
-      fontWeight: "500",
+      fontWeight: "600",
+      letterSpacing: -0.1,
+      lineHeight: 22,
+    },
+    optionRowTextDimmed: {
+      color: s.softText,
     },
     feedbackBox: {
-      borderRadius: 10,
-      padding: 10,
-      backgroundColor: colors.card,
-      borderWidth: 1,
-      borderColor: colors.text + "22",
+      borderRadius: RADIUS.card,
+      padding: SP.md,
+      backgroundColor: s.card,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: s.border,
       gap: 4,
+      marginTop: 2,
     },
     feedbackTitle: {
-      color: colors.notification,
       fontWeight: "700",
       fontSize: 14,
     },
     feedbackText: {
-      color: colors.text,
+      color: s.text,
       fontSize: 13,
+      fontWeight: "500",
     },
     referenceRow: {
       flexDirection: "row",
@@ -659,21 +1160,21 @@ const getStyles = ({ colors }: TTheme) =>
       gap: 4,
     },
     referenceLabel: {
-      color: colors.text,
+      color: s.text,
       fontSize: 13,
       fontWeight: "700",
     },
     referenceLink: {
-      color: colors.notification,
+      color: s.accent,
       fontSize: 13,
       fontWeight: "600",
     },
     primaryButton: {
-      marginTop: 8,
-      borderRadius: 12,
-      backgroundColor: colors.notification,
+      marginTop: SP.sm,
+      borderRadius: RADIUS.button,
+      backgroundColor: s.accent,
       paddingVertical: 14,
-      paddingHorizontal: 16,
+      paddingHorizontal: SP.lg,
       alignItems: "center",
       justifyContent: "center",
     },
@@ -685,7 +1186,7 @@ const getStyles = ({ colors }: TTheme) =>
       opacity: 0.5,
     },
     primaryButtonText: {
-      color: "white",
+      color: "#FFFFFF",
       fontWeight: "700",
       fontSize: 15,
     },
@@ -708,8 +1209,8 @@ const getStyles = ({ colors }: TTheme) =>
     },
     resultCard: {
       width: "100%",
-      borderRadius: 20,
-      borderWidth: 1,
+      borderRadius: RADIUS.card,
+      borderWidth: StyleSheet.hairlineWidth,
       paddingHorizontal: 22,
       paddingVertical: 26,
       alignItems: "center",
@@ -851,5 +1352,6 @@ const getStyles = ({ colors }: TTheme) =>
       fontWeight: "800",
     },
   });
+};
 
 export default ChapterQuizBottomSheet;
