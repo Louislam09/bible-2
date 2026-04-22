@@ -34,6 +34,7 @@ import {
 import Animated, {
   Easing,
   FadeInDown,
+  FadeInUp,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -47,11 +48,39 @@ export {
   hasSessionForQuizSize
 };
 
-const TILE_ENTER_MS = 200;
-const TILE_STAGGER_MS = 42;
-const ATTEMPT_STAGGER_MS = 38;
+/**
+ * Durations and stagger follow `constants/quizHistoryWebViewHtml.ts` keyframes:
+ * `quizHdIn` 0.78s, `homeEnterFromBottom` 0.92s, `bookCardIn` 0.88s,
+ * `cubic-bezier(0.4, 0, 0.2, 1)`, step `var(--bb) * 36ms`.
+ */
+const QUIZ_HEAD_ENT_MS = 780;
+const QUIZ_BLOCK_ENT_MS = 920;
+const QUIZ_CARD_ENT_MS = 880;
+const STAGGER_BB_MS = 36;
+const TILE_STAGGER_MS = 40;
+const ATTEMPT_STAGGER_MS = 44;
 const PRESS_IN_MS = 110;
 const PRESS_OUT_MS = 160;
+
+const easeDetail = Easing.bezier(0.4, 0, 0.2, 1);
+
+function headFromTop(delayMs: number) {
+  return FadeInDown.duration(QUIZ_HEAD_ENT_MS)
+    .delay(delayMs)
+    .easing(easeDetail);
+}
+
+function bodyFromBottom(delayMs: number) {
+  return FadeInUp.duration(QUIZ_BLOCK_ENT_MS)
+    .delay(delayMs)
+    .easing(easeDetail);
+}
+
+function bookCardFromBottom(delayMs: number) {
+  return FadeInUp.duration(QUIZ_CARD_ENT_MS)
+    .delay(delayMs)
+    .easing(easeDetail);
+}
 
 type Props = {
   surfaces: QuizSurfaces;
@@ -131,16 +160,20 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
   const tileW =
     (Dimensions.get("window").width - SP.lg * 2 - SP.md) / 2 - 1;
 
+  const d1 = STAGGER_BB_MS;
+  const d2 = STAGGER_BB_MS * 2;
+  const tileBaseDelay = STAGGER_BB_MS * 3;
+  const nTiles = CHAPTER_QUIZ_SIZE_OPTIONS.length;
+  const afterTiles = tileBaseDelay + nTiles * TILE_STAGGER_MS;
+  const intentosLabelDelay = afterTiles + 32;
+  const attemptEnterBase = intentosLabelDelay + STAGGER_BB_MS;
+
   return (
     <ScrollView
       contentContainerStyle={styles.listContent}
       showsVerticalScrollIndicator={false}
     >
-      <Animated.View
-        entering={FadeInDown.duration(TILE_ENTER_MS)
-          .delay(0)
-          .easing(Easing.out(Easing.quad))}
-      >
+      <Animated.View entering={headFromTop(0)}>
         <RNView style={styles.detailHead}>
           <Text style={[styles.detailTitle, { color: surfaces.text }]}>
             {book} {chapter}
@@ -150,21 +183,13 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
           </Text>
         </RNView>
       </Animated.View>
-      <Animated.View
-        entering={FadeInDown.duration(TILE_ENTER_MS)
-          .delay(24)
-          .easing(Easing.out(Easing.quad))}
-      >
+      <Animated.View entering={bodyFromBottom(0)}>
         <RNView
           style={[styles.headDivider, { backgroundColor: surfaces.border }]}
         />
       </Animated.View>
 
-      <Animated.View
-        entering={FadeInDown.duration(TILE_ENTER_MS)
-          .delay(40)
-          .easing(Easing.out(Easing.quad))}
-      >
+      <Animated.View entering={bodyFromBottom(d1)}>
         <QuizQuickActionsRow>
           <QuizQuickAction
             icon="BookOpen"
@@ -205,11 +230,7 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
         </QuizQuickActionsRow>
       </Animated.View>
 
-      <Animated.View
-        entering={FadeInDown.duration(TILE_ENTER_MS)
-          .delay(56)
-          .easing(Easing.out(Easing.quad))}
-      >
+      <Animated.View entering={bodyFromBottom(d2)}>
         <Text style={[styles.sectionLabel, { color: surfaces.muted }]}>
           RETOS
         </Text>
@@ -254,7 +275,7 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
             <ChallengeTile
               key={size}
               size={size}
-              index={index}
+              enterDelay={tileBaseDelay + index * TILE_STAGGER_MS}
               loading={loading}
               disabled={loadingQuizSize !== null}
               tileW={tileW}
@@ -266,11 +287,7 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
         })}
       </RNView>
 
-      <Animated.View
-        entering={FadeInDown.duration(TILE_ENTER_MS)
-          .delay(72 + CHAPTER_QUIZ_SIZE_OPTIONS.length * TILE_STAGGER_MS)
-          .easing(Easing.out(Easing.quad))}
-      >
+      <Animated.View entering={bodyFromBottom(intentosLabelDelay)}>
         <Text
           style={[
             styles.sectionLabel,
@@ -281,11 +298,7 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
         </Text>
       </Animated.View>
       {sortedAttempts.length === 0 ? (
-        <Animated.View
-          entering={FadeInDown.duration(TILE_ENTER_MS)
-            .delay(100)
-            .easing(Easing.out(Easing.quad))}
-        >
+        <Animated.View entering={bodyFromBottom(attemptEnterBase)}>
           <Text style={[styles.emptyHint, { color: surfaces.muted }]}>
             Aún no hay intentos guardados para este capítulo.
           </Text>
@@ -296,13 +309,9 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
           return (
             <Animated.View
               key={row.id}
-              entering={FadeInDown.duration(TILE_ENTER_MS)
-                .delay(
-                  90 +
-                    CHAPTER_QUIZ_SIZE_OPTIONS.length * TILE_STAGGER_MS +
-                    index * ATTEMPT_STAGGER_MS,
-                )
-                .easing(Easing.out(Easing.quad))}
+              entering={bodyFromBottom(
+                attemptEnterBase + index * ATTEMPT_STAGGER_MS,
+              )}
             >
               <AttemptRow
                 row={row}
@@ -320,7 +329,7 @@ export const ChapterQuizDetailView: React.FC<Props> = ({
 
 const ChallengeTile: React.FC<{
   size: ChapterQuizSizeOption;
-  index: number;
+  enterDelay: number;
   loading: boolean;
   disabled: boolean;
   tileW: number;
@@ -329,7 +338,7 @@ const ChallengeTile: React.FC<{
   onPress: () => void;
 }> = ({
   size,
-  index,
+  enterDelay,
   loading,
   disabled,
   tileW,
@@ -342,9 +351,7 @@ const ChallengeTile: React.FC<{
     transform: [{ scale: scale.value }],
   }));
 
-  const entering = FadeInDown.duration(TILE_ENTER_MS)
-    .delay(64 + index * TILE_STAGGER_MS)
-    .easing(Easing.out(Easing.quad));
+  const entering = bookCardFromBottom(enterDelay);
 
   return (
     <Animated.View
