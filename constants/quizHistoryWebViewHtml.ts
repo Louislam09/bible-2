@@ -47,11 +47,11 @@ function buildQuizHomeAvatarMarkup(
   avatar: QuizHistoryHomeUserAvatar | null | undefined,
 ): string {
   if (!avatar?.src) {
-    return '<div class="quiz-av" aria-hidden="true">✝</div>';
+    return '<div class="quiz-av quiz-hd-in" style="--hi:0" aria-hidden="true">✝</div>';
   }
   const src = escapeHtml(avatar.src);
   const fallback = escapeJsSingleQuoted(avatar.onErrorSrc);
-  return `<div class="quiz-av quiz-av--img" aria-hidden="true"><img src="${src}" alt="" decoding="async" onerror="this.onerror=null;this.src='${fallback}'" /></div>`;
+  return `<div class="quiz-av quiz-av--img quiz-hd-in" style="--hi:0" aria-hidden="true"><img src="${src}" alt="" decoding="async" onerror="this.onerror=null;this.src='${fallback}'" /></div>`;
 }
 
 /** Linear mix #RRGGBB → #RRGGBB (t=0 → a, t=1 → b). */
@@ -467,7 +467,7 @@ function buildFeaturedCarouselInnerHtml(
       <img src="${escapeHtml(cover)}" alt="" loading="lazy" decoding="async" onerror="this.parentNode.className='feat-blob';this.remove();" />
     </div>`
           : `<div class="feat-blob" aria-hidden="true"></div>`;
-      return `<button type="button" class="feat-card" data-book-idx="${idx}" style="--fi:${fi};background:${grad}">
+      return `<button type="button" class="feat-card quiz-btm-in" data-book-idx="${idx}" style="--fi:${fi};--bb: calc(2 + var(--fi, 0)); background:${grad}">
   <div class="feat-card-inner">
     <div class="feat-copy">
       <div class="feat-kicker">${escapeHtml(b.shortName)}</div>
@@ -494,8 +494,8 @@ function buildOrbitStripInnerHtml(
   if (scored.length === 0) return "";
   return scored
     .map(
-      ({ b, idx }) =>
-        `<button type="button" class="orbit-av" data-book-idx="${idx}" style="background:${b.avatarBg};color:${b.bookColor};border-color:${b.borderAccent}">${escapeHtml(b.shortName)}</button>`,
+      ({ b, idx }, oi) =>
+        `<button type="button" class="orbit-av quiz-btm-in" data-book-idx="${idx}" style="--oi:${oi};--bb: calc(2 + var(--oi, 0)); background:${b.avatarBg};color:${b.bookColor};border-color:${b.borderAccent}">${escapeHtml(b.shortName)}</button>`,
     )
     .join("");
 }
@@ -539,8 +539,8 @@ export function buildQuizHistoryBooksHtml(payload: {
   const booksHtml =
     books.length === 0
       ? `<div class="empty" style="--i:0">
-          <div class="empty-icon">✓</div>
-          <p class="empty-text">Aún no has completado ningún quiz.<br/>Comienza a leer y prueba tu conocimiento.</p>
+          <div class="empty-icon quiz-btm-in" style="--bb:0">✓</div>
+          <p class="empty-text quiz-btm-in" style="--bb:1">Aún no has completado ningún quiz.<br/>Comienza a leer y prueba tu conocimiento.</p>
         </div>`
       : books
         .map((b, idx) => {
@@ -591,7 +591,7 @@ export function buildQuizHistoryBooksHtml(payload: {
   const quizHomeAvatarHtml = buildQuizHomeAvatarMarkup(homeUserAvatar);
 
   let entSeq = 0;
-  const entHeader = entSeq++;
+  entSeq++;
   const entGreet = entSeq++;
   const entFeat = featuredHtml ? entSeq++ : -1;
   const entOrbit = orbitHtml ? entSeq++ : -1;
@@ -610,34 +610,35 @@ export function buildQuizHistoryBooksHtml(payload: {
   html, body { margin: 0; padding: 0; background: ${softPageBg}; color: ${surfaces.text};
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 15px; line-height: 1.35; }
-  @keyframes metricsIn {
-    from { opacity: 0; transform: translateY(-3px); }
+  @keyframes quizHdIn {
+    from { opacity: 0; transform: translateY(-18px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes controlsIn {
-    from { opacity: 0; transform: translateY(3px); }
+  @keyframes homeEnterFromBottom {
+    from { opacity: 0; transform: translateY(44px); }
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes bookCardIn {
     from { opacity: 0; transform: translateY(8px) scale(0.99); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
-  @keyframes emptyIn {
-    from { opacity: 0; transform: scale(0.985); }
-    to { opacity: 1; transform: scale(1); }
-  }
   @keyframes barGrow {
     from { transform: scaleX(0.004); }
     to { transform: scaleX(1); }
   }
   .wrap { padding: 0 0 40px; }
-  .ent-block {
-    animation: controlsIn 0.98s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: calc(var(--eb) * 82ms);
+  .ent-sec .quiz-btm-in,
+  .ent-sec.quiz-btm-in {
+    animation: homeEnterFromBottom 0.92s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc((var(--eb) - 1) * 70ms + var(--bb) * 36ms);
   }
-  .quiz-top.ent-block {
-    animation: metricsIn 1.02s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: calc(var(--eb) * 82ms);
+  .feat-section.ent-sec .feat-card.quiz-btm-in {
+    animation: bookCardIn 0.88s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc((var(--eb) - 1) * 70ms + var(--bb) * 36ms);
+  }
+  .quiz-hd-in {
+    animation: quizHdIn 0.78s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--hi) * 48ms);
   }
   .quiz-top {
     padding: 18px 16px 16px;
@@ -672,7 +673,8 @@ export function buildQuizHistoryBooksHtml(payload: {
     height: 100%; border-radius: 99px;
     background: linear-gradient(90deg, ${surfaces.accent}, ${mixHex(surfaces.accent, QUIZ_HOME_YELLOW, 0.38)});
     width: ${levelBarPct}%;
-    animation: barGrow 1.08s cubic-bezier(0.4, 0, 0.2, 1) 0.26s both;
+    animation: barGrow 1.08s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(0.15s + var(--hi) * 48ms);
     transform-origin: left center;
   }
   .quiz-xp {
@@ -704,13 +706,11 @@ export function buildQuizHistoryBooksHtml(payload: {
     -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
   }
   .feat-scroller::-webkit-scrollbar { height: 0; }
-  .feat-card {
+  .feat-section .feat-card {
     flex: 0 0 min(88vw, 318px); width: min(88vw, 318px); scroll-snap-align: center;
     border: none; border-radius: 22px; overflow: hidden; cursor: pointer; text-align: left;
     padding: 0; margin: 0; font: inherit; color: #fff; -webkit-appearance: none; appearance: none;
     box-shadow: 0 14px 36px rgba(0,0,0,0.15);
-    animation: bookCardIn 0.88s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: calc(var(--fi, 0) * 72ms);
     transition: transform 0.2s ease;
   }
   .feat-card:active { transform: scale(0.98); }
@@ -800,10 +800,12 @@ export function buildQuizHistoryBooksHtml(payload: {
   }
   .book-card { background: ${surfaces.card}; border: 1px solid ${surfaces.borderStrong}; border-radius: 16px; cursor: pointer;
     text-align: left; -webkit-appearance: none; appearance: none; font: inherit; color: inherit;
-    animation: bookCardIn 0.88s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: calc(var(--i, 0) * 64ms);
     transition: filter 0.2s ease, box-shadow 0.22s ease, border-color 0.2s ease;
     box-shadow: 0 1px 0 ${surfaces.borderStrong}, 0 4px 12px rgba(0,0,0,0.05); }
+  #list.ent-sec .book-card {
+    animation: bookCardIn 0.88s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc((var(--eb) - 1) * 70ms + var(--i) * 48ms);
+  }
   .book-card--has-progress { box-shadow: 0 1px 0 ${surfaces.borderStrong}, 0 6px 18px rgba(0,0,0,0.07); }
   .book-card:active { filter: brightness(0.97); }
   .book-card.muted { opacity: 0.52; }
@@ -958,12 +960,11 @@ export function buildQuizHistoryBooksHtml(payload: {
   .v29-rc:last-child { border-right: 0; }
   .v29-rc span:first-child { font-size: 14px; font-weight: 800; }
   .v29-rl { font-size: 9px; font-weight: 600; color: ${surfaces.muted}; text-transform: lowercase; }
-  .empty { text-align: center; padding: 40px 16px; grid-column: 1 / -1;
-    animation: emptyIn 0.92s cubic-bezier(0.4, 0, 0.2, 1) 0.26s both; }
+  .empty { text-align: center; padding: 40px 16px; grid-column: 1 / -1; }
   .empty-icon { font-size: 36px; color: ${surfaces.softText}; margin-bottom: 12px; opacity: 0.8; }
   .empty-text { font-size: 14px; font-weight: 500; color: ${surfaces.muted}; line-height: 22px; }
   @media (prefers-reduced-motion: reduce) {
-    .ent-block, .quiz-top, .feat-card, .feat-bar-fill, .quiz-lvl-fill, .orbit-av, .filter-label, .filter-row, .book-card, .book-card .v4-seg, .book-card .v7-bar-fill,
+    .ent-sec, .ent-sec .quiz-btm-in, .quiz-btm-in, .quiz-hd-in, .quiz-top, .feat-section .feat-card, .feat-bar-fill, .quiz-lvl-fill, .orbit-av, .filter-label, .filter-row, .book-card, .book-card .v4-seg, .book-card .v7-bar-fill,
     .book-card .v16-fill, .book-card .v16lr-fill,
     .book-card .v29-fill, .book-card .v29-lfill, .empty {
       animation: none !important; animation-delay: 0s !important; }
@@ -974,54 +975,54 @@ export function buildQuizHistoryBooksHtml(payload: {
 </head>
 <body>
 <div class="wrap">
-  <header class="quiz-top ent-block" style="--eb:${entHeader}">
+  <header class="quiz-top">
     <div class="quiz-top-row">
       ${quizHomeAvatarHtml}
       <div class="quiz-top-mid">
-        <div class="quiz-lvl-lbl">Nivel <b>${levelNum}</b> <span class="quiz-lvl-subl">· ${escapeHtml(levelSubText)}</span></div>
-        <div class="quiz-lvl-bar"><div class="quiz-lvl-fill"></div></div>
+        <div class="quiz-lvl-lbl quiz-hd-in" style="--hi:1">Nivel <b>${levelNum}</b> <span class="quiz-lvl-subl">· ${escapeHtml(levelSubText)}</span></div>
+        <div class="quiz-lvl-bar quiz-hd-in" style="--hi:2"><div class="quiz-lvl-fill"></div></div>
       </div>
-      <div class="quiz-xp"><b>${xpDisplay}</b><span>XP</span></div>
+      <div class="quiz-xp quiz-hd-in" style="--hi:3"><b>${xpDisplay}</b><span>XP</span></div>
     </div>
     <div class="quiz-stat-strip">
-      <div class="quiz-stat-pill"><b>${metrics.avgPercent}%</b><small>Promedio</small></div>
-      <div class="quiz-stat-pill"><b>${metrics.streakDays}</b><small>Racha</small></div>
-      <div class="quiz-stat-pill"><b>${metrics.chaptersCompleted}</b><small>Capítulos</small></div>
+      <div class="quiz-stat-pill quiz-hd-in" style="--hi:4"><b>${metrics.avgPercent}%</b><small>Promedio</small></div>
+      <div class="quiz-stat-pill quiz-hd-in" style="--hi:5"><b>${metrics.streakDays}</b><small>Racha</small></div>
+      <div class="quiz-stat-pill quiz-hd-in" style="--hi:6"><b>${metrics.chaptersCompleted}</b><small>Capítulos</small></div>
     </div>
   </header>
-  <section class="quiz-greet ent-block" style="--eb:${entGreet}">
-    <p class="quiz-greet-hi">Shalom 👋</p>
-    <h1 class="quiz-greet-h1">¡Sigamos con un quiz<span class="spark">✨</span>!</h1>
-    <p class="quiz-greet-sub">${escapeHtml(greetSub)}</p>
+  <section class="quiz-greet ent-sec" style="--eb:${entGreet}">
+    <p class="quiz-greet-hi quiz-btm-in" style="--bb:0">Shalom 👋</p>
+    <h1 class="quiz-greet-h1 quiz-btm-in" style="--bb:1">¡Sigamos con un quiz<span class="spark">✨</span>!</h1>
+    <p class="quiz-greet-sub quiz-btm-in" style="--bb:2">${escapeHtml(greetSub)}</p>
   </section>
   ${featuredHtml !== ""
-      ? `<section class="feat-section ent-block" style="--eb:${entFeat}" aria-label="Destacados">
+      ? `<section class="feat-section ent-sec" style="--eb:${entFeat}" aria-label="Destacados">
     <div class="feat-head">
-      <h2>Retos destacados</h2>
-      <span>Deslizá →</span>
+      <h2 class="quiz-btm-in" style="--bb:0">Retos destacados</h2>
+      <span class="quiz-btm-in" style="--bb:1">Deslizá →</span>
     </div>
     <div class="feat-scroller">${featuredHtml}</div>
   </section>`
       : ""}
   ${orbitHtml !== ""
-      ? `<section class="orbit-section ent-block" style="--eb:${entOrbit}" aria-label="Tus libros">
+      ? `<section class="orbit-section ent-sec" style="--eb:${entOrbit}" aria-label="Tus libros">
     <div class="orbit-head">
-      <h3>Tus libros</h3>
-      <span>Toca para abrir</span>
+      <h3 class="quiz-btm-in" style="--bb:0">Tus libros</h3>
+      <span class="quiz-btm-in" style="--bb:1">Toca para abrir</span>
     </div>
     <div class="orbit-row">${orbitHtml}</div>
   </section>`
       : ""}
-  <div class="home-library-hd ent-block" style="--eb:${entLib}">
-    <p class="home-library-title">Últimos quiz</p>
-    <p class="home-library-see">Lista completa</p>
+  <div class="home-library-hd ent-sec" style="--eb:${entLib}">
+    <p class="home-library-title quiz-btm-in" style="--bb:0">Últimos quiz</p>
+    <p class="home-library-see quiz-btm-in" style="--bb:1">Lista completa</p>
   </div>
-  <div class="filter-label ent-block" style="--eb:${entFlab}">Categoría</div>
-  <div class="filter-row ent-block" style="--eb:${entFrow}">
-    <button type="button" class="chip${filter === "started" ? " on" : ""}" id="chip-started">${escapeHtml(filterStartedLabel)}</button>
-    <button type="button" class="chip${filter === "all" ? " on" : ""}" id="chip-all">Todos</button>
+  <div class="filter-label ent-sec quiz-btm-in" style="--eb:${entFlab};--bb:0">Categoría</div>
+  <div class="filter-row ent-sec" style="--eb:${entFrow}">
+    <button type="button" class="chip quiz-btm-in${filter === "started" ? " on" : ""}" id="chip-started" style="--bb:0">${escapeHtml(filterStartedLabel)}</button>
+    <button type="button" class="chip quiz-btm-in${filter === "all" ? " on" : ""}" id="chip-all" style="--bb:1">Todos</button>
   </div>
-  <div id="list" class="${listContainerClass} ent-block" style="--eb:${entList}" data-filter="${filter}">${booksHtml}</div>
+  <div id="list" class="${listContainerClass} ent-sec" style="--eb:${entList}" data-filter="${filter}">${booksHtml}</div>
 </div>
 <script>
 (function(){
@@ -1035,8 +1036,8 @@ export function buildQuizHistoryBooksHtml(payload: {
     if (list) list.setAttribute("data-filter", f);
     var cs = document.getElementById("chip-started");
     var ca = document.getElementById("chip-all");
-    if (cs) cs.className = "chip" + (f === "started" ? " on" : "");
-    if (ca) ca.className = "chip" + (f === "all" ? " on" : "");
+    if (cs) cs.className = "chip quiz-btm-in" + (f === "started" ? " on" : "");
+    if (ca) ca.className = "chip quiz-btm-in" + (f === "all" ? " on" : "");
     if (syncToNative) post({ type: "filter", filter: f });
   }
   (function wireChips() {
@@ -1129,16 +1130,26 @@ export function buildQuizHistoryChaptersHtml(payload: {
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; background: ${surfaces.base}; color: ${surfaces.text};
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  @keyframes chEntIn {
-    from { opacity: 0; transform: translateY(5px); }
+  @keyframes chHeadFromTop {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes chFromBottom {
+    from { opacity: 0; transform: translateY(36px); }
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes chCellIn {
     from { opacity: 0; transform: translateY(7px) scale(0.99); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .ent-block { animation: chEntIn 0.65s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: calc(var(--eb) * 56ms); }
+  .head.ent-block {
+    animation: chHeadFromTop 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--eb) * 56ms);
+  }
+  .ent-block:not(.head) {
+    animation: chFromBottom 0.65s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc((var(--eb) - 1) * 56ms);
+  }
   .cell.cell-ent { animation: chCellIn 0.58s cubic-bezier(0.4, 0, 0.2, 1) both;
     animation-delay: calc(72ms + var(--ci) * 19ms); }
   @media (prefers-reduced-motion: reduce) {
