@@ -55,7 +55,7 @@ const BOOK_META_BY_LONG = (() => {
 })();
 import WebView from "react-native-webview";
 import { View } from "../Themed";
-import { AnimatedView } from "./AnimatedView";
+import { AnimatedView, type AnimatedViewTransition } from "./AnimatedView";
 
 type Surfaces = ReturnType<typeof getSurfaces>;
 
@@ -92,7 +92,7 @@ export function quizHistoryHomeAvatarFromUser(
 }
 
 export const QuizHistoryBooksWebView: React.FC<{
-  direction: "forward" | "backward";
+  direction: AnimatedViewTransition;
   surfaces: Surfaces;
   metrics: ChapterQuizHistoryMetrics;
   /** Intentos (misma fuente que `computeChapterQuizMetrics`) para XP/nivel. */
@@ -302,7 +302,7 @@ export const QuizHistoryChaptersWebView: React.FC<{
   attempts: ChapterQuizAttemptRow[];
   quizSessions: ChapterQuizSessionRow[];
   onPressChapter: (chapter: number) => void;
-  direction: "forward" | "backward";
+  direction: AnimatedViewTransition;
 }> = ({
   surfaces,
   book,

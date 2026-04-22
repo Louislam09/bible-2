@@ -4,7 +4,10 @@ import {
   type SingleScreenHeaderProps,
 } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
-import { AnimatedView } from "@/components/quizHistory/AnimatedView";
+import {
+  AnimatedView,
+  type AnimatedViewTransition,
+} from "@/components/quizHistory/AnimatedView";
 import {
   ChapterQuizDetailView,
   type ChapterQuizSizeOption,
@@ -98,10 +101,10 @@ type ViewState =
   | { kind: "chapters"; book: string }
   | { kind: "chapterDetail"; book: string; chapter: number }
   | {
-      kind: "review";
-      attemptId: string;
-      reviewFrom: ReviewNavigationFrom | null;
-    };
+    kind: "review";
+    attemptId: string;
+    reviewFrom: ReviewNavigationFrom | null;
+  };
 
 type BooksFilter = "started" | "all";
 
@@ -125,7 +128,7 @@ const ChapterQuizHistoryScreen = () => {
   const [attempts, setAttempts] = useState<ChapterQuizAttemptRow[]>([]);
   const [quizSessions, setQuizSessions] = useState<ChapterQuizSessionRow[]>([]);
   const [viewState, setViewState] = useState<ViewState>({ kind: "books" });
-  const [direction, setDirection] = useState<"forward" | "backward">("forward");
+  const [direction, setDirection] = useState<AnimatedViewTransition>("forward");
   const [booksFilter, setBooksFilter] = useState<BooksFilter>("started");
   const [booksLayout, setBooksLayout] = useState<QuizHistoryBooksLayout>("grid");
   const [booksSettingsOpen, setBooksSettingsOpen] = useState(false);
@@ -256,14 +259,14 @@ const ChapterQuizHistoryScreen = () => {
   }, [goBackInternal, router]);
 
   const openBook = useCallback((book: string) => {
-    setDirection("forward");
+    setDirection("expand-updown");
     setViewState({ kind: "chapters", book });
   }, []);
 
   const openReviewByAttempt = useCallback(
     (row: ChapterQuizAttemptRow, reviewFrom: ReviewNavigationFrom) => {
       setReviewAttempt(row);
-      setDirection("forward");
+      setDirection("expand-down");
       setViewState({
         kind: "review",
         attemptId: row.id,
@@ -274,7 +277,7 @@ const ChapterQuizHistoryScreen = () => {
   );
 
   const openChapter = useCallback((book: string, chapter: number) => {
-    setDirection("forward");
+    setDirection("expand-down");
     setViewState({ kind: "chapterDetail", book, chapter });
   }, []);
 
@@ -327,11 +330,11 @@ const ChapterQuizHistoryScreen = () => {
         const versesText =
           allBibleLoaded
             ? await loadChapterVersesTextForQuiz(
-                getBibleServices,
-                String(currentBibleVersion),
-                book,
-                chapter,
-              )
+              getBibleServices,
+              String(currentBibleVersion),
+              book,
+              chapter,
+            )
             : "";
         const result = await getQuestionsForChapter({
           book,
@@ -566,32 +569,32 @@ const ChapterQuizHistoryScreen = () => {
       headerRightProps:
         viewState.kind === "books"
           ? {
-              RightComponent: () => (
-                <Pressable
-                  onPress={() => {
-                    void Haptics.selectionAsync();
-                    setBooksSettingsOpen(true);
-                  }}
-                  style={{ marginRight: 4, padding: 6 }}
-                  hitSlop={12}
-                >
-                  <Icon
-                    name="Settings"
-                    size={headerIconSize}
-                    color={theme.colors.notification}
-                  />
-                </Pressable>
-              ),
-              headerRightIcon: "RefreshCw",
-              headerRightIconColor: theme.colors.notification,
-              disabled: false,
-            }
+            RightComponent: () => (
+              <Pressable
+                onPress={() => {
+                  void Haptics.selectionAsync();
+                  setBooksSettingsOpen(true);
+                }}
+                style={{ marginRight: 4, padding: 6 }}
+                hitSlop={12}
+              >
+                <Icon
+                  name="Settings"
+                  size={headerIconSize}
+                  color={theme.colors.notification}
+                />
+              </Pressable>
+            ),
+            headerRightIcon: "RefreshCw",
+            headerRightIconColor: theme.colors.notification,
+            disabled: false,
+          }
           : {
-              headerRightIcon: "RefreshCw",
-              style: { display: "none" },
-              headerRightIconColor: theme.colors.notification,
-              disabled: true,
-            },
+            headerRightIcon: "RefreshCw",
+            style: { display: "none" },
+            headerRightIconColor: theme.colors.notification,
+            disabled: true,
+          },
     };
   }, [headerGoBack, reviewAttempt, theme, viewState]);
 
@@ -706,7 +709,7 @@ const ChapterQuizHistoryScreen = () => {
 /* ───────────────────────── Books / chapters (WebView lists) ───────────────────────── */
 
 const BooksView: React.FC<{
-  direction: "forward" | "backward";
+  direction: AnimatedViewTransition;
   surfaces: ReturnType<typeof getSurfaces>;
   metrics: ReturnType<typeof computeChapterQuizMetrics>;
   attempts: ChapterQuizAttemptRow[];
@@ -721,7 +724,7 @@ const BooksView: React.FC<{
 }> = (props) => <QuizHistoryBooksWebView {...props} />;
 
 const ChaptersView: React.FC<{
-  direction: "forward" | "backward";
+  direction: AnimatedViewTransition;
   surfaces: ReturnType<typeof getSurfaces>;
   book: string;
   summary: BookSummary | null;
