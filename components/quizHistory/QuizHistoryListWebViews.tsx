@@ -122,13 +122,6 @@ export const QuizHistoryBooksWebView: React.FC<{
 }) => {
     const { theme } = useMyTheme();
 
-    const visible = useMemo(() => {
-      if (filter === "started") {
-        return bookSummaries.filter((b) => b.hasAnyAttempt);
-      }
-      return bookSummaries;
-    }, [bookSummaries, filter]);
-
     const startedCount = useMemo(
       () => bookSummaries.filter((b) => b.hasAnyAttempt).length,
       [bookSummaries],
@@ -147,7 +140,7 @@ export const QuizHistoryBooksWebView: React.FC<{
     const html = useMemo(() => {
       const isDark = theme.dark;
       const cardHex = surfaces.card;
-      const books = visible.map((s) => {
+      const books = bookSummaries.map((s) => {
         const meta = BOOK_META_BY_LONG.get(s.book);
         const shortName = meta?.shortName ?? s.book.slice(0, 2);
         const bookColor = meta?.bookColor ?? "#888888";
@@ -230,12 +223,13 @@ export const QuizHistoryBooksWebView: React.FC<{
         books,
         homeUserAvatar,
       });
+      // `filter` se aplica solo en el DOM del WebView (evita recargar `source` al tocar chips).
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- filter omitido a propósito
     }, [
-      visible,
+      bookSummaries,
       surfaces,
       metrics,
       progress,
-      filter,
       startedCount,
       booksLayout,
       theme.dark,
@@ -267,7 +261,7 @@ export const QuizHistoryBooksWebView: React.FC<{
 
     return (
       <WebView
-        key={`books-${filter}-${visible.length}-${booksLayout}-${cardVariant}`}
+        key={`books-${booksLayout}-${cardVariant}`}
         originWhitelist={["*"]}
         source={{ html }}
         style={{ flex: 1, minWidth: "100%", backgroundColor: surfaces.base }}

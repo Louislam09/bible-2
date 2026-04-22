@@ -4,6 +4,7 @@
  */
 
 import type { QuizHistoryBookCardVariant } from "@/constants/quizHistoryBookCardVariant";
+import { BOOK_IMAGES } from "@/constants/Images";
 import type { ChapterQuizProgress } from "@/utils/chapterQuizProgress";
 
 export type QuizHistorySurfacesCss = {
@@ -439,6 +440,11 @@ function buildV29BookCardHtml(
 /** Pastel quiz-app accent (filters / CTA) — pairs with dark text. */
 const QUIZ_HOME_YELLOW = "#f4d03f";
 
+function bookCoverCdnUrl(longName: string): string | null {
+  const url = (BOOK_IMAGES as Record<string, string | undefined>)[longName];
+  return url != null && url.length > 0 ? url : null;
+}
+
 function buildFeaturedCarouselInnerHtml(
   books: QuizHistoryBookCardPayload[],
   surfaces: QuizHistorySurfacesCss,
@@ -454,6 +460,13 @@ function buildFeaturedCarouselInnerHtml(
       const w = `${pctN.toFixed(2)}%`;
       const sub = `${b.attemptCount} intento${b.attemptCount === 1 ? "" : "s"} · ${escapeHtml(b.lastActivityLabel)}`;
       const grad = `linear-gradient(125deg, ${b.bookColor} 0%, ${mixHex(b.bookColor, "#4c3d8f", 0.35)} 55%, ${mixHex(b.bookColor, surfaces.base, 0.2)} 100%)`;
+      const cover = bookCoverCdnUrl(b.book);
+      const blobBlock =
+        cover != null
+          ? `<div class="feat-blob feat-blob--cover" aria-hidden="true">
+      <img src="${escapeHtml(cover)}" alt="" loading="lazy" decoding="async" onerror="this.parentNode.className='feat-blob';this.remove();" />
+    </div>`
+          : `<div class="feat-blob" aria-hidden="true"></div>`;
       return `<button type="button" class="feat-card" data-book-idx="${idx}" style="--fi:${fi};background:${grad}">
   <div class="feat-card-inner">
     <div class="feat-copy">
@@ -463,7 +476,7 @@ function buildFeaturedCarouselInnerHtml(
       <div class="feat-bar"><div class="feat-bar-fill" style="width:${w}"></div></div>
       <span class="feat-cta">¡Vamos!</span>
     </div>
-    <div class="feat-blob" aria-hidden="true"></div>
+    ${blobBlock}
   </div>
 </button>`;
     })
@@ -551,17 +564,10 @@ export function buildQuizHistoryBooksHtml(payload: {
         .join("");
 
   const filterStartedLabel = `Iniciados${startedCount > 0 ? ` · ${startedCount}` : ""}`;
-  const gridColClass =
-    layout === "grid" && books.length > 0
-      ? filter === "started"
-        ? "book-container--grid-cols-1"
-        : "book-container--grid-cols-2"
-      : "";
   const listContainerClass =
     books.length === 0
       ? "book-container book-container--list home-feed"
-      : `book-container book-container--${layout}${gridColClass ? ` ${gridColClass}` : ""
-      } home-feed`;
+      : `book-container book-container--${layout} home-feed`;
 
   const startedBooksCount = books.filter((b) => b.hasAnyAttempt).length;
   const xpDisplay = progress.totalXp;
@@ -710,6 +716,30 @@ export function buildQuizHistoryBooksHtml(payload: {
     background: radial-gradient(circle at 28% 38%, rgba(255,255,255,0.4) 0%, transparent 50%);
     opacity: 0.95;
   }
+  .feat-blob--cover {
+    position: relative;
+    overflow: hidden;
+    min-height: 152px;
+    align-self: stretch;
+    opacity: 1;
+  }
+  .feat-blob--cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, transparent 48%);
+    pointer-events: none;
+  }
+  .feat-blob--cover img {
+    position: relative;
+    z-index: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 152px;
+    object-fit: cover;
+    object-position: center 20%;
+  }
   .orbit-section { margin-top: 22px; padding: 0 16px; animation: controlsIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both; }
   .orbit-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
   .orbit-head h3 { font-size: 15px; font-weight: 900; margin: 0; color: ${surfaces.text}; letter-spacing: -0.35px; }
@@ -739,6 +769,9 @@ export function buildQuizHistoryBooksHtml(payload: {
   .book-container--grid { display: grid; gap: 12px; align-items: stretch; }
   .book-container--grid-cols-1 { grid-template-columns: 1fr; }
   .book-container--grid-cols-2 { grid-template-columns: 1fr 1fr; }
+  #list.home-feed.book-container--grid[data-filter="started"] { grid-template-columns: 1fr; }
+  #list.home-feed.book-container--grid[data-filter="all"] { grid-template-columns: 1fr 1fr; }
+  #list[data-filter="started"] .book-card.muted { display: none !important; }
   .book-container--list { display: flex; flex-direction: column; gap: 0; }
   #list { padding: 0 16px; }
   .home-feed.book-container--list .book-card {
@@ -971,10 +1004,10 @@ export function buildQuizHistoryBooksHtml(payload: {
   </div>
   <div class="filter-label">Categoría</div>
   <div class="filter-row">
-    <button type="button" class="chip ${filter === "started" ? "on" : ""}" id="chip-started">${escapeHtml(filterStartedLabel)}</button>
-    <button type="button" class="chip ${filter === "all" ? "on" : ""}" id="chip-all">Todos</button>
+    <button type="button" class="chip${filter === "started" ? " on" : ""}" id="chip-started">${escapeHtml(filterStartedLabel)}</button>
+    <button type="button" class="chip${filter === "all" ? " on" : ""}" id="chip-all">Todos</button>
   </div>
-  <div id="list" class="${listContainerClass}">${booksHtml}</div>
+  <div id="list" class="${listContainerClass}" data-filter="${filter}">${booksHtml}</div>
 </div>
 <script>
 (function(){
@@ -982,12 +1015,28 @@ export function buildQuizHistoryBooksHtml(payload: {
   function post(o) {
     if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(o));
   }
-  document.getElementById("chip-started").onclick = function() {
-    post({ type: "filter", filter: "started" });
-  };
-  document.getElementById("chip-all").onclick = function() {
-    post({ type: "filter", filter: "all" });
-  };
+  function setFilterInPage(f, syncToNative) {
+    if (f !== "started" && f !== "all") return;
+    var list = document.getElementById("list");
+    if (list) list.setAttribute("data-filter", f);
+    var cs = document.getElementById("chip-started");
+    var ca = document.getElementById("chip-all");
+    if (cs) cs.className = "chip" + (f === "started" ? " on" : "");
+    if (ca) ca.className = "chip" + (f === "all" ? " on" : "");
+    if (syncToNative) post({ type: "filter", filter: f });
+  }
+  (function wireChips() {
+    var s = document.getElementById("chip-started");
+    var a = document.getElementById("chip-all");
+    function onClick(ev, f) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      setFilterInPage(f, true);
+    }
+    if (s) s.addEventListener("click", function(ev) { onClick(ev, "started"); }, { passive: false });
+    if (a) a.addEventListener("click", function(ev) { onClick(ev, "all"); }, { passive: false });
+  })();
+  setFilterInPage(DATA.filter, false);
   document.querySelector(".wrap").addEventListener("click", function(e) {
     if (e.target.closest(".chip")) return;
     var btn = e.target.closest("[data-book-idx]");
