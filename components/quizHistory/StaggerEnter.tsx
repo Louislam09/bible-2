@@ -2,8 +2,8 @@ import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import Animated, { Easing, FadeInDown } from "react-native-reanimated";
 
-const BASE_MS = 44;
-const STEP_MS = 46;
+const BASE_MS = 55;
+const STEP_MS = 54;
 
 type Props = {
   index: number;
@@ -17,8 +17,8 @@ export function StaggerEnter({ index, children, style }: Props) {
     <Animated.View
       entering={FadeInDown
         .delay(BASE_MS + index * STEP_MS)
-        .duration(380)
-        .easing(Easing.out(Easing.cubic))}
+        .duration(460)
+        .easing(Easing.bezier(0.4, 0, 0.2, 1))}
       style={style}
     >
       {children}

@@ -611,19 +611,19 @@ export function buildQuizHistoryBooksHtml(payload: {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 15px; line-height: 1.35; }
   @keyframes metricsIn {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-3px); }
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes controlsIn {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(3px); }
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes bookCardIn {
-    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+    from { opacity: 0; transform: translateY(8px) scale(0.99); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
   @keyframes emptyIn {
-    from { opacity: 0; transform: scale(0.94); }
+    from { opacity: 0; transform: scale(0.985); }
     to { opacity: 1; transform: scale(1); }
   }
   @keyframes barGrow {
@@ -632,10 +632,13 @@ export function buildQuizHistoryBooksHtml(payload: {
   }
   .wrap { padding: 0 0 40px; }
   .ent-block {
-    animation: controlsIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(var(--eb) * 48ms);
+    animation: controlsIn 0.98s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--eb) * 82ms);
   }
-  .quiz-top.ent-block { animation-name: metricsIn; }
+  .quiz-top.ent-block {
+    animation: metricsIn 1.02s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--eb) * 82ms);
+  }
   .quiz-top {
     padding: 18px 16px 16px;
     background: ${surfaces.card};
@@ -669,7 +672,7 @@ export function buildQuizHistoryBooksHtml(payload: {
     height: 100%; border-radius: 99px;
     background: linear-gradient(90deg, ${surfaces.accent}, ${mixHex(surfaces.accent, QUIZ_HOME_YELLOW, 0.38)});
     width: ${levelBarPct}%;
-    animation: barGrow 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+    animation: barGrow 1.08s cubic-bezier(0.4, 0, 0.2, 1) 0.26s both;
     transform-origin: left center;
   }
   .quiz-xp {
@@ -706,9 +709,9 @@ export function buildQuizHistoryBooksHtml(payload: {
     border: none; border-radius: 22px; overflow: hidden; cursor: pointer; text-align: left;
     padding: 0; margin: 0; font: inherit; color: #fff; -webkit-appearance: none; appearance: none;
     box-shadow: 0 14px 36px rgba(0,0,0,0.15);
-    animation: bookCardIn 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(var(--fi, 0) * 50ms);
-    transition: transform 0.18s ease;
+    animation: bookCardIn 0.88s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--fi, 0) * 72ms);
+    transition: transform 0.2s ease;
   }
   .feat-card:active { transform: scale(0.98); }
   .feat-card-inner { display: flex; flex-direction: row; min-height: 152px; position: relative; }
@@ -719,7 +722,7 @@ export function buildQuizHistoryBooksHtml(payload: {
   .feat-sub { font-size: 12px; font-weight: 500; opacity: 0.9; line-height: 16px; margin-bottom: 12px; }
   .feat-bar { height: 5px; border-radius: 99px; background: rgba(255,255,255,0.3); overflow: hidden; margin-bottom: 14px; }
   .feat-bar-fill { height: 100%; border-radius: 99px; background: #ffffff; transform-origin: left center;
-    animation: barGrow 0.68s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(var(--fi, 0) * 50ms + 0.08s); }
+    animation: barGrow 1.06s cubic-bezier(0.4, 0, 0.2, 1) both; animation-delay: calc(var(--fi, 0) * 72ms + 0.16s); }
   .feat-cta {
     display: inline-block; font-size: 13px; font-weight: 900; color: ${chipOnFg};
     background: ${chipOnBg}; padding: 10px 22px; border-radius: 999px;
@@ -797,8 +800,8 @@ export function buildQuizHistoryBooksHtml(payload: {
   }
   .book-card { background: ${surfaces.card}; border: 1px solid ${surfaces.borderStrong}; border-radius: 16px; cursor: pointer;
     text-align: left; -webkit-appearance: none; appearance: none; font: inherit; color: inherit;
-    animation: bookCardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(var(--i, 0) * 40ms);
+    animation: bookCardIn 0.88s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 64ms);
     transition: filter 0.2s ease, box-shadow 0.22s ease, border-color 0.2s ease;
     box-shadow: 0 1px 0 ${surfaces.borderStrong}, 0 4px 12px rgba(0,0,0,0.05); }
   .book-card--has-progress { box-shadow: 0 1px 0 ${surfaces.borderStrong}, 0 6px 18px rgba(0,0,0,0.07); }
@@ -824,8 +827,8 @@ export function buildQuizHistoryBooksHtml(payload: {
   .v4-seg-track { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 2px; height: 8px; border-radius: 6px; overflow: hidden; margin-bottom: 12px; width: 100%; }
   .v4-seg-track--thin { height: 4px; margin-bottom: 10px; }
   .v4-seg { min-width: 0; height: 100%; border-radius: 3px; transform-origin: left center;
-    animation: barGrow 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(var(--i, 0) * 40ms + 0.1s); }
+    animation: barGrow 1.06s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 64ms + 0.16s); }
   .v4-seg.v4-seg-pass { background: var(--book); }
   .v4-seg.v4-seg-prog { background: var(--seg-prog); }
   .v4-seg.v4-seg-idle { background: ${surfaces.borderStrong}; opacity: 0.95; }
@@ -852,7 +855,7 @@ export function buildQuizHistoryBooksHtml(payload: {
   .v7-cell-lbl { font-size: 9px; font-weight: 600; color: ${surfaces.muted}; margin-top: 3px; text-transform: lowercase; }
   .v7-bar-track { height: 4px; border-radius: 99px; background: ${surfaces.borderStrong}; overflow: hidden; margin-top: 8px; }
   .v7-bar-fill { height: 100%; border-radius: 99px; background: var(--book); transform-origin: left center;
-    animation: barGrow 0.68s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(var(--i, 0) * 40ms + 0.08s); }
+    animation: barGrow 1.06s cubic-bezier(0.4, 0, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 64ms + 0.14s); }
   .v7-list-row { display: flex; flex-direction: row; align-items: stretch; gap: 12px; }
   .v7-list-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0; }
   .v7-list-top { display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 5px; }
@@ -956,7 +959,7 @@ export function buildQuizHistoryBooksHtml(payload: {
   .v29-rc span:first-child { font-size: 14px; font-weight: 800; }
   .v29-rl { font-size: 9px; font-weight: 600; color: ${surfaces.muted}; text-transform: lowercase; }
   .empty { text-align: center; padding: 40px 16px; grid-column: 1 / -1;
-    animation: emptyIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
+    animation: emptyIn 0.92s cubic-bezier(0.4, 0, 0.2, 1) 0.26s both; }
   .empty-icon { font-size: 36px; color: ${surfaces.softText}; margin-bottom: 12px; opacity: 0.8; }
   .empty-text { font-size: 14px; font-weight: 500; color: ${surfaces.muted}; line-height: 22px; }
   @media (prefers-reduced-motion: reduce) {
@@ -1127,17 +1130,17 @@ export function buildQuizHistoryChaptersHtml(payload: {
   html, body { margin: 0; padding: 0; background: ${surfaces.base}; color: ${surfaces.text};
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
   @keyframes chEntIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes chCellIn {
-    from { opacity: 0; transform: translateY(10px) scale(0.97); }
+    from { opacity: 0; transform: translateY(7px) scale(0.99); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .ent-block { animation: chEntIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(var(--eb) * 44ms); }
-  .cell.cell-ent { animation: chCellIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(56ms + var(--ci) * 16ms); }
+  .ent-block { animation: chEntIn 0.65s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--eb) * 56ms); }
+  .cell.cell-ent { animation: chCellIn 0.58s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(72ms + var(--ci) * 19ms); }
   @media (prefers-reduced-motion: reduce) {
     .ent-block, .cell.cell-ent { animation: none !important; animation-delay: 0s !important; }
   }

@@ -62,9 +62,10 @@ type Props = {
   sharedTransitionTag?: string;
 };
 
-const DURATION = 300;
+/** Slightly long + smooth decel so Mis Quiz stack changes feel less snappy. */
+const DURATION = 420;
 
-const ease = Easing.out(Easing.quad);
+const ease = Easing.out(Easing.cubic);
 
 type BuilderWithEasing = BaseAnimationBuilder & {
   easing: (easingFunction: (v: number) => number) => BaseAnimationBuilder;
