@@ -259,7 +259,7 @@ const ChapterQuizHistoryScreen = () => {
   }, [goBackInternal, router]);
 
   const openBook = useCallback((book: string) => {
-    setDirection("expand-updown");
+    setDirection("expand-from-previous");
     setViewState({ kind: "chapters", book });
   }, []);
 
