@@ -590,6 +590,16 @@ export function buildQuizHistoryBooksHtml(payload: {
 
   const quizHomeAvatarHtml = buildQuizHomeAvatarMarkup(homeUserAvatar);
 
+  let entSeq = 0;
+  const entHeader = entSeq++;
+  const entGreet = entSeq++;
+  const entFeat = featuredHtml ? entSeq++ : -1;
+  const entOrbit = orbitHtml ? entSeq++ : -1;
+  const entLib = entSeq++;
+  const entFlab = entSeq++;
+  const entFrow = entSeq++;
+  const entList = entSeq++;
+
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -621,12 +631,16 @@ export function buildQuizHistoryBooksHtml(payload: {
     to { transform: scaleX(1); }
   }
   .wrap { padding: 0 0 40px; }
+  .ent-block {
+    animation: controlsIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--eb) * 48ms);
+  }
+  .quiz-top.ent-block { animation-name: metricsIn; }
   .quiz-top {
     padding: 18px 16px 16px;
     background: ${surfaces.card};
     border-radius: 0 0 26px 26px;
     box-shadow: 0 12px 36px rgba(0,0,0,0.07);
-    animation: metricsIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   .quiz-top-row { display: flex; flex-direction: row; align-items: center; gap: 12px; }
   .quiz-av {
@@ -673,12 +687,12 @@ export function buildQuizHistoryBooksHtml(payload: {
   .quiz-stat-pill { flex: 1; text-align: center; background: ${softPageBg}; border-radius: 14px; padding: 10px 4px; }
   .quiz-stat-pill b { display: block; font-size: 16px; font-weight: 800; color: ${surfaces.text}; letter-spacing: -0.35px; }
   .quiz-stat-pill small { font-size: 9px; font-weight: 600; color: ${surfaces.muted}; text-transform: uppercase; letter-spacing: 0.05em; }
-  .quiz-greet { padding: 22px 16px 4px; animation: controlsIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both; }
+  .quiz-greet { padding: 22px 16px 4px; }
   .quiz-greet-hi { font-size: 14px; font-weight: 600; color: ${surfaces.muted}; margin: 0 0 6px; }
   .quiz-greet-h1 { font-size: 25px; font-weight: 900; color: ${surfaces.text}; letter-spacing: -0.6px; margin: 0; line-height: 1.12; }
   .quiz-greet-h1 .spark { color: ${surfaces.accent}; }
   .quiz-greet-sub { font-size: 13px; font-weight: 500; color: ${surfaces.muted}; margin: 10px 0 0; line-height: 18px; }
-  .feat-section { margin-top: 16px; animation: controlsIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both; }
+  .feat-section { margin-top: 16px; }
   .feat-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 16px; margin-bottom: 12px; }
   .feat-head h2 { font-size: 16px; font-weight: 900; color: ${surfaces.text}; margin: 0; letter-spacing: -0.35px; }
   .feat-head span { font-size: 12px; font-weight: 600; color: ${surfaces.muted}; }
@@ -740,7 +754,7 @@ export function buildQuizHistoryBooksHtml(payload: {
     object-fit: cover;
     object-position: center 20%;
   }
-  .orbit-section { margin-top: 22px; padding: 0 16px; animation: controlsIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both; }
+  .orbit-section { margin-top: 22px; padding: 0 16px; }
   .orbit-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
   .orbit-head h3 { font-size: 15px; font-weight: 900; margin: 0; color: ${surfaces.text}; letter-spacing: -0.35px; }
   .orbit-head span { font-size: 12px; font-weight: 600; color: ${surfaces.muted}; }
@@ -756,11 +770,8 @@ export function buildQuizHistoryBooksHtml(payload: {
   .home-library-hd { padding: 26px 16px 8px; display: flex; justify-content: space-between; align-items: baseline; }
   .home-library-title { font-size: 16px; font-weight: 900; color: ${surfaces.text}; margin: 0; letter-spacing: -0.4px; }
   .home-library-see { font-size: 12px; font-weight: 600; color: ${surfaces.muted}; margin: 0; }
-  .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; padding: 0 16px;
-    animation: controlsIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  .filter-label { width: 100%; font-size: 11px; font-weight: 600; color: ${surfaces.muted}; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px; padding: 0 16px;
-    animation: controlsIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.06s; }
-  .filter-label + .filter-row { animation-delay: 0.1s; }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; padding: 0 16px; }
+  .filter-label { width: 100%; font-size: 11px; font-weight: 600; color: ${surfaces.muted}; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px; padding: 0 16px; }
   .chip { border: 1px solid ${surfaces.borderStrong}; padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
     background: ${surfaces.card}; color: ${surfaces.muted}; cursor: pointer;
     transition: border-color 0.22s ease, background 0.22s ease, color 0.22s ease, transform 0.16s ease; }
@@ -949,7 +960,7 @@ export function buildQuizHistoryBooksHtml(payload: {
   .empty-icon { font-size: 36px; color: ${surfaces.softText}; margin-bottom: 12px; opacity: 0.8; }
   .empty-text { font-size: 14px; font-weight: 500; color: ${surfaces.muted}; line-height: 22px; }
   @media (prefers-reduced-motion: reduce) {
-    .quiz-top, .feat-card, .feat-bar-fill, .quiz-lvl-fill, .orbit-av, .filter-label, .filter-row, .book-card, .book-card .v4-seg, .book-card .v7-bar-fill,
+    .ent-block, .quiz-top, .feat-card, .feat-bar-fill, .quiz-lvl-fill, .orbit-av, .filter-label, .filter-row, .book-card, .book-card .v4-seg, .book-card .v7-bar-fill,
     .book-card .v16-fill, .book-card .v16lr-fill,
     .book-card .v29-fill, .book-card .v29-lfill, .empty {
       animation: none !important; animation-delay: 0s !important; }
@@ -960,7 +971,7 @@ export function buildQuizHistoryBooksHtml(payload: {
 </head>
 <body>
 <div class="wrap">
-  <header class="quiz-top">
+  <header class="quiz-top ent-block" style="--eb:${entHeader}">
     <div class="quiz-top-row">
       ${quizHomeAvatarHtml}
       <div class="quiz-top-mid">
@@ -975,13 +986,13 @@ export function buildQuizHistoryBooksHtml(payload: {
       <div class="quiz-stat-pill"><b>${metrics.chaptersCompleted}</b><small>Capítulos</small></div>
     </div>
   </header>
-  <section class="quiz-greet">
+  <section class="quiz-greet ent-block" style="--eb:${entGreet}">
     <p class="quiz-greet-hi">Shalom 👋</p>
     <h1 class="quiz-greet-h1">¡Sigamos con un quiz<span class="spark">✨</span>!</h1>
     <p class="quiz-greet-sub">${escapeHtml(greetSub)}</p>
   </section>
   ${featuredHtml !== ""
-      ? `<section class="feat-section" aria-label="Destacados">
+      ? `<section class="feat-section ent-block" style="--eb:${entFeat}" aria-label="Destacados">
     <div class="feat-head">
       <h2>Retos destacados</h2>
       <span>Deslizá →</span>
@@ -990,7 +1001,7 @@ export function buildQuizHistoryBooksHtml(payload: {
   </section>`
       : ""}
   ${orbitHtml !== ""
-      ? `<section class="orbit-section" aria-label="Tus libros">
+      ? `<section class="orbit-section ent-block" style="--eb:${entOrbit}" aria-label="Tus libros">
     <div class="orbit-head">
       <h3>Tus libros</h3>
       <span>Toca para abrir</span>
@@ -998,16 +1009,16 @@ export function buildQuizHistoryBooksHtml(payload: {
     <div class="orbit-row">${orbitHtml}</div>
   </section>`
       : ""}
-  <div class="home-library-hd">
+  <div class="home-library-hd ent-block" style="--eb:${entLib}">
     <p class="home-library-title">Últimos quiz</p>
     <p class="home-library-see">Lista completa</p>
   </div>
-  <div class="filter-label">Categoría</div>
-  <div class="filter-row">
+  <div class="filter-label ent-block" style="--eb:${entFlab}">Categoría</div>
+  <div class="filter-row ent-block" style="--eb:${entFrow}">
     <button type="button" class="chip${filter === "started" ? " on" : ""}" id="chip-started">${escapeHtml(filterStartedLabel)}</button>
     <button type="button" class="chip${filter === "all" ? " on" : ""}" id="chip-all">Todos</button>
   </div>
-  <div id="list" class="${listContainerClass}" data-filter="${filter}">${booksHtml}</div>
+  <div id="list" class="${listContainerClass} ent-block" style="--eb:${entList}" data-filter="${filter}">${booksHtml}</div>
 </div>
 <script>
 (function(){
@@ -1076,7 +1087,7 @@ export function buildQuizHistoryChaptersHtml(payload: {
   const ringCirc = 2 * Math.PI * ringR;
 
   const grid = cells
-    .map((c) => {
+    .map((c, ci) => {
       const cls =
         c.state === "pass" ? "cell pass" : c.state === "fail" ? "cell fail" : "cell none";
       const rClamped = Math.max(0, Math.min(1, c.ratio));
@@ -1093,12 +1104,18 @@ export function buildQuizHistoryChaptersHtml(payload: {
             </circle>
           </svg>`
           : "";
-      return `<button type="button" class="${cls}" data-chapter="${c.chapter}">
+      return `<button type="button" class="${cls} cell-ent" style="--ci:${ci}" data-chapter="${c.chapter}">
         ${ring}
         <span class="cell-num">${c.chapter}</span>
       </button>`;
     })
     .join("");
+
+  let chE = 0;
+  const chEbHead = chE++;
+  const chEbD1 = chE++;
+  const chEbLeg = chE++;
+  const chEbD2 = chE++;
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -1109,6 +1126,21 @@ export function buildQuizHistoryChaptersHtml(payload: {
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; background: ${surfaces.base}; color: ${surfaces.text};
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  @keyframes chEntIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes chCellIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .ent-block { animation: chEntIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--eb) * 44ms); }
+  .cell.cell-ent { animation: chCellIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(56ms + var(--ci) * 16ms); }
+  @media (prefers-reduced-motion: reduce) {
+    .ent-block, .cell.cell-ent { animation: none !important; animation-delay: 0s !important; }
+  }
   .wrap { padding: 16px 16px 40px; }
   .head { margin-bottom: 12px; }
   .title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: ${surfaces.text}; margin-bottom: 4px; }
@@ -1132,17 +1164,17 @@ export function buildQuizHistoryChaptersHtml(payload: {
 </head>
 <body>
 <div class="wrap">
-  <div class="head">
+  <div class="head ent-block" style="--eb:${chEbHead}">
     <div class="title">${escapeHtml(book)}</div>
     <div class="sub">${escapeHtml(sub)}</div>
   </div>
-  <div class="divider"></div>
-  <div class="legend">
+  <div class="divider ent-block" style="--eb:${chEbD1}"></div>
+  <div class="legend ent-block" style="--eb:${chEbLeg}">
     <div class="leg"><span class="dot" style="background:${surfaces.accent}"></span> 4/4 retos</div>
     <div class="leg"><span class="dot" style="background:${surfaces.fail}"></span> Retos en progreso</div>
     <div class="leg"><span class="dot hollow"></span> Sin iniciar</div>
   </div>
-  <div class="divider"></div>
+  <br />
   <div class="grid">${grid}</div>
 </div>
 <script>

@@ -27,6 +27,7 @@ import {
   QuizQuickActionsRow,
 } from "@/components/quizHistory/QuizQuickAction";
 import { QuizReviewItem } from "@/components/quizHistory/QuizReviewItem";
+import { StaggerEnter } from "@/components/quizHistory/StaggerEnter";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View as ThemedView } from "@/components/Themed";
 import { useAlert } from "@/context/AlertContext";
@@ -601,14 +602,12 @@ const ChapterQuizHistoryScreen = () => {
   return (
     <Fragment>
       <Stack.Screen options={singleScreenHeader(screenOptions)} />
-      <ScreenWithAnimation
-        icon="ListChecks"
-        iconColor={theme.colors.notification}
-        title="Mis Quiz"
+      <View
+        style={{ flex: 1 }}
       >
         <ThemedView style={[styles.container, { backgroundColor: surfaces.base }]}>
           {viewState.kind === "books" ? (
-            <AnimatedView key="books" direction={direction}>
+            <AnimatedView key="books" direction={'expand-from-previous'}>
               <BooksView
                 direction={direction}
                 surfaces={surfaces}
@@ -701,7 +700,7 @@ const ChapterQuizHistoryScreen = () => {
           onBooksLayoutChange={setBooksLayout}
         />
         {isChapterQuizOpen ? <ChapterQuizBottomSheet /> : null}
-      </ScreenWithAnimation>
+      </View>
     </Fragment>
   );
 };
@@ -779,112 +778,124 @@ const ReviewView: React.FC<{
         ? "Repasa lo que no acertaste"
         : "Cada repaso ayuda a entender mejor";
 
+    const nQ = attempt.questions.length;
+    const idxAfterQuestions = 3 + nQ;
+
     return (
       <ScrollView
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.reviewHead}>
-          <View style={{ flex: 1 }}>
-            <Text style={[styles.reviewTitle, { color: surfaces.text }]}>
-              {attempt.book} {attempt.chapter}
-            </Text>
-            <Text style={[styles.reviewSub, { color: surfaces.muted }]}>
-              {`${attempt.score} de ${attempt.total} correctas · ${subline}`}
-            </Text>
+        <StaggerEnter index={0}>
+          <View style={styles.reviewHead}>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.reviewTitle, { color: surfaces.text }]}>
+                {attempt.book} {attempt.chapter}
+              </Text>
+              <Text style={[styles.reviewSub, { color: surfaces.muted }]}>
+                {`${attempt.score} de ${attempt.total} correctas · ${subline}`}
+              </Text>
+            </View>
+            <ScoreRing
+              score={attempt.score}
+              total={attempt.total}
+              pass={attempt.pass}
+              surfaces={surfaces}
+            />
           </View>
-          <ScoreRing
-            score={attempt.score}
-            total={attempt.total}
-            pass={attempt.pass}
-            surfaces={surfaces}
+        </StaggerEnter>
+        <StaggerEnter index={1}>
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: surfaces.border, marginBottom: SP.lg },
+            ]}
           />
-        </View>
-        <View
-          style={[
-            styles.divider,
-            { backgroundColor: surfaces.border, marginBottom: SP.lg },
-          ]}
-        />
+        </StaggerEnter>
 
-        {/* Quick row of small actions */}
-        <QuizQuickActionsRow>
-          <QuizQuickAction
-            icon="Star"
-            label={attempt.isFavorite ? "Guardado" : "Guardar"}
-            active={attempt.isFavorite}
-            onPress={onToggleFavorite}
-            surfaces={surfaces}
-          />
-          <QuizQuickAction
-            icon="Trash2"
-            label="Eliminar"
-            onPress={onDelete}
-            surfaces={surfaces}
-            danger
-          />
-        </QuizQuickActionsRow>
+        <StaggerEnter index={2}>
+          <QuizQuickActionsRow>
+            <QuizQuickAction
+              icon="Star"
+              label={attempt.isFavorite ? "Guardado" : "Guardar"}
+              active={attempt.isFavorite}
+              onPress={onToggleFavorite}
+              surfaces={surfaces}
+            />
+            <QuizQuickAction
+              icon="Trash2"
+              label="Eliminar"
+              onPress={onDelete}
+              surfaces={surfaces}
+              danger
+            />
+          </QuizQuickActionsRow>
+        </StaggerEnter>
 
         {attempt.questions.map((q, idx) => (
-          <QuizReviewItem
-            key={`${attempt.id}-${idx}`}
-            index={idx}
-            question={q}
-            selected={byIndex.get(idx) ?? null}
-            surfaces={surfaces}
-          />
+          <StaggerEnter key={`${attempt.id}-${idx}`} index={3 + idx}>
+            <QuizReviewItem
+              index={idx}
+              question={q}
+              selected={byIndex.get(idx) ?? null}
+              surfaces={surfaces}
+            />
+          </StaggerEnter>
         ))}
 
-        <View style={styles.reviewActions}>
-          {hasFailed ? (
-            <PrimaryButton
-              label="Reintentar falladas"
-              icon="RotateCcw"
-              onPress={onRetryFailed}
+        <StaggerEnter index={idxAfterQuestions}>
+          <View style={styles.reviewActions}>
+            {hasFailed ? (
+              <PrimaryButton
+                label="Reintentar falladas"
+                icon="RotateCcw"
+                onPress={onRetryFailed}
+                surfaces={surfaces}
+              />
+            ) : null}
+            <SecondaryButton
+              label="Volver al capítulo"
+              icon="ArrowLeft"
+              onPress={onBack}
               surfaces={surfaces}
             />
-          ) : null}
-          <SecondaryButton
-            label="Volver al capítulo"
-            icon="ArrowLeft"
-            onPress={onBack}
-            surfaces={surfaces}
-          />
-        </View>
+          </View>
+        </StaggerEnter>
 
-        {/* Downvote section */}
-        <View
-          style={[
-            styles.voteSection,
-            { borderTopColor: surfaces.border },
-          ]}
-        >
-          {isDownvoted ? (
-            <>
-              <Text style={[styles.voteHint, { color: surfaces.muted }]}>
-                Ya votaste negativo este quiz compartido
-              </Text>
+        <StaggerEnter index={idxAfterQuestions + 1}>
+          <View
+            style={[
+              styles.voteSection,
+              { borderTopColor: surfaces.border },
+            ]}
+          >
+            {isDownvoted ? (
+              <>
+                <Text style={[styles.voteHint, { color: surfaces.muted }]}>
+                  Ya votaste negativo este quiz compartido
+                </Text>
+                <DangerButton
+                  label={isDownvoteLoading ? "Quitando…" : "Quitar voto negativo"}
+                  icon="Undo2"
+                  onPress={onRemoveDownvote}
+                  surfaces={surfaces}
+                  loading={isDownvoteLoading}
+                  variant="active"
+                />
+              </>
+            ) : (
               <DangerButton
-                label={isDownvoteLoading ? "Quitando…" : "Quitar voto negativo"}
-                icon="Undo2"
-                onPress={onRemoveDownvote}
+                label={
+                  isDownvoteLoading ? "Enviando…" : "Reportar quiz como incorrecto"
+                }
+                icon="ThumbsDown"
+                onPress={onDownvote}
                 surfaces={surfaces}
                 loading={isDownvoteLoading}
-                variant="active"
               />
-            </>
-          ) : (
-            <DangerButton
-              label={
-                isDownvoteLoading ? "Enviando…" : "Reportar quiz como incorrecto"
-              }
-              icon="ThumbsDown"
-              onPress={onDownvote}
-              surfaces={surfaces}
-              loading={isDownvoteLoading}
-            />
-          )}
-        </View>
+            )}
+          </View>
+        </StaggerEnter>
       </ScrollView>
     );
   };
