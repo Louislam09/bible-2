@@ -2,6 +2,7 @@ import {
   buildQuizHistoryBooksHtml,
   buildQuizHistoryChaptersHtml,
   type QuizHistoryBooksLayout,
+  type QuizHistoryHomeUserAvatar,
   type QuizHistorySurfacesCss,
 } from "@/constants/quizHistoryWebViewHtml";
 import {
@@ -20,7 +21,9 @@ import {
   SP,
   getSurfaces,
 } from "@/components/quizHistory/quizHistoryTokens";
+import { computeChapterQuizProgress } from "@/utils/chapterQuizProgress";
 import type { ChapterQuizHistoryMetrics } from "@/utils/quizHistory";
+import { POCKETBASE_URL } from "@/globalConfig";
 import { chapterQuizCacheService } from "@/services/chapterQuizCacheService";
 import type {
   ChapterQuizAttemptRow,
@@ -39,6 +42,7 @@ import {
 } from "@/utils/quizBookMeta";
 import { encodeChapterTileStates } from "@/utils/quizChapterTileStates";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import type { pbUser } from "@/types";
 import React, { useCallback, useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 
@@ -75,27 +79,44 @@ function toCss(s: Surfaces): QuizHistorySurfacesCss {
 
 type BooksFilter = "started" | "all";
 
+/** Same avatar URLs as `UserProfile` (PocketBase file vs Robohash). */
+export function quizHistoryHomeAvatarFromUser(
+  user: pbUser | null | undefined,
+): QuizHistoryHomeUserAvatar | null {
+  if (!user) return null;
+  const base = POCKETBASE_URL ?? "";
+  const avatarUrl = `${base}/api/files/${user.collectionId}/${user.id}/${user.avatar}`;
+  const defaultAvatar = `https://robohash.org/set_set10/bgset_bg1/${user.id}?size=200x200`;
+  const src = user.avatar ? avatarUrl : defaultAvatar;
+  return { src, onErrorSrc: defaultAvatar };
+}
+
 export const QuizHistoryBooksWebView: React.FC<{
   direction: "forward" | "backward";
   surfaces: Surfaces;
   metrics: ChapterQuizHistoryMetrics;
+  /** Intentos (misma fuente que `computeChapterQuizMetrics`) para XP/nivel. */
+  attempts: ChapterQuizAttemptRow[];
   bookSummaries: BookSummary[];
   indexByBook: Map<string, ChapterAttemptIndex>;
   filter: BooksFilter;
   booksLayout: QuizHistoryBooksLayout;
   /** Override default in `constants/quizHistoryBookCardVariant.ts` */
   cardVariant?: QuizHistoryBookCardVariant;
+  user?: pbUser | null;
   onFilterChange: (f: BooksFilter) => void;
   onPressBook: (book: string) => void;
 }> = ({
   direction,
   surfaces,
   metrics,
+  attempts,
   bookSummaries,
   indexByBook,
   filter,
   booksLayout,
   cardVariant = QUIZ_HISTORY_BOOK_CARD_VARIANT,
+  user = null,
   onFilterChange,
   onPressBook,
 }) => {
@@ -111,6 +132,16 @@ export const QuizHistoryBooksWebView: React.FC<{
     const startedCount = useMemo(
       () => bookSummaries.filter((b) => b.hasAnyAttempt).length,
       [bookSummaries],
+    );
+
+    const homeUserAvatar = useMemo(
+      () => quizHistoryHomeAvatarFromUser(user),
+      [user],
+    );
+
+    const progress = useMemo(
+      () => computeChapterQuizProgress(attempts),
+      [attempts],
     );
 
     const html = useMemo(() => {
@@ -191,22 +222,26 @@ export const QuizHistoryBooksWebView: React.FC<{
       return buildQuizHistoryBooksHtml({
         surfaces: toCss(surfaces),
         metrics,
+        progress,
         filter,
         startedCount,
         layout: booksLayout,
         cardVariant,
         books,
+        homeUserAvatar,
       });
     }, [
       visible,
       surfaces,
       metrics,
+      progress,
       filter,
       startedCount,
       booksLayout,
       theme.dark,
       indexByBook,
       cardVariant,
+      homeUserAvatar,
     ]);
 
     const onMessage = useCallback(

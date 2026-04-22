@@ -56,7 +56,7 @@ import {
 import { bibleState$ } from "@/state/bibleState";
 import { chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { modalState$ } from "@/state/modalState";
-import { Screens } from "@/types";
+import { Screens, type pbUser } from "@/types";
 import {
   parseQuizHistoryBookCardVariant,
   type QuizHistoryBookCardVariant,
@@ -119,6 +119,7 @@ const ChapterQuizHistoryScreen = () => {
       storedData$.quizHistoryBookCardVariant.get(),
     ),
   );
+  const quizHistoryUser = use$(() => storedData$.user.get());
   const { getQuestionsForChapter } = useChapterQuizAI();
 
   const [attempts, setAttempts] = useState<ChapterQuizAttemptRow[]>([]);
@@ -609,11 +610,13 @@ const ChapterQuizHistoryScreen = () => {
                 direction={direction}
                 surfaces={surfaces}
                 metrics={metrics}
+                attempts={attempts}
                 bookSummaries={bookSummaries}
                 indexByBook={indexByBook}
                 filter={booksFilter}
                 booksLayout={booksLayout}
                 cardVariant={quizHistoryBookCardVariant}
+                user={quizHistoryUser}
                 onFilterChange={setBooksFilter}
                 onPressBook={openBook}
               />
@@ -706,11 +709,13 @@ const BooksView: React.FC<{
   direction: "forward" | "backward";
   surfaces: ReturnType<typeof getSurfaces>;
   metrics: ReturnType<typeof computeChapterQuizMetrics>;
+  attempts: ChapterQuizAttemptRow[];
   bookSummaries: BookSummary[];
   indexByBook: Map<string, ChapterAttemptIndex>;
   filter: BooksFilter;
   booksLayout: QuizHistoryBooksLayout;
   cardVariant: QuizHistoryBookCardVariant;
+  user?: pbUser | null;
   onFilterChange: (f: BooksFilter) => void;
   onPressBook: (book: string) => void;
 }> = (props) => <QuizHistoryBooksWebView {...props} />;

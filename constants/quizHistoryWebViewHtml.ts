@@ -4,6 +4,7 @@
  */
 
 import type { QuizHistoryBookCardVariant } from "@/constants/quizHistoryBookCardVariant";
+import type { ChapterQuizProgress } from "@/utils/chapterQuizProgress";
 
 export type QuizHistorySurfacesCss = {
   base: string;
@@ -29,6 +30,27 @@ function escapeHtml(s: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+/** Escape for use inside single-quoted JS (e.g. img onerror handler). */
+function escapeJsSingleQuoted(s: string): string {
+  return s.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+export type QuizHistoryHomeUserAvatar = {
+  src: string;
+  onErrorSrc: string;
+};
+
+function buildQuizHomeAvatarMarkup(
+  avatar: QuizHistoryHomeUserAvatar | null | undefined,
+): string {
+  if (!avatar?.src) {
+    return '<div class="quiz-av" aria-hidden="true">✝</div>';
+  }
+  const src = escapeHtml(avatar.src);
+  const fallback = escapeJsSingleQuoted(avatar.onErrorSrc);
+  return `<div class="quiz-av quiz-av--img" aria-hidden="true"><img src="${src}" alt="" decoding="async" onerror="this.onerror=null;this.src='${fallback}'" /></div>`;
 }
 
 /** Linear mix #RRGGBB → #RRGGBB (t=0 → a, t=1 → b). */
@@ -414,6 +436,57 @@ function buildV29BookCardHtml(
 </button>`;
 }
 
+/** Pastel quiz-app accent (filters / CTA) — pairs with dark text. */
+const QUIZ_HOME_YELLOW = "#f4d03f";
+
+function buildFeaturedCarouselInnerHtml(
+  books: QuizHistoryBookCardPayload[],
+  surfaces: QuizHistorySurfacesCss,
+): string {
+  const items = books
+    .map((b, idx) => ({ b, idx }))
+    .filter((x) => x.b.hasAnyAttempt)
+    .slice(0, 8);
+  if (items.length === 0) return "";
+  return items
+    .map(({ b, idx }, fi) => {
+      const pctN = Math.max(0, Math.min(100, b.percent));
+      const w = `${pctN.toFixed(2)}%`;
+      const sub = `${b.attemptCount} intento${b.attemptCount === 1 ? "" : "s"} · ${escapeHtml(b.lastActivityLabel)}`;
+      const grad = `linear-gradient(125deg, ${b.bookColor} 0%, ${mixHex(b.bookColor, "#4c3d8f", 0.35)} 55%, ${mixHex(b.bookColor, surfaces.base, 0.2)} 100%)`;
+      return `<button type="button" class="feat-card" data-book-idx="${idx}" style="--fi:${fi};background:${grad}">
+  <div class="feat-card-inner">
+    <div class="feat-copy">
+      <div class="feat-kicker">${escapeHtml(b.shortName)}</div>
+      <div class="feat-title">${escapeHtml(b.book)}</div>
+      <div class="feat-sub">${sub}</div>
+      <div class="feat-bar"><div class="feat-bar-fill" style="width:${w}"></div></div>
+      <span class="feat-cta">¡Vamos!</span>
+    </div>
+    <div class="feat-blob" aria-hidden="true"></div>
+  </div>
+</button>`;
+    })
+    .join("");
+}
+
+function buildOrbitStripInnerHtml(
+  books: QuizHistoryBookCardPayload[],
+): string {
+  const scored = books
+    .map((b, idx) => ({ b, idx, score: b.inProgressChapters * 10 + b.attemptCount }))
+    .filter((x) => x.b.hasAnyAttempt)
+    .sort((a, c) => c.score - a.score)
+    .slice(0, 12);
+  if (scored.length === 0) return "";
+  return scored
+    .map(
+      ({ b, idx }) =>
+        `<button type="button" class="orbit-av" data-book-idx="${idx}" style="background:${b.avatarBg};color:${b.bookColor};border-color:${b.borderAccent}">${escapeHtml(b.shortName)}</button>`,
+    )
+    .join("");
+}
+
 export function buildQuizHistoryBooksHtml(payload: {
   surfaces: QuizHistorySurfacesCss;
   metrics: {
@@ -421,14 +494,27 @@ export function buildQuizHistoryBooksHtml(payload: {
     streakDays: number;
     chaptersCompleted: number;
   };
+  /** XP y nivel (ver `utils/chapterQuizProgress.ts`). */
+  progress: ChapterQuizProgress;
   filter: "started" | "all";
   startedCount: number;
   layout: QuizHistoryBooksLayout;
   cardVariant: QuizHistoryBookCardVariant;
   books: QuizHistoryBookCardPayload[];
+  /** Logged-in user portrait (PocketBase file or Robohash), same rules as UserProfile. */
+  homeUserAvatar?: QuizHistoryHomeUserAvatar | null;
 }): string {
-  const { surfaces, metrics, filter, startedCount, layout, books, cardVariant } =
-    payload;
+  const {
+    surfaces,
+    metrics,
+    progress,
+    filter,
+    startedCount,
+    layout,
+    books,
+    cardVariant,
+    homeUserAvatar,
+  } = payload;
   const dataJson = safeJsonForScript({
     filter,
     books: books.map((b) => b.book),
@@ -473,9 +559,30 @@ export function buildQuizHistoryBooksHtml(payload: {
       : "";
   const listContainerClass =
     books.length === 0
-      ? "book-container book-container--list"
+      ? "book-container book-container--list home-feed"
       : `book-container book-container--${layout}${gridColClass ? ` ${gridColClass}` : ""
-      }`;
+      } home-feed`;
+
+  const startedBooksCount = books.filter((b) => b.hasAnyAttempt).length;
+  const xpDisplay = progress.totalXp;
+  const levelNum = progress.level;
+  const levelBarPct = progress.isMaxLevel
+    ? 100
+    : Math.max(0, Math.min(100, progress.levelProgressPercent));
+  const levelSubText = progress.isMaxLevel
+    ? "Máximo alcanzado"
+    : `Faltan ${Math.max(0, Math.ceil(progress.xpToNext))} XP → nivel ${progress.level + 1}`;
+  const featuredHtml = buildFeaturedCarouselInnerHtml(books, surfaces);
+  const orbitHtml = buildOrbitStripInnerHtml(books);
+  const softPageBg = mixHex(surfaces.accent, surfaces.base, 0.91);
+  const chipOnBg = QUIZ_HOME_YELLOW;
+  const chipOnFg = "#1a1520";
+  const greetSub =
+    startedBooksCount > 0
+      ? `${startedBooksCount} libro${startedBooksCount === 1 ? "" : "s"} activos · racha ${metrics.streakDays} día${metrics.streakDays === 1 ? "" : "s"}`
+      : "Empezá desde la lectura y tu progreso aparecerá aquí";
+
+  const quizHomeAvatarHtml = buildQuizHomeAvatarMarkup(homeUserAvatar);
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -484,7 +591,7 @@ export function buildQuizHistoryBooksHtml(payload: {
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; padding: 0; background: ${surfaces.base}; color: ${surfaces.text};
+  html, body { margin: 0; padding: 0; background: ${softPageBg}; color: ${surfaces.text};
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 15px; line-height: 1.35; }
   @keyframes metricsIn {
@@ -507,28 +614,143 @@ export function buildQuizHistoryBooksHtml(payload: {
     from { transform: scaleX(0.004); }
     to { transform: scaleX(1); }
   }
-  .wrap { padding: 16px 16px 40px; }
-  .metrics { display: flex; border: 1px solid ${surfaces.borderStrong}; border-radius: 16px; overflow: hidden; margin-bottom: 16px;
-    animation: metricsIn 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
-    box-shadow: 0 1px 0 ${surfaces.borderStrong}, 0 4px 14px rgba(0,0,0,0.06); }
-  .metric-cell { flex: 1; text-align: center; padding: 12px 8px; border-right: 1px solid ${surfaces.borderStrong}; }
-  .metric-cell:last-child { border-right: 0; }
-  .metric-val { font-size: 17px; font-weight: 700; color: ${surfaces.text}; letter-spacing: -0.3px; }
-  .metric-lbl { font-size: 11px; font-weight: 500; color: ${surfaces.muted}; margin-top: 2px; }
-  .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center;
+  .wrap { padding: 0 0 40px; }
+  .quiz-top {
+    padding: 18px 16px 16px;
+    background: ${surfaces.card};
+    border-radius: 0 0 26px 26px;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.07);
+    animation: metricsIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .quiz-top-row { display: flex; flex-direction: row; align-items: center; gap: 12px; }
+  .quiz-av {
+    width: 50px; height: 50px; border-radius: 999px; flex-shrink: 0;
+    background: linear-gradient(135deg, ${surfaces.accent} 0%, ${mixHex(surfaces.accent, "#c4b5fd", 0.35)} 100%);
+    color: #fff; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 18px ${mixHex(surfaces.accent, "#000000", 0.55)}40;
+  }
+  .quiz-av--img {
+    padding: 0;
+    overflow: hidden;
+    background: ${surfaces.borderStrong};
+  }
+  .quiz-av--img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .quiz-top-mid { flex: 1; min-width: 0; }
+  .quiz-lvl-lbl { font-size: 11px; font-weight: 700; color: ${surfaces.muted}; margin-bottom: 6px; line-height: 1.25; }
+  .quiz-lvl-lbl b { color: ${surfaces.text}; font-weight: 800; }
+  .quiz-lvl-subl { font-weight: 600; color: ${surfaces.muted}; }
+  .quiz-lvl-bar { height: 9px; border-radius: 99px; background: ${surfaces.borderStrong}; overflow: hidden; }
+  .quiz-lvl-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, ${surfaces.accent}, ${mixHex(surfaces.accent, QUIZ_HOME_YELLOW, 0.38)});
+    width: ${levelBarPct}%;
+    animation: barGrow 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+    transform-origin: left center;
+  }
+  .quiz-xp {
+    flex-shrink: 0; text-align: center;
+    padding: 8px 11px; border-radius: 16px;
+    background: ${mixHex(QUIZ_HOME_YELLOW, surfaces.card, 0.82)};
+    border: 1px solid ${mixHex(QUIZ_HOME_YELLOW, surfaces.borderStrong, 0.45)};
+  }
+  .quiz-xp b { display: block; font-size: 14px; font-weight: 900; color: ${mixHex(QUIZ_HOME_YELLOW, "#92400e", 0.55)}; letter-spacing: -0.3px; }
+  .quiz-xp span { font-size: 10px; font-weight: 800; color: ${surfaces.muted}; letter-spacing: 0.06em; }
+  .quiz-stat-strip {
+    display: flex; flex-direction: row; justify-content: space-between; gap: 8px; margin-top: 14px;
+    padding-top: 14px; border-top: 1px solid ${surfaces.borderStrong};
+  }
+  .quiz-stat-pill { flex: 1; text-align: center; background: ${softPageBg}; border-radius: 14px; padding: 10px 4px; }
+  .quiz-stat-pill b { display: block; font-size: 16px; font-weight: 800; color: ${surfaces.text}; letter-spacing: -0.35px; }
+  .quiz-stat-pill small { font-size: 9px; font-weight: 600; color: ${surfaces.muted}; text-transform: uppercase; letter-spacing: 0.05em; }
+  .quiz-greet { padding: 22px 16px 4px; animation: controlsIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both; }
+  .quiz-greet-hi { font-size: 14px; font-weight: 600; color: ${surfaces.muted}; margin: 0 0 6px; }
+  .quiz-greet-h1 { font-size: 25px; font-weight: 900; color: ${surfaces.text}; letter-spacing: -0.6px; margin: 0; line-height: 1.12; }
+  .quiz-greet-h1 .spark { color: ${surfaces.accent}; }
+  .quiz-greet-sub { font-size: 13px; font-weight: 500; color: ${surfaces.muted}; margin: 10px 0 0; line-height: 18px; }
+  .feat-section { margin-top: 16px; animation: controlsIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both; }
+  .feat-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 16px; margin-bottom: 12px; }
+  .feat-head h2 { font-size: 16px; font-weight: 900; color: ${surfaces.text}; margin: 0; letter-spacing: -0.35px; }
+  .feat-head span { font-size: 12px; font-weight: 600; color: ${surfaces.muted}; }
+  .feat-scroller {
+    display: flex; flex-direction: row; gap: 14px; overflow-x: auto; padding: 0 16px 10px;
+    -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
+  }
+  .feat-scroller::-webkit-scrollbar { height: 0; }
+  .feat-card {
+    flex: 0 0 min(88vw, 318px); width: min(88vw, 318px); scroll-snap-align: center;
+    border: none; border-radius: 22px; overflow: hidden; cursor: pointer; text-align: left;
+    padding: 0; margin: 0; font: inherit; color: #fff; -webkit-appearance: none; appearance: none;
+    box-shadow: 0 14px 36px rgba(0,0,0,0.15);
+    animation: bookCardIn 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--fi, 0) * 50ms);
+    transition: transform 0.18s ease;
+  }
+  .feat-card:active { transform: scale(0.98); }
+  .feat-card-inner { display: flex; flex-direction: row; min-height: 152px; position: relative; }
+  .feat-copy { flex: 1; padding: 18px 16px; position: relative; z-index: 1; }
+  .feat-kicker { font-size: 11px; font-weight: 800; opacity: 0.9; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .feat-title { font-size: 18px; font-weight: 900; letter-spacing: -0.45px; line-height: 1.2; margin-bottom: 6px;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.22); }
+  .feat-sub { font-size: 12px; font-weight: 500; opacity: 0.9; line-height: 16px; margin-bottom: 12px; }
+  .feat-bar { height: 5px; border-radius: 99px; background: rgba(255,255,255,0.3); overflow: hidden; margin-bottom: 14px; }
+  .feat-bar-fill { height: 100%; border-radius: 99px; background: #ffffff; transform-origin: left center;
+    animation: barGrow 0.68s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(var(--fi, 0) * 50ms + 0.08s); }
+  .feat-cta {
+    display: inline-block; font-size: 13px; font-weight: 900; color: ${chipOnFg};
+    background: ${chipOnBg}; padding: 10px 22px; border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  }
+  .feat-blob {
+    width: 36%; min-width: 96px;
+    background: radial-gradient(circle at 28% 38%, rgba(255,255,255,0.4) 0%, transparent 50%);
+    opacity: 0.95;
+  }
+  .orbit-section { margin-top: 22px; padding: 0 16px; animation: controlsIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both; }
+  .orbit-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .orbit-head h3 { font-size: 15px; font-weight: 900; margin: 0; color: ${surfaces.text}; letter-spacing: -0.35px; }
+  .orbit-head span { font-size: 12px; font-weight: 600; color: ${surfaces.muted}; }
+  .orbit-row { display: flex; flex-direction: row; gap: 11px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .orbit-row::-webkit-scrollbar { height: 0; }
+  .orbit-av {
+    flex-shrink: 0; width: 50px; height: 50px; border-radius: 999px; cursor: pointer; border: 2px solid;
+    font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;
+    -webkit-appearance: none; appearance: none; font: inherit;
+    box-shadow: 0 5px 16px rgba(0,0,0,0.09); transition: transform 0.15s ease;
+  }
+  .orbit-av:active { transform: scale(0.93); }
+  .home-library-hd { padding: 26px 16px 8px; display: flex; justify-content: space-between; align-items: baseline; }
+  .home-library-title { font-size: 16px; font-weight: 900; color: ${surfaces.text}; margin: 0; letter-spacing: -0.4px; }
+  .home-library-see { font-size: 12px; font-weight: 600; color: ${surfaces.muted}; margin: 0; }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; padding: 0 16px;
     animation: controlsIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  .filter-label { width: 100%; font-size: 11px; font-weight: 600; color: ${surfaces.muted}; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px;
+  .filter-label { width: 100%; font-size: 11px; font-weight: 600; color: ${surfaces.muted}; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px; padding: 0 16px;
     animation: controlsIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.06s; }
   .filter-label + .filter-row { animation-delay: 0.1s; }
   .chip { border: 1px solid ${surfaces.borderStrong}; padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
     background: ${surfaces.card}; color: ${surfaces.muted}; cursor: pointer;
     transition: border-color 0.22s ease, background 0.22s ease, color 0.22s ease, transform 0.16s ease; }
   .chip:active { transform: scale(0.96); }
-  .chip.on { border-color: ${surfaces.accent}; background: ${surfaces.accentSoft}; color: ${surfaces.accent}; }
+  .chip.on { border-color: ${mixHex(chipOnBg, chipOnFg, 0.75)}; background: ${chipOnBg}; color: ${chipOnFg}; }
   .book-container--grid { display: grid; gap: 12px; align-items: stretch; }
   .book-container--grid-cols-1 { grid-template-columns: 1fr; }
   .book-container--grid-cols-2 { grid-template-columns: 1fr 1fr; }
   .book-container--list { display: flex; flex-direction: column; gap: 0; }
+  #list { padding: 0 16px; }
+  .home-feed.book-container--list .book-card {
+    border-radius: 20px;
+    position: relative;
+    padding-right: 34px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+  }
+  .home-feed.book-container--list .book-card::after {
+    content: "›"; position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+    font-size: 24px; font-weight: 300; color: ${surfaces.muted}; line-height: 1; pointer-events: none;
+  }
   .book-card { background: ${surfaces.card}; border: 1px solid ${surfaces.borderStrong}; border-radius: 16px; cursor: pointer;
     text-align: left; -webkit-appearance: none; appearance: none; font: inherit; color: inherit;
     animation: bookCardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -694,23 +916,60 @@ export function buildQuizHistoryBooksHtml(payload: {
   .empty-icon { font-size: 36px; color: ${surfaces.softText}; margin-bottom: 12px; opacity: 0.8; }
   .empty-text { font-size: 14px; font-weight: 500; color: ${surfaces.muted}; line-height: 22px; }
   @media (prefers-reduced-motion: reduce) {
-    .metrics, .filter-label, .filter-row, .book-card, .book-card .v4-seg, .book-card .v7-bar-fill,
+    .quiz-top, .feat-card, .feat-bar-fill, .quiz-lvl-fill, .orbit-av, .filter-label, .filter-row, .book-card, .book-card .v4-seg, .book-card .v7-bar-fill,
     .book-card .v16-fill, .book-card .v16lr-fill,
     .book-card .v29-fill, .book-card .v29-lfill, .empty {
       animation: none !important; animation-delay: 0s !important; }
-    .book-card, .chip { transition: none !important; }
-    .chip:active { transform: none !important; }
+    .book-card, .chip, .feat-card, .orbit-av { transition: none !important; }
+    .chip:active, .feat-card:active, .orbit-av:active { transform: none !important; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="metrics">
-    <div class="metric-cell"><div class="metric-val">${metrics.avgPercent}%</div><div class="metric-lbl">Promedio</div></div>
-    <div class="metric-cell"><div class="metric-val">${metrics.streakDays}</div><div class="metric-lbl">Racha</div></div>
-    <div class="metric-cell"><div class="metric-val">${metrics.chaptersCompleted}</div><div class="metric-lbl">Capítulos</div></div>
+  <header class="quiz-top">
+    <div class="quiz-top-row">
+      ${quizHomeAvatarHtml}
+      <div class="quiz-top-mid">
+        <div class="quiz-lvl-lbl">Nivel <b>${levelNum}</b> <span class="quiz-lvl-subl">· ${escapeHtml(levelSubText)}</span></div>
+        <div class="quiz-lvl-bar"><div class="quiz-lvl-fill"></div></div>
+      </div>
+      <div class="quiz-xp"><b>${xpDisplay}</b><span>XP</span></div>
+    </div>
+    <div class="quiz-stat-strip">
+      <div class="quiz-stat-pill"><b>${metrics.avgPercent}%</b><small>Promedio</small></div>
+      <div class="quiz-stat-pill"><b>${metrics.streakDays}</b><small>Racha</small></div>
+      <div class="quiz-stat-pill"><b>${metrics.chaptersCompleted}</b><small>Capítulos</small></div>
+    </div>
+  </header>
+  <section class="quiz-greet">
+    <p class="quiz-greet-hi">Shalom 👋</p>
+    <h1 class="quiz-greet-h1">¡Sigamos con un quiz<span class="spark">✨</span>!</h1>
+    <p class="quiz-greet-sub">${escapeHtml(greetSub)}</p>
+  </section>
+  ${featuredHtml !== ""
+      ? `<section class="feat-section" aria-label="Destacados">
+    <div class="feat-head">
+      <h2>Retos destacados</h2>
+      <span>Deslizá →</span>
+    </div>
+    <div class="feat-scroller">${featuredHtml}</div>
+  </section>`
+      : ""}
+  ${orbitHtml !== ""
+      ? `<section class="orbit-section" aria-label="Tus libros">
+    <div class="orbit-head">
+      <h3>Tus libros</h3>
+      <span>Toca para abrir</span>
+    </div>
+    <div class="orbit-row">${orbitHtml}</div>
+  </section>`
+      : ""}
+  <div class="home-library-hd">
+    <p class="home-library-title">Últimos quiz</p>
+    <p class="home-library-see">Lista completa</p>
   </div>
-  <div class="filter-label">Filtro</div>
+  <div class="filter-label">Categoría</div>
   <div class="filter-row">
     <button type="button" class="chip ${filter === "started" ? "on" : ""}" id="chip-started">${escapeHtml(filterStartedLabel)}</button>
     <button type="button" class="chip ${filter === "all" ? "on" : ""}" id="chip-all">Todos</button>
@@ -729,8 +988,9 @@ export function buildQuizHistoryBooksHtml(payload: {
   document.getElementById("chip-all").onclick = function() {
     post({ type: "filter", filter: "all" });
   };
-  document.getElementById("list").addEventListener("click", function(e) {
-    var btn = e.target.closest(".book-card");
+  document.querySelector(".wrap").addEventListener("click", function(e) {
+    if (e.target.closest(".chip")) return;
+    var btn = e.target.closest("[data-book-idx]");
     if (!btn) return;
     var idx = parseInt(btn.getAttribute("data-book-idx"), 10);
     if (isNaN(idx) || !DATA.books[idx]) return;
