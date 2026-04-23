@@ -16,7 +16,9 @@ import { QuizHistoryBooksSettingsModal } from "@/components/quizHistory/QuizHist
 import {
   QuizHistoryBooksWebView,
   QuizHistoryChaptersWebView,
+  quizHistoryHomeAvatarFromUser,
 } from "@/components/quizHistory/QuizHistoryListWebViews";
+import { QuizHistoryProfilePanel } from "@/components/quizHistory/QuizHistoryProfilePanel";
 import {
   RADIUS,
   SP,
@@ -67,6 +69,7 @@ import {
 } from "@/constants/quizHistoryBookCardVariant";
 import type { QuizHistoryBooksLayout } from "@/constants/quizHistoryWebViewHtml";
 import { headerIconSize } from "@/constants/size";
+import { computeChapterQuizProgress } from "@/utils/chapterQuizProgress";
 import { computeChapterQuizMetrics } from "@/utils/quizHistory";
 import { loadChapterVersesTextForQuiz } from "@/utils/loadChapterVersesForQuiz";
 import { showToast } from "@/utils/showToast";
@@ -99,6 +102,7 @@ type ReviewNavigationFrom =
 
 type ViewState =
   | { kind: "books" }
+  | { kind: "profile" }
   | { kind: "chapters"; book: string }
   | { kind: "chapterDetail"; book: string; chapter: number }
   | {
@@ -151,6 +155,14 @@ const ChapterQuizHistoryScreen = () => {
   const metrics = useMemo(
     () => computeChapterQuizMetrics(attempts),
     [attempts],
+  );
+  const quizProgress = useMemo(
+    () => computeChapterQuizProgress(attempts),
+    [attempts],
+  );
+  const profileHomeAvatar = useMemo(
+    () => quizHistoryHomeAvatarFromUser(quizHistoryUser),
+    [quizHistoryUser],
   );
 
   const downvotedSet = useMemo(
@@ -213,6 +225,11 @@ const ChapterQuizHistoryScreen = () => {
 
   // Internal back navigation through view stack.
   const goBackInternal = useCallback((): boolean => {
+    if (viewState.kind === "profile") {
+      setDirection("backward");
+      setViewState({ kind: "books" });
+      return true;
+    }
     if (viewState.kind === "review") {
       setDirection("backward");
       const rf = viewState.reviewFrom;
@@ -258,6 +275,12 @@ const ChapterQuizHistoryScreen = () => {
       router.push("/(dashboard)");
     }
   }, [goBackInternal, router]);
+
+  const openQuizProfile = useCallback(() => {
+    void Haptics.selectionAsync();
+    setDirection("none");
+    setViewState({ kind: "profile" });
+  }, []);
 
   const openBook = useCallback((book: string) => {
     setDirection("expand-from-previous");
@@ -552,19 +575,26 @@ const ChapterQuizHistoryScreen = () => {
     const title =
       viewState.kind === "books"
         ? "Mis Quiz"
-        : viewState.kind === "chapters"
-          ? viewState.book
-          : viewState.kind === "chapterDetail"
-            ? `${viewState.book} ${viewState.chapter}`
-            : reviewAttempt
-              ? `${reviewAttempt.book} ${reviewAttempt.chapter}`
-              : "Repasar";
+        : viewState.kind === "profile"
+          ? quizHistoryUser?.name?.trim() || "Perfil"
+          : viewState.kind === "chapters"
+            ? viewState.book
+            : viewState.kind === "chapterDetail"
+              ? `${viewState.book} ${viewState.chapter}`
+              : reviewAttempt
+                ? `${reviewAttempt.book} ${reviewAttempt.chapter}`
+                : "Repasar";
 
     return {
       theme,
       title,
+      headerShown: viewState.kind !== "profile",
       titleIcon:
-        viewState.kind === "books" ? "ListChecks" : "BookOpen",
+        viewState.kind === "books"
+          ? "ListChecks"
+          : viewState.kind === "profile"
+            ? "User"
+            : "BookOpen",
       titleIconColor: theme.colors.notification,
       goBack: headerGoBack,
       headerRightProps:
@@ -597,11 +627,13 @@ const ChapterQuizHistoryScreen = () => {
             disabled: true,
           },
     };
-  }, [headerGoBack, reviewAttempt, theme, viewState]);
+  }, [headerGoBack, quizHistoryUser?.name, reviewAttempt, theme, viewState]);
 
   return (
     <Fragment>
-      <Stack.Screen options={singleScreenHeader(screenOptions)} />
+      <Stack.Screen
+        options={singleScreenHeader(screenOptions)}
+      />
       <View
         style={{ flex: 1 }}
       >
@@ -621,6 +653,18 @@ const ChapterQuizHistoryScreen = () => {
                 user={quizHistoryUser}
                 onFilterChange={setBooksFilter}
                 onPressBook={openBook}
+                onOpenProfile={openQuizProfile}
+              />
+            </AnimatedView>
+          ) : viewState.kind === "profile" ? (
+            <AnimatedView key="profile" direction={direction}>
+              <QuizHistoryProfilePanel
+                surfaces={surfaces}
+                user={quizHistoryUser}
+                homeAvatar={profileHomeAvatar}
+                progress={quizProgress}
+                streakDays={metrics.streakDays}
+                onClose={headerGoBack}
               />
             </AnimatedView>
           ) : viewState.kind === "chapters" ? (
@@ -720,6 +764,7 @@ const BooksView: React.FC<{
   user?: pbUser | null;
   onFilterChange: (f: BooksFilter) => void;
   onPressBook: (book: string) => void;
+  onOpenProfile: () => void;
 }> = (props) => <QuizHistoryBooksWebView {...props} />;
 
 const ChaptersView: React.FC<{

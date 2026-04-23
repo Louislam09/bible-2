@@ -47,11 +47,11 @@ function buildQuizHomeAvatarMarkup(
   avatar: QuizHistoryHomeUserAvatar | null | undefined,
 ): string {
   if (!avatar?.src) {
-    return '<div class="quiz-av quiz-hd-in" style="--hi:0" aria-hidden="true">✝</div>';
+    return '<button type="button" class="quiz-av quiz-av--tap quiz-hd-in" style="--hi:0" aria-label="Ver perfil">✝</button>';
   }
   const src = escapeHtml(avatar.src);
   const fallback = escapeJsSingleQuoted(avatar.onErrorSrc);
-  return `<div class="quiz-av quiz-av--img quiz-hd-in" style="--hi:0" aria-hidden="true"><img src="${src}" alt="" decoding="async" onerror="this.onerror=null;this.src='${fallback}'" /></div>`;
+  return `<button type="button" class="quiz-av quiz-av--img quiz-av--tap quiz-hd-in" style="--hi:0" aria-label="Ver perfil"><img src="${src}" alt="" decoding="async" onerror="this.onerror=null;this.src='${fallback}'" /></button>`;
 }
 
 /** Linear mix #RRGGBB → #RRGGBB (t=0 → a, t=1 → b). */
@@ -500,7 +500,11 @@ function buildOrbitStripInnerHtml(
     .join("");
 }
 
-const flameSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="quiz-stat-flame" aria-hidden="true"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>`;
+/** Same path as the streak flame in the books WebView (`flameSvg`). */
+export const QUIZ_HISTORY_FLAME_PATH =
+  "M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4";
+
+const flameSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="quiz-stat-flame" aria-hidden="true"><path d="${QUIZ_HISTORY_FLAME_PATH}"/></svg>`;
 
 export function buildQuizHistoryBooksHtml(payload: {
   surfaces: QuizHistorySurfacesCss;
@@ -649,12 +653,17 @@ export function buildQuizHistoryBooksHtml(payload: {
     box-shadow: 0 12px 36px rgba(0,0,0,0.07);
   }
   .quiz-top-row { display: flex; flex-direction: row; align-items: center; gap: 12px; }
+  button.quiz-av {
+    -webkit-appearance: none; appearance: none; border: none; margin: 0; padding: 0; cursor: pointer;
+    font: inherit; color: inherit; text-align: inherit;
+  }
   .quiz-av {
     width: 50px; height: 50px; border-radius: 999px; flex-shrink: 0;
     background: linear-gradient(135deg, ${surfaces.accent} 0%, ${mixHex(surfaces.accent, "#c4b5fd", 0.35)} 100%);
     color: #fff; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center;
     box-shadow: 0 6px 18px ${mixHex(surfaces.accent, "#000000", 0.55)}40;
   }
+  .quiz-av--tap:active { opacity: 0.88; transform: scale(0.97); }
   .quiz-av--img {
     padding: 0;
     overflow: hidden;
@@ -1062,6 +1071,13 @@ export function buildQuizHistoryBooksHtml(payload: {
   setFilterInPage(DATA.filter, false);
   document.querySelector(".wrap").addEventListener("click", function(e) {
     if (e.target.closest(".chip")) return;
+    var avTap = e.target.closest(".quiz-av--tap");
+    if (avTap) {
+      e.preventDefault();
+      e.stopPropagation();
+      post({ type: "openProfile" });
+      return;
+    }
     var btn = e.target.closest("[data-book-idx]");
     if (!btn) return;
     var idx = parseInt(btn.getAttribute("data-book-idx"), 10);

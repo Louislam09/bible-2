@@ -50,6 +50,7 @@ export const singleScreenHeader = ({
   headerRightProps,
   mainIconSize,
   goBack,
+  ...rest
 }: SingleScreenHeaderProps) => {
   const styles = {
     headerTitle: {
@@ -109,5 +110,6 @@ export const singleScreenHeader = ({
     headerStyle: {
       backgroundColor: backgroundColor || theme.colors.background,
     },
+    ...rest
   };
 };

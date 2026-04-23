@@ -33,6 +33,7 @@ import Animated, {
 
 /** Presets for `entering` / `exiting` on screen content (e.g. Mis quiz stack). */
 export type AnimatedViewTransition =
+  | "none"
   | "forward"
   | "backward"
   | "expand-up"
@@ -82,6 +83,11 @@ function enteringExitingFor(
   transition: AnimatedViewTransition,
 ): { entering: BaseAnimationBuilder; exiting: BaseAnimationBuilder } {
   switch (transition) {
+    case "none":
+      return {
+        entering: timed(FadeIn),
+        exiting: timed(FadeOut),
+      };
     case "forward":
       return {
         entering: timed(FadeInRight),

@@ -106,6 +106,7 @@ export const QuizHistoryBooksWebView: React.FC<{
   user?: pbUser | null;
   onFilterChange: (f: BooksFilter) => void;
   onPressBook: (book: string) => void;
+  onOpenProfile: () => void;
 }> = ({
   direction,
   surfaces,
@@ -119,6 +120,7 @@ export const QuizHistoryBooksWebView: React.FC<{
   user = null,
   onFilterChange,
   onPressBook,
+  onOpenProfile,
 }) => {
     const { theme } = useMyTheme();
 
@@ -252,11 +254,14 @@ export const QuizHistoryBooksWebView: React.FC<{
           if (msg.type === "selectBook" && msg.book) {
             onPressBook(msg.book);
           }
+          if (msg.type === "openProfile") {
+            onOpenProfile();
+          }
         } catch {
           /* ignore */
         }
       },
-      [onFilterChange, onPressBook],
+      [onFilterChange, onOpenProfile, onPressBook],
     );
 
     return (
