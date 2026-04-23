@@ -1,6 +1,7 @@
 import Icon from "@/components/Icon";
 import { QuizBadgeItem } from "@/components/quizHistory/QuizBadgeItem";
 import { SP, type QuizSurfaces } from "@/components/quizHistory/quizHistoryTokens";
+import { StaggerEnter } from "@/components/quizHistory/StaggerEnter";
 import {
   QUIZ_HISTORY_FLAME_PATH,
   type QuizHistoryHomeUserAvatar,
@@ -14,13 +15,7 @@ import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, {
   Easing,
   Extrapolation,
@@ -38,24 +33,17 @@ const INNER_START_DELAY_MS = HERO_REVEAL_MS * 0.9;
 const INNER_ENTRANCE_MS = 640;
 const INNER_SLIDE_PX = 14;
 /**
- * White sheet rises after yellow header lands (reference: profile-animation frames ~04→05).
+ * White sheet rises after the hero/header animation finishes, then inner blocks stagger in.
  */
-const SHEET_START_MS = HERO_REVEAL_MS + 140;
-const SHEET_ENTRANCE_MS = 780;
-const SHEET_SLIDE_PX = 56;
-const SHEET_INNER_SLIDE_PX = 12;
+const SHEET_START_MS = HERO_REVEAL_MS + 72;
+const SHEET_ENTRANCE_MS = 760;
+const SHEET_SLIDE_PX = 64;
+/** Base delay for `StaggerEnter` in sheet content (after sheet starts lifting). */
+const SHEET_STAGGER_DELAY_OFFSET_MS = SHEET_START_MS + 260;
 
 function staggerProgress(v: number, index: number): number {
   "worklet";
   const start = index * 0.14;
-  const end = Math.min(start + 0.48, 1);
-  return interpolate(v, [start, end], [0, 1], Extrapolation.CLAMP);
-}
-
-/** Stagger for sheet blocks (streak → stats → fat bar → badges), like frames 05→08. */
-function sheetStaggerProgress(v: number, index: number): number {
-  "worklet";
-  const start = index * 0.13;
   const end = Math.min(start + 0.48, 1);
   return interpolate(v, [start, end], [0, 1], Extrapolation.CLAMP);
 }
@@ -108,6 +96,15 @@ export const QuizHistoryProfilePanel: React.FC<{
     () => badgeStates.filter((b) => !b.unlocked),
     [badgeStates],
   );
+  /** Stagger indices after "Mis insignias" (6): unlocked row(s) or empty line, then locked block. */
+  const badgeStagger = useMemo(() => {
+    const unlockedRowStart = 7;
+    const unlockedSlots =
+      badgesUnlocked.length > 0 ? badgesUnlocked.length : 1;
+    const lockedHeaderIndex = unlockedRowStart + unlockedSlots;
+    const lockedRowStart = lockedHeaderIndex + 1;
+    return { unlockedRowStart, lockedHeaderIndex, lockedRowStart };
+  }, [badgesUnlocked.length]);
   const barPct = progress.isMaxLevel
     ? 100
     : Math.max(0, Math.min(100, progress.levelProgressPercent));
@@ -188,51 +185,18 @@ export const QuizHistoryProfilePanel: React.FC<{
     };
   });
 
-  const sheetLiftStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      sheetReveal.value,
-      [0, 0.1],
-      [0, 1],
-      Extrapolation.CLAMP,
-    ),
-    transform: [
-      {
-        translateY: interpolate(
-          sheetReveal.value,
-          [0, 1],
-          [SHEET_SLIDE_PX, 0],
-          Extrapolation.CLAMP,
-        ),
-      },
-    ],
-  }));
-
-  const sheetStreakStyle = useAnimatedStyle(() => {
-    const t = sheetStaggerProgress(sheetReveal.value, 0);
+  const sheetLiftStyle = useAnimatedStyle(() => {
+    const u = sheetReveal.value;
     return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * SHEET_INNER_SLIDE_PX }],
-    };
-  });
-  const sheetStatsStyle = useAnimatedStyle(() => {
-    const t = sheetStaggerProgress(sheetReveal.value, 1);
-    return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * SHEET_INNER_SLIDE_PX }],
-    };
-  });
-  const sheetProgressBlockStyle = useAnimatedStyle(() => {
-    const t = sheetStaggerProgress(sheetReveal.value, 2);
-    return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * SHEET_INNER_SLIDE_PX }],
-    };
-  });
-  const sheetBadgesStyle = useAnimatedStyle(() => {
-    const t = sheetStaggerProgress(sheetReveal.value, 3);
-    return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * SHEET_INNER_SLIDE_PX }],
+      opacity: interpolate(u, [0, 0.2], [0, 1], Extrapolation.CLAMP),
+      transform: [
+        {
+          translateY: interpolate(u, [0, 1], [SHEET_SLIDE_PX, 0], Extrapolation.CLAMP),
+        },
+        {
+          scale: interpolate(u, [0, 1], [0.97, 1], Extrapolation.CLAMP),
+        },
+      ],
     };
   });
 
@@ -339,46 +303,42 @@ export const QuizHistoryProfilePanel: React.FC<{
           sheetLiftStyle,
         ]}
       >
-        <Animated.View style={sheetStreakStyle}>
-          <Pressable
-            style={[
-              styles.streakCard,
-              { backgroundColor: mixHex(headerYellow, "#f4d03f", 0.55) },
-            ]}
-            disabled
-          >
-            <View style={styles.streakLeft}>
-              <Text style={[styles.streakSmall, { color: "#3d3d3d" }]}>
-                Tu racha
-              </Text>
-              <Text style={[styles.streakBig, { color: "#1a1520" }]}>
-                {streakDays} día{streakDays === 1 ? "" : "s"}
-              </Text>
-            </View>
-            <View style={styles.streakRight}>
-              <Svg
-                width={34}
-                height={34}
-                viewBox="0 0 24 24"
-                accessibilityRole="image"
-                accessibilityLabel="Racha"
-              >
-                <Path
-                  d={QUIZ_HISTORY_FLAME_PATH}
-                  fill="none"
-                  stroke={streakFlameColor}
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </Svg>
-              <Icon name="ChevronRight" size={20} color="#1a152099" />
-            </View>
-          </Pressable>
-        </Animated.View>
+        <Pressable
+          style={[
+            styles.streakCard,
+            { backgroundColor: mixHex(headerYellow, "#f4d03f", 0.55) },
+          ]}
+          disabled
+        >
+          <StaggerEnter index={0} delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS} style={styles.streakLeft}>
+            <Text style={[styles.streakSmall, { color: "#3d3d3d" }]}>Tu racha</Text>
+            <Text style={[styles.streakBig, { color: "#1a1520" }]}>
+              {streakDays} día{streakDays === 1 ? "" : "s"}
+            </Text>
+          </StaggerEnter>
+          <StaggerEnter index={1} delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS} style={styles.streakRight}>
+            <Svg
+              width={34}
+              height={34}
+              viewBox="0 0 24 24"
+              accessibilityRole="image"
+              accessibilityLabel="Racha"
+            >
+              <Path
+                d={QUIZ_HISTORY_FLAME_PATH}
+                fill="none"
+                stroke={streakFlameColor}
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </Svg>
+            <Icon name="ChevronRight" size={20} color="#1a152099" />
+          </StaggerEnter>
+        </Pressable>
 
-        <Animated.View style={sheetStatsStyle}>
-          <View style={styles.statRow}>
+        <View style={styles.statRow}>
+          <StaggerEnter index={2} delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS} style={styles.statCardWrap}>
             <View
               style={[
                 styles.statCard,
@@ -386,16 +346,15 @@ export const QuizHistoryProfilePanel: React.FC<{
               ]}
             >
               <View
-                style={[
-                  styles.statIcon,
-                  { backgroundColor: surfaces.accentSoft },
-                ]}
+                style={[styles.statIcon, { backgroundColor: surfaces.accentSoft }]}
               >
                 <Icon name="Trophy" size={18} color={surfaces.accent} />
               </View>
               <Text style={[styles.statLbl, { color: surfaces.muted }]}>Nivel</Text>
               <Text style={[styles.statVal, { color: surfaces.text }]}>{tier}</Text>
             </View>
+          </StaggerEnter>
+          <StaggerEnter index={3} delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS} style={styles.statCardWrap}>
             <View
               style={[
                 styles.statCard,
@@ -403,10 +362,7 @@ export const QuizHistoryProfilePanel: React.FC<{
               ]}
             >
               <View
-                style={[
-                  styles.statIcon,
-                  { backgroundColor: surfaces.accentSoft },
-                ]}
+                style={[styles.statIcon, { backgroundColor: surfaces.accentSoft }]}
               >
                 <Icon name="Star" size={18} color={surfaces.accent} />
               </View>
@@ -415,18 +371,17 @@ export const QuizHistoryProfilePanel: React.FC<{
                 {progress.totalXp}
               </Text>
             </View>
-          </View>
-        </Animated.View>
+          </StaggerEnter>
+        </View>
 
-        <Animated.View style={sheetProgressBlockStyle}>
+        <StaggerEnter index={4} delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS}>
           <Text style={[styles.sectionTitle, { color: surfaces.text }]}>
             Progreso de nivel
           </Text>
+        </StaggerEnter>
+        <StaggerEnter index={5} delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS}>
           <View
-            style={[
-              styles.fatTrack,
-              { backgroundColor: surfaces.borderStrong },
-            ]}
+            style={[styles.fatTrack, { backgroundColor: surfaces.borderStrong }]}
           >
             <View
               style={[
@@ -437,10 +392,10 @@ export const QuizHistoryProfilePanel: React.FC<{
               <Text style={styles.fatFillText}>{Math.round(barPct)}%</Text>
             </View>
           </View>
-        </Animated.View>
+        </StaggerEnter>
 
-        <Animated.View style={sheetBadgesStyle}>
-          <View style={styles.badgesBlock}>
+        <View style={styles.badgesBlock}>
+          <StaggerEnter index={6} delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS}>
             <View style={styles.badgesHead}>
               <Text style={[styles.sectionTitle, { color: surfaces.text, marginBottom: 0 }]}>
                 Mis insignias
@@ -449,42 +404,64 @@ export const QuizHistoryProfilePanel: React.FC<{
                 <Text style={[styles.seeAll, { color: surfaces.muted }]}>Ver todas</Text>
               </Pressable>
             </View>
-            {badgesUnlocked.length > 0 ? (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.badgesRow}
-              >
-                {badgesUnlocked.map((b) => (
-                  <QuizBadgeItem key={b.id} surfaces={surfaces} state={b} />
-                ))}
-              </ScrollView>
-            ) : (
+          </StaggerEnter>
+          {badgesUnlocked.length > 0 ? (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.badgesRow}
+            >
+              {badgesUnlocked.map((b, i) => (
+                <StaggerEnter
+                  key={b.id}
+                  index={badgeStagger.unlockedRowStart + i}
+                  delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS}
+                >
+                  <QuizBadgeItem surfaces={surfaces} state={b} />
+                </StaggerEnter>
+              ))}
+            </ScrollView>
+          ) : (
+            <StaggerEnter
+              index={badgeStagger.unlockedRowStart}
+              delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS}
+            >
               <Text style={[styles.badgesEmpty, { color: surfaces.muted }]}>
                 Aún no tienes insignias desbloqueadas.
               </Text>
-            )}
-          </View>
+            </StaggerEnter>
+          )}
+        </View>
 
-          {badgesLocked.length > 0 ? (
-            <View style={styles.badgesBlock}>
+        {badgesLocked.length > 0 ? (
+          <View style={styles.badgesBlock}>
+            <StaggerEnter
+              index={badgeStagger.lockedHeaderIndex}
+              delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS}
+            >
               <View style={styles.badgesHead}>
                 <Text style={[styles.sectionTitle, { color: surfaces.text, marginBottom: 0 }]}>
                   Insignias bloqueadas
                 </Text>
               </View>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.badgesRow}
-              >
-                {badgesLocked.map((b) => (
-                  <QuizBadgeItem key={b.id} surfaces={surfaces} state={b} />
-                ))}
-              </ScrollView>
-            </View>
-          ) : null}
-        </Animated.View>
+            </StaggerEnter>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.badgesRow}
+            >
+              {badgesLocked.map((b, i) => (
+                <StaggerEnter
+                  key={b.id}
+                  index={badgeStagger.lockedRowStart + i}
+                  delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS}
+                >
+                  <QuizBadgeItem surfaces={surfaces} state={b} />
+                </StaggerEnter>
+              ))}
+            </ScrollView>
+          </View>
+        ) : null}
       </Animated.View>
       <View style={{ height: SP.xl }} />
     </ScrollView>
@@ -599,6 +576,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: SP.sm,
     marginBottom: SP.lg,
+  },
+  statCardWrap: {
+    flex: 1,
   },
   statCard: {
     flex: 1,

@@ -9,14 +9,15 @@ type Props = {
   index: number;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  /** Added before the index-based stagger (e.g. wait for sheet / route transition). */
+  delayOffsetMs?: number;
 };
 
 /** Staggered slide-up + fade on first mount. */
-export function StaggerEnter({ index, children, style }: Props) {
+export function StaggerEnter({ index, children, style, delayOffsetMs = 0 }: Props) {
   return (
     <Animated.View
-      entering={FadeInDown
-        .delay(BASE_MS + index * STEP_MS)
+      entering={FadeInDown.delay(BASE_MS + delayOffsetMs + index * STEP_MS)
         .duration(460)
         .easing(Easing.bezier(0.4, 0, 0.2, 1))}
       style={style}
