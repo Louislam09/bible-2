@@ -500,6 +500,8 @@ function buildOrbitStripInnerHtml(
     .join("");
 }
 
+const flameSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="quiz-stat-flame" aria-hidden="true"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>`;
+
 export function buildQuizHistoryBooksHtml(payload: {
   surfaces: QuizHistorySurfacesCss;
   metrics: {
@@ -577,7 +579,7 @@ export function buildQuizHistoryBooksHtml(payload: {
     : Math.max(0, Math.min(100, progress.levelProgressPercent));
   const levelSubText = progress.isMaxLevel
     ? "Máximo alcanzado"
-    : `Faltan ${Math.max(0, Math.ceil(progress.xpToNext))} XP → nivel ${progress.level + 1}`;
+    : `Nivel ${progress.level + 1}`;
   const featuredHtml = buildFeaturedCarouselInnerHtml(books, surfaces);
   const orbitHtml = buildOrbitStripInnerHtml(books);
   const softPageBg = mixHex(surfaces.accent, surfaces.base, 0.91);
@@ -665,7 +667,7 @@ export function buildQuizHistoryBooksHtml(payload: {
     display: block;
   }
   .quiz-top-mid { flex: 1; min-width: 0; }
-  .quiz-lvl-lbl { font-size: 11px; font-weight: 700; color: ${surfaces.muted}; margin-bottom: 6px; line-height: 1.25; }
+  .quiz-lvl-lbl { display: flex; flex-direction: row; align-items: center; gap: 4px; justify-content: space-between; font-size: 11px; font-weight: 700; color: ${surfaces.muted}; margin-bottom: 6px; line-height: 1.25; }
   .quiz-lvl-lbl b { color: ${surfaces.text}; font-weight: 800; }
   .quiz-lvl-subl { font-weight: 600; color: ${surfaces.muted}; }
   .quiz-lvl-bar { height: 9px; border-radius: 99px; background: ${surfaces.borderStrong}; overflow: hidden; }
@@ -690,7 +692,12 @@ export function buildQuizHistoryBooksHtml(payload: {
     padding-top: 14px; border-top: 1px solid ${surfaces.borderStrong};
   }
   .quiz-stat-pill { flex: 1; text-align: center; background: ${softPageBg}; border-radius: 14px; padding: 10px 4px; }
-  .quiz-stat-pill b { display: block; font-size: 16px; font-weight: 800; color: ${surfaces.text}; letter-spacing: -0.35px; }
+  .quiz-stat-pill b { display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 16px; font-weight: 800; color: ${surfaces.text}; letter-spacing: -0.35px; }
+  .quiz-stat-pill b .quiz-stat-flame {
+    flex-shrink: 0;
+    display: block;
+    color: ${mixHex(QUIZ_HOME_YELLOW, "#ea580c", 0.58)};
+  }
   .quiz-stat-pill small { font-size: 9px; font-weight: 600; color: ${surfaces.muted}; text-transform: uppercase; letter-spacing: 0.05em; }
   .quiz-greet { padding: 22px 16px 4px; }
   .quiz-greet-hi { font-size: 14px; font-weight: 600; color: ${surfaces.muted}; margin: 0 0 6px; }
@@ -979,14 +986,15 @@ export function buildQuizHistoryBooksHtml(payload: {
     <div class="quiz-top-row">
       ${quizHomeAvatarHtml}
       <div class="quiz-top-mid">
-        <div class="quiz-lvl-lbl quiz-hd-in" style="--hi:1">Nivel <b>${levelNum}</b> <span class="quiz-lvl-subl">· ${escapeHtml(levelSubText)}</span></div>
+        <div class="quiz-lvl-lbl quiz-hd-in" style="--hi:1"><b>Mi Nivel ${levelNum}</b> <span class="quiz-lvl-subl"> ${escapeHtml(levelSubText)}</span></div>
         <div class="quiz-lvl-bar quiz-hd-in" style="--hi:2"><div class="quiz-lvl-fill"></div></div>
       </div>
       <div class="quiz-xp quiz-hd-in" style="--hi:3"><b>${xpDisplay}</b><span>XP</span></div>
     </div>
     <div class="quiz-stat-strip">
       <div class="quiz-stat-pill quiz-hd-in" style="--hi:4"><b>${metrics.avgPercent}%</b><small>Promedio</small></div>
-      <div class="quiz-stat-pill quiz-hd-in" style="--hi:5"><b>${metrics.streakDays}</b><small>Racha</small></div>
+      <div class="quiz-stat-pill quiz-hd-in" style="--hi:5"><b>${metrics.streakDays} ${flameSvg}</b><small>Racha</small>
+      </div>
       <div class="quiz-stat-pill quiz-hd-in" style="--hi:6"><b>${metrics.chaptersCompleted}</b><small>Capítulos</small></div>
     </div>
   </header>
