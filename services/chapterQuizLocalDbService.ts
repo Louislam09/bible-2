@@ -6,6 +6,8 @@ const QUIZ_COMPLETION_TABLE = "chapter_quiz_completion_local";
 const QUIZ_ATTEMPTS_TABLE = "chapter_quiz_attempts";
 /** Opened quiz (5/10/15/20) not finished — used for “en progreso” until completed or cleared. */
 const QUIZ_SESSIONS_TABLE = "chapter_quiz_sessions_local";
+/** Insignias de perfil desbloqueadas al menos una vez (persistente). */
+const QUIZ_BADGES_UNLOCKED_TABLE = "quiz_badges_unlocked_local";
 
 const CREATE_QUIZ_CACHE_TABLE = `
 CREATE TABLE IF NOT EXISTS ${QUIZ_CACHE_TABLE} (
@@ -57,6 +59,12 @@ CREATE TABLE IF NOT EXISTS ${QUIZ_SESSIONS_TABLE} (
   PRIMARY KEY (chapter_key, question_count)
 );`;
 
+const CREATE_QUIZ_BADGES_UNLOCKED_TABLE = `
+CREATE TABLE IF NOT EXISTS ${QUIZ_BADGES_UNLOCKED_TABLE} (
+  badge_id TEXT PRIMARY KEY,
+  unlocked_at TEXT NOT NULL
+);`;
+
 export type ChapterQuizAnswerEntry = {
   questionIndex: number;
   selected: string | null;
@@ -80,6 +88,11 @@ export type ChapterQuizSessionRow = {
   chapterKey: string;
   questionCount: number;
   updatedAt: string;
+};
+
+export type QuizBadgeUnlockRow = {
+  badgeId: string;
+  unlockedAt: string;
 };
 
 const parseQuestions = (value: string): Question[] => {
@@ -120,7 +133,54 @@ class ChapterQuizLocalDbService {
     await db.execAsync(CREATE_QUIZ_CACHE_UPDATED_AT_INDEX);
     await db.execAsync(CREATE_QUIZ_ATTEMPTS_COMPLETED_AT_INDEX);
     await db.execAsync(CREATE_QUIZ_SESSIONS_TABLE);
+    await db.execAsync(CREATE_QUIZ_BADGES_UNLOCKED_TABLE);
     this.initialized = true;
+  }
+
+  /**
+   * Insignias guardadas localmente con la primera fecha de desbloqueo (INSERT OR IGNORE).
+   */
+  async getPersistedQuizBadgeUnlocks(): Promise<QuizBadgeUnlockRow[]> {
+    await this.init();
+    const db = await getAppDatabase();
+    const statement = await db.prepareAsync(
+      `SELECT badge_id, unlocked_at FROM ${QUIZ_BADGES_UNLOCKED_TABLE};`,
+    );
+    try {
+      const result = await statement.executeAsync();
+      const rows = (await result.getAllAsync()) as Array<{
+        badge_id: string;
+        unlocked_at: string;
+      }>;
+      return rows.map((r) => ({
+        badgeId: r.badge_id,
+        unlockedAt: r.unlocked_at,
+      }));
+    } finally {
+      await statement.finalizeAsync();
+    }
+  }
+
+  /**
+   * Graba en SQLite cada insignia cuyos criterios se cumplen ahora (INSERT OR IGNORE conserva la primera fecha).
+   */
+  async syncQuizBadgeUnlocksFromCriteria(
+    states: readonly { id: string; unlocked: boolean }[],
+  ): Promise<void> {
+    await this.init();
+    const db = await getAppDatabase();
+    const now = toIso();
+    const statement = await db.prepareAsync(
+      `INSERT OR IGNORE INTO ${QUIZ_BADGES_UNLOCKED_TABLE} (badge_id, unlocked_at) VALUES (?, ?);`,
+    );
+    try {
+      for (const s of states) {
+        if (!s.unlocked) continue;
+        await statement.executeAsync([s.id, now]);
+      }
+    } finally {
+      await statement.finalizeAsync();
+    }
   }
 
   /** User opened this quiz size but has not finished (or closed mid-quiz). */

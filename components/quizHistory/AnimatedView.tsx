@@ -86,7 +86,8 @@ function enteringExitingFor(
     case "none":
       return {
         entering: timed(FadeIn),
-        exiting: timed(FadeOut),
+        // no exiting
+        exiting: undefined as any,
       };
     case "forward":
       return {

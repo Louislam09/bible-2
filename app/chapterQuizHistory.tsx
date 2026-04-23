@@ -70,6 +70,7 @@ import {
 import type { QuizHistoryBooksLayout } from "@/constants/quizHistoryWebViewHtml";
 import { headerIconSize } from "@/constants/size";
 import { computeChapterQuizProgress } from "@/utils/chapterQuizProgress";
+import { persistNewQuizBadgeUnlocks } from "@/utils/quizBadges";
 import { computeChapterQuizMetrics } from "@/utils/quizHistory";
 import { loadChapterVersesTextForQuiz } from "@/utils/loadChapterVersesForQuiz";
 import { showToast } from "@/utils/showToast";
@@ -177,6 +178,7 @@ const ChapterQuizHistoryScreen = () => {
     ]);
     setAttempts(rows);
     setQuizSessions(sessions);
+    void persistNewQuizBadgeUnlocks(rows, computeChapterQuizProgress(rows));
   }, []);
 
   const reloadDownvotes = useCallback(async () => {
@@ -663,6 +665,7 @@ const ChapterQuizHistoryScreen = () => {
                 user={quizHistoryUser}
                 homeAvatar={profileHomeAvatar}
                 progress={quizProgress}
+                attempts={attempts}
                 streakDays={metrics.streakDays}
                 onClose={headerGoBack}
               />
