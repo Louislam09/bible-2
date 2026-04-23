@@ -38,6 +38,9 @@ import WebviewInterlinearChapter from "./home/content/WebviewInterlinearChapter"
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
+import LottieView from "lottie-react-native";
+
+const sparkleStarsSource = require("../assets/lottie/SparkleStars.json");
 
 interface BibleTopProps {
 }
@@ -650,57 +653,70 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
         startAT={0}
         shouldScroll={false}
       >
-        <View style={styles.quizSheetContent}>
-          <Text style={[styles.quizModalTitle, { color: theme.colors.text }]}>
-            Selecciona número de preguntas
-          </Text>
-          <View style={styles.quizModalOptions}>
-            {quizQuestionCountOptions.map((count) => (
-              <TouchableOpacity
-                key={count}
-                style={[
-                  styles.quizOptionButton,
-                  {
-                    borderColor:
-                      selectedQuestionCount === count
-                        ? theme.colors.notification
-                        : theme.colors.text + "40",
-                    backgroundColor:
-                      selectedQuestionCount === count
-                        ? theme.colors.notification + "25"
-                        : "transparent",
-                  },
-                ]}
-                onPress={() => {
-                  if (isPreparingQuiz || isGeneratingQuiz) return;
-                  setSelectedQuestionCount(count);
-                  handleStartChapterQuiz(count);
-                }}
-                disabled={isPreparingQuiz || isGeneratingQuiz}
-              >
-                <Text style={[styles.quizOptionText, { color: theme.colors.text }]}>
-                  {count} preguntas
-                </Text>
-              </TouchableOpacity>
-            ))}
+        <View style={styles.quizSheetWrap}>
+          <View style={styles.quizSheetContent}>
+            <Text style={[styles.quizModalTitle, { color: theme.colors.text }]}>
+              Selecciona número de preguntas
+            </Text>
+            <View style={styles.quizModalOptions}>
+              {quizQuestionCountOptions.map((count) => (
+                <TouchableOpacity
+                  key={count}
+                  style={[
+                    styles.quizOptionButton,
+                    {
+                      borderColor:
+                        selectedQuestionCount === count
+                          ? theme.colors.notification
+                          : theme.colors.text + "40",
+                      backgroundColor:
+                        selectedQuestionCount === count
+                          ? theme.colors.notification + "25"
+                          : "transparent",
+                    },
+                  ]}
+                  onPress={() => {
+                    if (isPreparingQuiz || isGeneratingQuiz) return;
+                    setSelectedQuestionCount(count);
+                    handleStartChapterQuiz(count);
+                  }}
+                  disabled={isPreparingQuiz || isGeneratingQuiz}
+                >
+                  <Text style={[styles.quizOptionText, { color: theme.colors.text }]}>
+                    {count} preguntas
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity
+              style={styles.quizModalCloseButton}
+              disabled={isPreparingQuiz || isGeneratingQuiz}
+              onPress={() => quizCountSheetRef.current?.dismiss()}
+            >
+              <Text style={{ color: theme.colors.text, opacity: isPreparingQuiz || isGeneratingQuiz ? 0.5 : 1 }}>
+                Cancelar
+              </Text>
+            </TouchableOpacity>
           </View>
-          {(isPreparingQuiz || isGeneratingQuiz) && (
-            <View style={styles.quizLoadingContainer}>
-              <ActivityIndicator color={theme.colors.notification} />
+          {(isPreparingQuiz || isGeneratingQuiz) ? (
+            <View
+              style={[
+                styles.quizLoadingOverlay,
+                { backgroundColor: theme.colors.background + "E8" },
+              ]}
+              pointerEvents="auto"
+            >
+              <LottieView
+                source={sparkleStarsSource}
+                autoPlay
+                loop
+                style={styles.quizSparkleLottie}
+              />
               <Text style={[styles.quizLoadingText, { color: theme.colors.text }]}>
                 Generando preguntas del capitulo...
               </Text>
             </View>
-          )}
-          <TouchableOpacity
-            style={styles.quizModalCloseButton}
-            disabled={isPreparingQuiz || isGeneratingQuiz}
-            onPress={() => quizCountSheetRef.current?.dismiss()}
-          >
-            <Text style={{ color: theme.colors.text, opacity: isPreparingQuiz || isGeneratingQuiz ? 0.5 : 1 }}>
-              Cancelar
-            </Text>
-          </TouchableOpacity>
+          ) : null}
         </View>
       </BottomModal>
     </Animated.View>
@@ -755,10 +771,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 9999,
   },
+  quizSheetWrap: {
+    position: "relative",
+    alignSelf: "stretch",
+  },
   quizSheetContent: {
     paddingHorizontal: 16,
     paddingBottom: 12,
     gap: 10,
+  },
+  quizLoadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  quizSparkleLottie: {
+    width: 240,
+    height: 240,
   },
   quizModalTitle: {
     fontSize: 18,
@@ -783,11 +815,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     alignItems: "center",
     paddingVertical: 8,
-  },
-  quizLoadingContainer: {
-    marginTop: 8,
-    alignItems: "center",
-    gap: 8,
   },
   quizLoadingText: {
     fontSize: 13,
