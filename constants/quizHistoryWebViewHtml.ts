@@ -1075,7 +1075,14 @@ export function buildQuizHistoryBooksHtml(payload: {
     if (avTap) {
       e.preventDefault();
       e.stopPropagation();
-      post({ type: "openProfile" });
+      var r = avTap.getBoundingClientRect();
+      post({
+        type: "openProfile",
+        x: r.left,
+        y: r.top,
+        w: r.width,
+        h: r.height,
+      });
       return;
     }
     var btn = e.target.closest("[data-book-idx]");

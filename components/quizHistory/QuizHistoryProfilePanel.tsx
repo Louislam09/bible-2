@@ -1,5 +1,9 @@
 import Icon from "@/components/Icon";
 import { QuizBadgeItem } from "@/components/quizHistory/QuizBadgeItem";
+import {
+  ProfileAvatarFlyOverlay,
+  type AvatarFlyRect,
+} from "@/components/quizHistory/ProfileAvatarFlyOverlay";
 import { SP, type QuizSurfaces } from "@/components/quizHistory/quizHistoryTokens";
 import { StaggerEnter } from "@/components/quizHistory/StaggerEnter";
 import {
@@ -13,7 +17,14 @@ import type { ChapterQuizAttemptRow } from "@/services/chapterQuizLocalDbService
 import type { pbUser } from "@/types";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -78,14 +89,73 @@ export const QuizHistoryProfilePanel: React.FC<{
   attempts: ChapterQuizAttemptRow[];
   streakDays: number;
   onClose: () => void;
-}> = ({ surfaces, user, homeAvatar, progress, attempts, streakDays, onClose }) => {
+  /** Screen-space rect of the books header avatar (from WebView measure). */
+  avatarFlyFrom?: AvatarFlyRect | null;
+  onAvatarFlyComplete?: () => void;
+}> = ({
+  surfaces,
+  user,
+  homeAvatar,
+  progress,
+  attempts,
+  streakDays,
+  onClose,
+  avatarFlyFrom = null,
+  onAvatarFlyComplete,
+}) => {
   const insets = useSafeAreaInsets();
   const name = useMemo(() => displayName(user), [user]);
   const handle = useMemo(() => displayHandle(user), [user]);
   const [avatarUri, setAvatarUri] = useState(homeAvatar?.src ?? "");
+  const avatarTargetRef = useRef<View>(null);
+  const [flyTargetRect, setFlyTargetRect] = useState<AvatarFlyRect | null>(null);
+  const [avatarFlyComplete, setAvatarFlyComplete] = useState(!avatarFlyFrom);
+
   useEffect(() => {
     setAvatarUri(homeAvatar?.src ?? "");
   }, [homeAvatar?.src]);
+
+  useEffect(() => {
+    if (!avatarFlyFrom) {
+      setAvatarFlyComplete(true);
+      setFlyTargetRect(null);
+      return;
+    }
+    setAvatarFlyComplete(false);
+    setFlyTargetRect(null);
+  }, [avatarFlyFrom]);
+
+  const measureFlyTarget = useCallback(() => {
+    avatarTargetRef.current?.measureInWindow((x, y, w, h) => {
+      if (w > 0 && h > 0) {
+        setFlyTargetRect({ x, y, w, h });
+      }
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!avatarFlyFrom) return;
+    let id2: ReturnType<typeof requestAnimationFrame> | undefined;
+    const id1 = requestAnimationFrame(() => {
+      id2 = requestAnimationFrame(measureFlyTarget);
+    });
+    return () => {
+      cancelAnimationFrame(id1);
+      if (id2 !== undefined) cancelAnimationFrame(id2);
+    };
+  }, [avatarFlyFrom, measureFlyTarget]);
+
+  /** Refine landing while hero `scaleY` finishes (overlay updates end rect without restarting). */
+  useLayoutEffect(() => {
+    if (!avatarFlyFrom) return;
+    const t = setTimeout(measureFlyTarget, Math.round(HERO_REVEAL_MS * 0.88));
+    return () => clearTimeout(t);
+  }, [avatarFlyFrom, measureFlyTarget]);
+
+  const handleAvatarFlyFinished = useCallback(() => {
+    setAvatarFlyComplete(true);
+    onAvatarFlyComplete?.();
+  }, [onAvatarFlyComplete]);
   const tier = levelTierLabel(progress.level);
   const badgeStates = useResolvedQuizBadgeStates(attempts, progress);
   const badgesUnlocked = useMemo(
@@ -116,11 +186,21 @@ export const QuizHistoryProfilePanel: React.FC<{
   const heroReveal = useSharedValue(0);
   const innerReveal = useSharedValue(0);
   const sheetReveal = useSharedValue(0);
+  const flyActiveSV = useSharedValue(avatarFlyFrom ? 1 : 0);
+
+  useEffect(() => {
+    flyActiveSV.value = avatarFlyFrom ? 1 : 0;
+  }, [avatarFlyFrom, flyActiveSV]);
+
   useEffect(() => {
     heroReveal.value = withTiming(1, {
       duration: HERO_REVEAL_MS,
       easing: Easing.bezier(0.25, 0.1, 0.25, 1),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hero reveal once per mount
+  }, []);
+
+  useEffect(() => {
     innerReveal.value = withDelay(
       INNER_START_DELAY_MS,
       withTiming(1, {
@@ -151,9 +231,10 @@ export const QuizHistoryProfilePanel: React.FC<{
   });
   const innerAvatarStyle = useAnimatedStyle(() => {
     const t = staggerProgress(innerReveal.value, 1);
+    const slidePx = flyActiveSV.value ? 0 : INNER_SLIDE_PX;
     return {
       opacity: t,
-      transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
+      transform: [{ translateY: (1 - t) * slidePx }],
     };
   });
   const innerNameStyle = useAnimatedStyle(() => {
@@ -200,7 +281,10 @@ export const QuizHistoryProfilePanel: React.FC<{
     };
   });
 
+  const showAvatarFly = Boolean(avatarFlyFrom) && !avatarFlyComplete;
+
   return (
+    <View style={styles.root}>
     <ScrollView
       style={styles.scroll}
       contentContainerStyle={styles.scrollContent}
@@ -234,26 +318,40 @@ export const QuizHistoryProfilePanel: React.FC<{
           </Pressable>
         </Animated.View>
         <Animated.View style={[styles.avatarWrap, innerAvatarStyle]}>
-          {avatarUri ? (
-            <Image
-              source={{ uri: avatarUri }}
-              onError={() => {
-                if (homeAvatar?.onErrorSrc) setAvatarUri(homeAvatar.onErrorSrc);
-              }}
-              style={styles.avatarImg}
-              contentFit="cover"
-              accessibilityLabel="Avatar"
-            />
-          ) : (
-            <View
-              style={[
-                styles.avatarFallback,
-                { backgroundColor: mixHex(surfaces.accent, "#c4b5fd", 0.35) },
-              ]}
-            >
-              <Text style={styles.avatarFallbackText}>✝</Text>
-            </View>
-          )}
+          <View
+            ref={avatarTargetRef}
+            collapsable={false}
+            style={[
+              styles.avatarImg,
+              showAvatarFly ? styles.avatarHiddenForFly : null,
+            ]}
+          >
+            {avatarUri ? (
+              <Image
+                source={{ uri: avatarUri }}
+                onError={() => {
+                  if (homeAvatar?.onErrorSrc) setAvatarUri(homeAvatar.onErrorSrc);
+                }}
+                style={StyleSheet.absoluteFill}
+                contentFit="cover"
+                accessibilityLabel="Avatar"
+              />
+            ) : (
+              <View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  {
+                    borderRadius: 999,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: mixHex(surfaces.accent, "#c4b5fd", 0.35),
+                  },
+                ]}
+              >
+                <Text style={styles.avatarFallbackText}>✝</Text>
+              </View>
+            )}
+          </View>
         </Animated.View>
         <Animated.View style={innerNameStyle}>
           <Text style={[styles.name, { color: "#1a1520" }]}>{name}</Text>
@@ -465,11 +563,25 @@ export const QuizHistoryProfilePanel: React.FC<{
       </Animated.View>
       <View style={{ height: SP.xl }} />
     </ScrollView>
+    {avatarFlyFrom ? (
+      <ProfileAvatarFlyOverlay
+        uri={avatarUri || null}
+        fallbackGlyph="✝"
+        from={avatarFlyFrom}
+        to={flyTargetRect}
+        active={!avatarFlyComplete}
+        onFinished={handleAvatarFlyFinished}
+        durationMs={HERO_REVEAL_MS}
+      />
+    ) : null}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  root: { flex: 1 },
   scroll: { flex: 1, alignSelf: "stretch" },
+  avatarHiddenForFly: { opacity: 0 },
   scrollContent: { paddingBottom: SP.lg },
   hero: {
     position: "relative",
@@ -502,6 +614,7 @@ const styles = StyleSheet.create({
     width: 88,
     height: 88,
     borderRadius: 999,
+    overflow: "hidden",
     backgroundColor: "#ddd",
   },
   avatarFallback: {

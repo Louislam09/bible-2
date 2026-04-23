@@ -43,8 +43,8 @@ import {
 import { encodeChapterTileStates } from "@/utils/quizChapterTileStates";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import type { pbUser } from "@/types";
-import React, { useCallback, useMemo } from "react";
-import { useWindowDimensions } from "react-native";
+import React, { useCallback, useMemo, useRef } from "react";
+import { useWindowDimensions, View } from "react-native";
 
 const BOOK_META_BY_LONG = (() => {
   const m = new Map<string, { shortName: string; bookColor: string }>();
@@ -54,7 +54,6 @@ const BOOK_META_BY_LONG = (() => {
   return m;
 })();
 import WebView from "react-native-webview";
-import { View } from "../Themed";
 import { AnimatedView, type AnimatedViewTransition } from "./AnimatedView";
 
 type Surfaces = ReturnType<typeof getSurfaces>;
@@ -106,7 +105,7 @@ export const QuizHistoryBooksWebView: React.FC<{
   user?: pbUser | null;
   onFilterChange: (f: BooksFilter) => void;
   onPressBook: (book: string) => void;
-  onOpenProfile: () => void;
+  onOpenProfile: (origin?: { x: number; y: number; w: number; h: number }) => void;
 }> = ({
   direction,
   surfaces,
@@ -123,6 +122,7 @@ export const QuizHistoryBooksWebView: React.FC<{
   onOpenProfile,
 }) => {
     const { theme } = useMyTheme();
+    const webHostRef = useRef<View>(null);
 
     const startedCount = useMemo(
       () => bookSummaries.filter((b) => b.hasAnyAttempt).length,
@@ -247,6 +247,10 @@ export const QuizHistoryBooksWebView: React.FC<{
             type: string;
             filter?: BooksFilter;
             book?: string;
+            x?: number;
+            y?: number;
+            w?: number;
+            h?: number;
           };
           if (msg.type === "filter" && msg.filter) {
             onFilterChange(msg.filter);
@@ -255,7 +259,18 @@ export const QuizHistoryBooksWebView: React.FC<{
             onPressBook(msg.book);
           }
           if (msg.type === "openProfile") {
-            onOpenProfile();
+            const ax = typeof msg.x === "number" ? msg.x : 0;
+            const ay = typeof msg.y === "number" ? msg.y : 0;
+            const aw = typeof msg.w === "number" && msg.w > 0 ? msg.w : 50;
+            const ah = typeof msg.h === "number" && msg.h > 0 ? msg.h : 50;
+            const host = webHostRef.current;
+            if (host) {
+              host.measureInWindow((wx, wy) => {
+                onOpenProfile({ x: wx + ax, y: wy + ay, w: aw, h: ah });
+              });
+            } else {
+              onOpenProfile({ x: ax, y: ay, w: aw, h: ah });
+            }
           }
         } catch {
           /* ignore */
@@ -265,38 +280,44 @@ export const QuizHistoryBooksWebView: React.FC<{
     );
 
     return (
-      <WebView
-        key={`books-${booksLayout}-${cardVariant}`}
-        originWhitelist={["*"]}
-        source={{ html }}
+      <View
+        ref={webHostRef}
         style={{ flex: 1, minWidth: "100%", backgroundColor: surfaces.base }}
-        containerStyle={{ backgroundColor: surfaces.base }}
-        scrollEnabled
-        nestedScrollEnabled
-        onMessage={onMessage}
-        renderLoading={() => (
-          <AnimatedView
-            key={`AnimatedView-books`}
-            direction={direction}
-            style={{
-              backgroundColor: surfaces.base,
-              flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <></>
+        collapsable={false}
+      >
+        <WebView
+          key={`books-${booksLayout}-${cardVariant}`}
+          originWhitelist={["*"]}
+          source={{ html }}
+          style={{ flex: 1, minWidth: "100%", backgroundColor: surfaces.base }}
+          containerStyle={{ backgroundColor: surfaces.base }}
+          scrollEnabled
+          nestedScrollEnabled
+          onMessage={onMessage}
+          renderLoading={() => (
+            <AnimatedView
+              key={`AnimatedView-books`}
+              direction={direction}
+              style={{
+                backgroundColor: surfaces.base,
+                flex: 1,
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 1000,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <></>
 
-          </AnimatedView>
-        )}
-        {...createOptimizedWebViewProps({}, "static")}
-      />
+            </AnimatedView>
+          )}
+          {...createOptimizedWebViewProps({}, "static")}
+        />
+      </View>
     );
   };
 
