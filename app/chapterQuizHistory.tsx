@@ -165,13 +165,6 @@ const ChapterQuizHistoryScreen = () => {
     () => quizHistoryHomeAvatarFromUser(quizHistoryUser),
     [quizHistoryUser],
   );
-  const [profileAvatarFlyFrom, setProfileAvatarFlyFrom] = useState<{
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-  } | null>(null);
-
   const downvotedSet = useMemo(
     () => new Set(userDownvotedChapterKeys),
     [userDownvotedChapterKeys],
@@ -235,7 +228,6 @@ const ChapterQuizHistoryScreen = () => {
   const goBackInternal = useCallback((): boolean => {
     if (viewState.kind === "profile") {
       setDirection("backward");
-      setProfileAvatarFlyFrom(null);
       setViewState({ kind: "books" });
       return true;
     }
@@ -285,18 +277,10 @@ const ChapterQuizHistoryScreen = () => {
     }
   }, [goBackInternal, router]);
 
-  const openQuizProfile = useCallback(
-    (origin?: { x: number; y: number; w: number; h: number }) => {
-      void Haptics.selectionAsync();
-      setDirection("none");
-      setProfileAvatarFlyFrom(origin ?? null);
-      setViewState({ kind: "profile" });
-    },
-    [],
-  );
-
-  const clearProfileAvatarFly = useCallback(() => {
-    setProfileAvatarFlyFrom(null);
+  const openQuizProfile = useCallback(() => {
+    void Haptics.selectionAsync();
+    setDirection("none");
+    setViewState({ kind: "profile" });
   }, []);
 
   const openBook = useCallback((book: string) => {
@@ -683,8 +667,6 @@ const ChapterQuizHistoryScreen = () => {
                 attempts={attempts}
                 streakDays={metrics.streakDays}
                 onClose={headerGoBack}
-                avatarFlyFrom={profileAvatarFlyFrom}
-                onAvatarFlyComplete={clearProfileAvatarFly}
               />
             </AnimatedView>
           ) : viewState.kind === "chapters" ? (
@@ -784,7 +766,7 @@ const BooksView: React.FC<{
   user?: pbUser | null;
   onFilterChange: (f: BooksFilter) => void;
   onPressBook: (book: string) => void;
-  onOpenProfile: (origin?: { x: number; y: number; w: number; h: number }) => void;
+  onOpenProfile: () => void;
 }> = (props) => <QuizHistoryBooksWebView {...props} />;
 
 const ChaptersView: React.FC<{
