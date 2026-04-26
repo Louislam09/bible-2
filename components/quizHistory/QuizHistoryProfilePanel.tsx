@@ -35,26 +35,17 @@ import Svg, { Path } from "react-native-svg";
 const trophyLottieSource = require("../../assets/lottie/Trophy.json");
 const QUIZ_HOME_YELLOW = "#f4d03f";
 
-const HERO_REVEAL_MS = 520;
-/** Start inner content when hero is ~90% done */
-const INNER_START_DELAY_MS = HERO_REVEAL_MS * 0.9;
-const INNER_ENTRANCE_MS = 640;
-const INNER_SLIDE_PX = 14;
+const HERO_REVEAL_MS = 1000;
+// const HERO_REVEAL_MS = 520;
+/** Hero inner content starts this many px above layout and slides down with the growing bg. */
+const HERO_HEIGHT_MAX = 250;
 /**
  * White sheet rises after the hero/header animation finishes, then inner blocks stagger in.
  */
-const SHEET_START_MS = HERO_REVEAL_MS + 72;
 const SHEET_ENTRANCE_MS = 760;
 const SHEET_SLIDE_PX = 64;
 /** Base delay for `StaggerEnter` in sheet content (after sheet starts lifting). */
-const SHEET_STAGGER_DELAY_OFFSET_MS = SHEET_START_MS + 260;
-
-function staggerProgress(v: number, index: number): number {
-  "worklet";
-  const start = index * 0.14;
-  const end = Math.min(start + 0.48, 1);
-  return interpolate(v, [start, end], [0, 1], Extrapolation.CLAMP);
-}
+const SHEET_STAGGER_DELAY_OFFSET_MS = 100;
 
 function levelTierLabel(level: number): string {
   if (level >= 80) return "Diamante";
@@ -115,18 +106,15 @@ export const QuizHistoryProfilePanel: React.FC<{
   const barPct = progress.isMaxLevel
     ? 100
     : Math.max(0, Math.min(100, progress.levelProgressPercent));
-  const headerYellow = surfaces.accent;
+  const headerColor = surfaces.accent;
   const headerYellowDeep = mixHex(surfaces.text, surfaces.accent, 0.35);
   const heroFg = useMemo(
-    () => textColorsOnBackground(headerYellow, surfaces.text),
-    [headerYellow, surfaces.text],
+    () => textColorsOnBackground(headerColor, surfaces.text),
+    [headerColor, surfaces.text],
   );
   const levelSubText = progress.isMaxLevel
     ? "Máximo alcanzado"
     : `Nivel ${progress.level + 1}`;
-  const xpPillBg = mixHex(surfaces.accent, surfaces.card, 0.82);
-  const xpPillBorder = mixHex(surfaces.accent, surfaces.borderStrong, 0.45);
-  const xpPillNumberColor = mixHex(surfaces.accent, "#92400e", 0.55);
   const barFill = surfaces.accent;
   const streakFlameColor = mixHex(QUIZ_HOME_YELLOW, "#ea580c", 0.58);
   // const streakFlameColor = mixHex("#000", "#ea580c", 0.58);
@@ -141,7 +129,6 @@ export const QuizHistoryProfilePanel: React.FC<{
   );
 
   const heroReveal = useSharedValue(0);
-  const innerReveal = useSharedValue(0);
   const sheetReveal = useSharedValue(0);
 
   useEffect(() => {
@@ -153,65 +140,104 @@ export const QuizHistoryProfilePanel: React.FC<{
   }, []);
 
   useEffect(() => {
-    innerReveal.value = withDelay(
-      INNER_START_DELAY_MS,
-      withTiming(1, {
-        duration: INNER_ENTRANCE_MS,
-        easing: Easing.out(Easing.cubic),
-      }),
-    );
-    sheetReveal.value = withDelay(
-      SHEET_START_MS,
-      withTiming(1, {
-        duration: SHEET_ENTRANCE_MS,
-        easing: Easing.bezier(0.33, 1, 0.68, 1),
-      }),
-    );
+    // sheetReveal.value = withDelay(
+    //   0,
+    //   withTiming(1, {
+    //     duration: SHEET_ENTRANCE_MS,
+    //     easing: Easing.bezier(0.33, 1, 0.68, 1),
+    //   }),
+    // );
+    sheetReveal.value = withTiming(1, {
+      duration: SHEET_ENTRANCE_MS,
+      easing: Easing.bezier(0.33, 1, 0.68, 1),
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
   }, []);
 
-  const heroEnterStyle = useAnimatedStyle(() => ({
-    transform: [{ scaleY: heroReveal.value }],
-  }));
+  const heroHeightStyle = useAnimatedStyle(() => {
+    const h = heroReveal.value;
+    return {
+      height: interpolate(
+        h,
+        [0, 1],
+        [120, HERO_HEIGHT_MAX],
+        // Extrapolation.CLAMP,
+        Extrapolation.EXTEND,
+      ),
+    };
+  });
 
-  const innerCloseStyle = useAnimatedStyle(() => {
-    const t = staggerProgress(innerReveal.value, 0);
+  const heroCloseBtnRevealStyle = useAnimatedStyle(() => {
+    const h = heroReveal.value;
     return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
+      opacity: interpolate(h, [0.7, 1], [0, 1], Extrapolation.CLAMP),
+      transform: [
+        {
+          translateY: interpolate(h, [0.7, 1], [50, 0], Extrapolation.CLAMP),
+        },
+      ],
     };
   });
-  const innerAvatarStyle = useAnimatedStyle(() => {
-    const t = staggerProgress(innerReveal.value, 1);
-    return { opacity: t };
-  });
-  const innerNameStyle = useAnimatedStyle(() => {
-    const t = staggerProgress(innerReveal.value, 2);
+
+  const heroAvatarRevealStyle = useAnimatedStyle(() => {
+    const h = heroReveal.value;
     return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
-      marginBottom: SP.sm,
+      width: interpolate(h, [0.3, 1], [50, 88], Extrapolation.CLAMP),
+      height: interpolate(h, [0.3, 1], [50, 88], Extrapolation.CLAMP),
     };
   });
-  const innerHandleStyle = useAnimatedStyle(() => {
-    const t = staggerProgress(innerReveal.value, 3);
+
+  const heroImageRevealStyle = useAnimatedStyle(() => {
+    const h = heroReveal.value;
     return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
+      width: interpolate(h, [0.3, 1], [50, 88], Extrapolation.CLAMP),
+      height: interpolate(h, [0.3, 1], [50, 88], Extrapolation.CLAMP),
+      transform: [
+        {
+          translateX: interpolate(h, [0.3, 1], [-150, 0], Extrapolation.CLAMP),
+        },
+        {
+          translateY: interpolate(h, [0.3, 1], [-20, 0], Extrapolation.CLAMP),
+        },
+      ],
     };
   });
-  const innerTopRowStyle = useAnimatedStyle(() => {
-    const t = staggerProgress(innerReveal.value, 4);
+
+  const heroQuizLeftRevealStyle = useAnimatedStyle(() => {
+    const h = heroReveal.value;
     return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
+      width: interpolate(h, [0, 1], [55, 0], Extrapolation.CLAMP),
+    };
+  });
+
+  const heroQuizTopRowRevealStyle = useAnimatedStyle(() => {
+    const h = heroReveal.value;
+    return {
+      // opacity: interpolate(h, [0, 1], [0, 1], Extrapolation.CLAMP),
+      transform: [
+        {
+          translateY: interpolate(h, [0, 1], [-120, 0], Extrapolation.CLAMP),
+        },
+      ],
+    };
+  });
+
+  const heroNameRevealStyle = useAnimatedStyle(() => {
+    const h = heroReveal.value;
+    return {
+      opacity: interpolate(h, [0.9, 1], [0, 1], Extrapolation.CLAMP),
+      transform: [
+        {
+          translateY: interpolate(h, [0, 1], [30, 0], Extrapolation.CLAMP),
+        },
+      ],
     };
   });
 
   const sheetLiftStyle = useAnimatedStyle(() => {
     const u = sheetReveal.value;
     return {
-      opacity: interpolate(u, [0, 0.2], [0, 1], Extrapolation.CLAMP),
+      // opacity: interpolate(u, [0, 0.2], [0, 1], Extrapolation.CLAMP),
       transform: [
         {
           translateY: interpolate(
@@ -231,26 +257,28 @@ export const QuizHistoryProfilePanel: React.FC<{
   return (
     <ScrollView
       style={styles.scroll}
-      contentContainerStyle={styles.scrollContent}
+      contentContainerStyle={[
+        styles.scrollContent,
+        { backgroundColor: surfaces.card },
+      ]}
       showsVerticalScrollIndicator={false}
     >
       <Animated.View
         style={[
           styles.hero,
           {
-            backgroundColor: headerYellow,
-            borderBottomColor: mixHex(headerYellowDeep, headerYellow, 0.35),
-            paddingTop: insets.top + SP.sm,
-            transformOrigin: "top",
+            borderBottomColor: mixHex(headerYellowDeep, headerColor, 0.35),
+            backgroundColor: headerColor,
           },
-          heroEnterStyle,
+          // { height: 120 },
+          heroHeightStyle,
         ]}
       >
         <Animated.View
           style={[
             styles.heroCloseBtn,
-            innerCloseStyle,
             { top: insets.top + 6, right: SP.lg },
+            heroCloseBtnRevealStyle,
           ]}
         >
           <Pressable
@@ -267,88 +295,122 @@ export const QuizHistoryProfilePanel: React.FC<{
             </View>
           </Pressable>
         </Animated.View>
-        <Animated.View style={[styles.heroAvatarWrap, innerAvatarStyle]}>
-          {avatarUri ? (
-            <Image
-              source={{ uri: avatarUri }}
-              onError={() => {
-                if (homeAvatar?.onErrorSrc) setAvatarUri(homeAvatar.onErrorSrc);
-              }}
-              style={styles.heroAvatarImg}
-              contentFit="cover"
-              accessibilityLabel="Avatar"
-            />
-          ) : (
-            <LinearGradient
-              colors={[
-                surfaces.accent,
-                mixHex(surfaces.accent, "#c4b5fd", 0.35),
-              ]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.heroAvatarFallback}
-            >
-              <Text style={styles.avatarFallbackText}>✝</Text>
-            </LinearGradient>
-          )}
-        </Animated.View>
-        <Animated.View style={innerNameStyle}>
-          <Text style={[styles.name, { color: heroFg.primary }]}>{name}</Text>
-        </Animated.View>
 
-        <Animated.View style={[styles.quizTopRow, innerTopRowStyle]}>
-          <View style={styles.quizTopMid}>
-            <View style={styles.quizLvlLblRow}>
-              <Text style={[styles.quizLvlBold, { color: heroFg.primary }]}>
-                Mi Nivel {progress.level}
-              </Text>
-              <Text style={[styles.quizLvlSubl, { color: heroFg.muted }]}>
-                {levelSubText}
-              </Text>
+        <Animated.View
+          style={[
+            styles.heroContent,
+            {
+              paddingTop: insets.top + SP.sm,
+              paddingHorizontal: SP.lg,
+            },
+          ]}
+        >
+          <Animated.View style={[styles.heroAvatarWrap, heroImageRevealStyle]}>
+            {avatarUri ? (
+              <Animated.Image
+                source={{ uri: avatarUri }}
+                onError={() => {
+                  if (homeAvatar?.onErrorSrc)
+                    setAvatarUri(homeAvatar.onErrorSrc);
+                }}
+                style={[styles.heroAvatarImg, heroAvatarRevealStyle]}
+                // contentFit="cover"
+                accessibilityLabel="Avatar"
+              />
+            ) : (
+              <LinearGradient
+                colors={[
+                  surfaces.accent,
+                  mixHex(surfaces.accent, QUIZ_HOME_YELLOW, 0.35),
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.heroAvatarFallback}
+              >
+                <Text style={styles.avatarFallbackText}>{name.charAt(0)}</Text>
+              </LinearGradient>
+            )}
+          </Animated.View>
+
+          <Animated.Text
+            style={[
+              styles.name,
+              { color: heroFg.primary },
+              heroNameRevealStyle,
+            ]}
+          >
+            {name}
+          </Animated.Text>
+
+          <Animated.View
+            style={[
+              styles.quizTopRow,
+              { marginTop: SP.sm },
+              heroQuizTopRowRevealStyle,
+            ]}
+          >
+            <Animated.View style={[{ width: 50 }, heroQuizLeftRevealStyle]} />
+            <View style={styles.quizTopMid}>
+              <View style={styles.quizLvlLblRow}>
+                <Text style={[styles.quizLvlBold, { color: heroFg.primary }]}>
+                  Mi Nivel {progress.level}
+                </Text>
+                <Text style={[styles.quizLvlSubl, { color: heroFg.muted }]}>
+                  {levelSubText}
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.quizLvlBar,
+                  {
+                    borderColor: mixHex(heroFg.primary, surfaces.accent, 0.45),
+                    borderWidth: 1,
+                    backgroundColor: mixHex(
+                      heroFg.primary,
+                      surfaces.accent,
+                      0.9,
+                    ),
+                  },
+                ]}
+              >
+                <LinearGradient
+                  colors={[
+                    mixHex(heroFg.primary, surfaces.accent, 0.45),
+                    mixHex(heroFg.primary, surfaces.accent, 0.15),
+                    QUIZ_HOME_YELLOW,
+                  ]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[styles.quizLvlFill, { width: `${barPct}%` }]}
+                />
+              </View>
             </View>
             <View
               style={[
-                styles.quizLvlBar,
+                styles.quizXpPill,
                 {
-                  borderColor: mixHex(heroFg.primary, surfaces.accent, 0.45),
+                  backgroundColor: mixHex(
+                    heroFg.primary,
+                    surfaces.accent,
+                    0.28,
+                  ),
+                  borderColor: mixHex(
+                    heroFg.primary,
+                    surfaces.borderStrong,
+                    0.45,
+                  ),
                   borderWidth: 1,
-                  backgroundColor: mixHex(heroFg.primary, surfaces.accent, 0.9),
                 },
               ]}
             >
-              <LinearGradient
-                colors={[
-                  mixHex(heroFg.primary, surfaces.accent, 0.45),
-                  mixHex(heroFg.primary, surfaces.accent, 0.15),
-                  QUIZ_HOME_YELLOW,
-                ]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={[styles.quizLvlFill, { width: `${barPct}%` }]}
-              />
+              <Text style={[styles.quizXpNum, { color: heroFg.primary }]}>
+                {progress.totalXp}
+              </Text>
+              <Text style={[styles.quizXpLbl, { color: streakFlameColor }]}>
+                XP
+              </Text>
             </View>
-          </View>
-          <View
-            style={[
-              styles.quizXpPill,
-              {
-                backgroundColor: mixHex(heroFg.primary, surfaces.accent, 0.28),
-                borderColor: mixHex(
-                  heroFg.primary,
-                  surfaces.borderStrong,
-                  0.45,
-                ),
-                borderWidth: 1,
-              },
-            ]}
-          >
-            <Text style={[styles.quizXpNum, { color: heroFg.primary }]}>
-              {progress.totalXp}
-            </Text>
-            <Text style={[styles.quizXpLbl, { color: streakFlameColor }]}>
-              XP
-            </Text>
-          </View>
+          </Animated.View>
         </Animated.View>
       </Animated.View>
 
@@ -585,7 +647,7 @@ export const QuizHistoryProfilePanel: React.FC<{
           </View>
         ) : null}
       </Animated.View>
-      <View style={{ height: SP.xl }} />
+      {/* <View style={{ height: SP.xl }} /> */}
     </ScrollView>
   );
 };
@@ -595,21 +657,25 @@ const styles = StyleSheet.create({
   scrollContent: { paddingBottom: SP.lg },
   hero: {
     position: "relative",
-    paddingBottom: SP.xl + 6,
-    paddingHorizontal: SP.lg,
-    alignItems: "center",
     borderBottomWidth: StyleSheet.hairlineWidth,
+    overflow: "hidden",
+  },
+  heroBg: {
+    ...StyleSheet.absoluteFillObject,
+    transformOrigin: "top",
+  },
+  heroContent: {
+    position: "relative",
+    zIndex: 1,
+    alignItems: "center",
+    alignSelf: "stretch",
+    paddingBottom: SP.xl + 6,
   },
   heroAvatarWrap: {
     marginBottom: SP.sm,
     borderRadius: 999,
     overflow: "hidden",
     backgroundColor: "#ddd",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 4,
   },
   heroAvatarImg: {
     width: 88,
@@ -680,7 +746,7 @@ const styles = StyleSheet.create({
   },
   heroCloseBtn: {
     position: "absolute",
-    zIndex: 2,
+    zIndex: 3,
   },
   heroCloseCircle: {
     width: 38,
@@ -717,10 +783,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SP.lg,
     paddingTop: SP.lg,
     paddingBottom: SP.md,
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    elevation: 4,
+    // elevation: 4,
   },
   streakCard: {
     flexDirection: "row",

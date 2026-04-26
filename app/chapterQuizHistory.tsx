@@ -107,10 +107,10 @@ type ViewState =
   | { kind: "chapters"; book: string }
   | { kind: "chapterDetail"; book: string; chapter: number }
   | {
-    kind: "review";
-    attemptId: string;
-    reviewFrom: ReviewNavigationFrom | null;
-  };
+      kind: "review";
+      attemptId: string;
+      reviewFrom: ReviewNavigationFrom | null;
+    };
 
 type BooksFilter = "started" | "all";
 
@@ -136,7 +136,8 @@ const ChapterQuizHistoryScreen = () => {
   const [viewState, setViewState] = useState<ViewState>({ kind: "books" });
   const [direction, setDirection] = useState<AnimatedViewTransition>("forward");
   const [booksFilter, setBooksFilter] = useState<BooksFilter>("started");
-  const [booksLayout, setBooksLayout] = useState<QuizHistoryBooksLayout>("grid");
+  const [booksLayout, setBooksLayout] =
+    useState<QuizHistoryBooksLayout>("grid");
   const [booksSettingsOpen, setBooksSettingsOpen] = useState(false);
   const [reviewAttempt, setReviewAttempt] =
     useState<ChapterQuizAttemptRow | null>(null);
@@ -206,7 +207,8 @@ const ChapterQuizHistoryScreen = () => {
   // Deep-link entry: ?attemptId=...
   useEffect(() => {
     const raw = params.attemptId;
-    const id = typeof raw === "string" ? raw : Array.isArray(raw) ? raw[0] : undefined;
+    const id =
+      typeof raw === "string" ? raw : Array.isArray(raw) ? raw[0] : undefined;
     if (!id) return;
     let cancelled = false;
     void chapterQuizLocalDbService.getAttemptById(id).then((row) => {
@@ -352,15 +354,14 @@ const ChapterQuizHistoryScreen = () => {
       }
       try {
         setLoadingQuizSize(size);
-        const versesText =
-          allBibleLoaded
-            ? await loadChapterVersesTextForQuiz(
+        const versesText = allBibleLoaded
+          ? await loadChapterVersesTextForQuiz(
               getBibleServices,
               String(currentBibleVersion),
               book,
               chapter,
             )
-            : "";
+          : "";
         const result = await getQuestionsForChapter({
           book,
           chapter,
@@ -456,7 +457,9 @@ const ChapterQuizHistoryScreen = () => {
       if (reviewAttempt?.id === id) {
         setReviewAttempt({ ...row, isFavorite: !row.isFavorite });
       }
-      showToast(row.isFavorite ? "Quitado de favoritos" : "Guardado en favoritos");
+      showToast(
+        row.isFavorite ? "Quitado de favoritos" : "Guardado en favoritos",
+      );
     },
     [reloadLocalQuizData, reviewAttempt?.id],
   );
@@ -520,7 +523,10 @@ const ChapterQuizHistoryScreen = () => {
   const handleRemoveDownvote = useCallback(
     (chapterKey: string) => {
       if (!pb.authStore.isValid) {
-        alertWarning("Inicia sesión", "Necesitas una cuenta para gestionar tu voto.");
+        alertWarning(
+          "Inicia sesión",
+          "Necesitas una cuenta para gestionar tu voto.",
+        );
         return;
       }
       confirm(
@@ -545,32 +551,36 @@ const ChapterQuizHistoryScreen = () => {
     [alertWarning, confirm, reloadDownvotes],
   );
 
-  const handleRetryFailed = useCallback(
-    async (id: string) => {
-      const attempt = await chapterQuizLocalDbService.getAttemptById(id);
-      if (!attempt) return;
-      const byIndex = new Map(
-        attempt.answers.map((x) => [x.questionIndex, x.selected]),
-      );
-      const failed = attempt.questions.filter((q, idx) => {
-        const sel = byIndex.get(idx) ?? null;
-        return sel !== q.correct;
-      });
-      if (failed.length === 0) {
-        showToast("No hubo preguntas falladas en este intento");
-        return;
-      }
-      chapterQuizStateHelpers.setActiveQuiz({
-        chapterKey: attempt.chapterKey,
-        book: attempt.book,
-        chapter: attempt.chapter,
-        requestedCount: failed.length,
-        questions: shuffleArray(failed),
-      });
-      modalState$.openChapterQuizBottomSheet();
-    },
-    [],
-  );
+  const handleRetryFailed = useCallback(async (id: string) => {
+    const attempt = await chapterQuizLocalDbService.getAttemptById(id);
+    if (!attempt) return;
+    const byIndex = new Map(
+      attempt.answers.map((x) => [x.questionIndex, x.selected]),
+    );
+    const failed = attempt.questions.filter((q, idx) => {
+      const sel = byIndex.get(idx) ?? null;
+      return sel !== q.correct;
+    });
+    if (failed.length === 0) {
+      showToast("No hubo preguntas falladas en este intento");
+      return;
+    }
+    chapterQuizStateHelpers.setActiveQuiz({
+      chapterKey: attempt.chapterKey,
+      book: attempt.book,
+      chapter: attempt.chapter,
+      requestedCount: failed.length,
+      questions: shuffleArray(failed),
+    });
+    modalState$.openChapterQuizBottomSheet();
+  }, []);
+  const hiddenHeaderOnView = [
+    "profile",
+    "books",
+    "chapters",
+    "review",
+    "chapterDetail",
+  ];
 
   const screenOptions: SingleScreenHeaderProps = useMemo(() => {
     const title =
@@ -589,7 +599,7 @@ const ChapterQuizHistoryScreen = () => {
     return {
       theme,
       title,
-      headerShown: viewState.kind !== "profile",
+      headerShown: !hiddenHeaderOnView.includes(viewState.kind),
       titleIcon:
         viewState.kind === "books"
           ? "ListChecks"
@@ -601,46 +611,48 @@ const ChapterQuizHistoryScreen = () => {
       headerRightProps:
         viewState.kind === "books"
           ? {
-            RightComponent: () => (
-              <Pressable
-                onPress={() => {
-                  void Haptics.selectionAsync();
-                  setBooksSettingsOpen(true);
-                }}
-                style={{ marginRight: 4, padding: 6 }}
-                hitSlop={12}
-              >
-                <Icon
-                  name="Settings"
-                  size={headerIconSize}
-                  color={theme.colors.notification}
-                />
-              </Pressable>
-            ),
-            headerRightIcon: "RefreshCw",
-            headerRightIconColor: theme.colors.notification,
-            disabled: false,
-          }
+              RightComponent: () => (
+                <Pressable
+                  onPress={() => {
+                    void Haptics.selectionAsync();
+                    setBooksSettingsOpen(true);
+                  }}
+                  style={{ marginRight: 4, padding: 6 }}
+                  hitSlop={12}
+                >
+                  <Icon
+                    name="Settings"
+                    size={headerIconSize}
+                    color={theme.colors.notification}
+                  />
+                </Pressable>
+              ),
+              headerRightIcon: "RefreshCw",
+              headerRightIconColor: theme.colors.notification,
+              disabled: false,
+            }
           : {
-            headerRightIcon: "RefreshCw",
-            style: { display: "none" },
-            headerRightIconColor: theme.colors.notification,
-            disabled: true,
-          },
+              headerRightIcon: "RefreshCw",
+              style: { display: "none" },
+              headerRightIconColor: theme.colors.notification,
+              disabled: true,
+            },
     };
   }, [headerGoBack, quizHistoryUser?.name, reviewAttempt, theme, viewState]);
 
   return (
     <Fragment>
-      <Stack.Screen
-        options={singleScreenHeader(screenOptions)}
-      />
-      <View
-        style={{ flex: 1 }}
-      >
-        <ThemedView style={[styles.container, { backgroundColor: surfaces.base }]}>
+      <Stack.Screen options={singleScreenHeader(screenOptions)} />
+      <View style={{ flex: 1 }}>
+        <ThemedView
+          style={[styles.container, { backgroundColor: surfaces.base }]}
+        >
           {viewState.kind === "books" ? (
-            <AnimatedView key="books" direction={'expand-from-previous'}>
+            <AnimatedView
+              noHeader={hiddenHeaderOnView.includes("books")}
+              key="books"
+              direction={"expand-from-previous"}
+            >
               <BooksView
                 direction={direction}
                 surfaces={surfaces}
@@ -658,7 +670,12 @@ const ChapterQuizHistoryScreen = () => {
               />
             </AnimatedView>
           ) : viewState.kind === "profile" ? (
-            <AnimatedView key="profile" direction={direction}>
+            <View
+              style={{ flex: 1, backgroundColor: "transparent" }}
+              // noHeader={hiddenHeaderOnView.includes("profile")}
+              // key="profile"
+              // direction={direction}
+            >
               <QuizHistoryProfilePanel
                 surfaces={surfaces}
                 user={quizHistoryUser}
@@ -668,9 +685,25 @@ const ChapterQuizHistoryScreen = () => {
                 streakDays={metrics.streakDays}
                 onClose={headerGoBack}
               />
-            </AnimatedView>
-          ) : viewState.kind === "chapters" ? (
+            </View>
+          ) : // <AnimatedView
+          //   noHeader={hiddenHeaderOnView.includes("profile")}
+          //   key="profile"
+          //   direction={direction}
+          // >
+          //   <QuizHistoryProfilePanel
+          //     surfaces={surfaces}
+          //     user={quizHistoryUser}
+          //     homeAvatar={profileHomeAvatar}
+          //     progress={quizProgress}
+          //     attempts={attempts}
+          //     streakDays={metrics.streakDays}
+          //     onClose={headerGoBack}
+          //   />
+          // </AnimatedView>
+          viewState.kind === "chapters" ? (
             <AnimatedView
+              noHeader={hiddenHeaderOnView.includes("chapters")}
               key={`chapters-${viewState.book}`}
               direction={direction}
             >
@@ -683,11 +716,14 @@ const ChapterQuizHistoryScreen = () => {
                 }
                 attempts={attemptsForChaptersList}
                 quizSessions={quizSessions}
-                onPressChapter={(chapter) => openChapter(viewState.book, chapter)}
+                onPressChapter={(chapter) =>
+                  openChapter(viewState.book, chapter)
+                }
               />
             </AnimatedView>
           ) : viewState.kind === "chapterDetail" ? (
             <AnimatedView
+              noHeader={hiddenHeaderOnView.includes("chapterDetail")}
               key={`chapter-detail-${viewState.book}-${viewState.chapter}`}
               direction={direction}
             >
@@ -718,6 +754,7 @@ const ChapterQuizHistoryScreen = () => {
             </AnimatedView>
           ) : reviewAttempt ? (
             <AnimatedView
+              noHeader={hiddenHeaderOnView.includes("review")}
               key={`review-${viewState.attemptId}`}
               direction={direction}
             >
@@ -730,10 +767,14 @@ const ChapterQuizHistoryScreen = () => {
                 }
                 onRetryFailed={() => void handleRetryFailed(reviewAttempt.id)}
                 onBack={headerGoBack}
-                onToggleFavorite={() => void handleToggleFavorite(reviewAttempt.id)}
+                onToggleFavorite={() =>
+                  void handleToggleFavorite(reviewAttempt.id)
+                }
                 onDelete={() => handleDeleteAttempt(reviewAttempt.id)}
                 onDownvote={() => handleDownvote(reviewAttempt.chapterKey)}
-                onRemoveDownvote={() => handleRemoveDownvote(reviewAttempt.chapterKey)}
+                onRemoveDownvote={() =>
+                  handleRemoveDownvote(reviewAttempt.chapterKey)
+                }
               />
             </AnimatedView>
           ) : null}
@@ -804,148 +845,146 @@ const ReviewView: React.FC<{
   onDownvote,
   onRemoveDownvote,
 }) => {
-    const byIndex = useMemo(
-      () => new Map(attempt.answers.map((x) => [x.questionIndex, x.selected])),
-      [attempt],
-    );
-    const hasFailed = useMemo(() => {
-      for (let i = 0; i < attempt.questions.length; i++) {
-        const q = attempt.questions[i];
-        const sel = byIndex.get(i) ?? null;
-        if (sel !== q.correct) return true;
-      }
-      return false;
-    }, [attempt, byIndex]);
+  const byIndex = useMemo(
+    () => new Map(attempt.answers.map((x) => [x.questionIndex, x.selected])),
+    [attempt],
+  );
+  const hasFailed = useMemo(() => {
+    for (let i = 0; i < attempt.questions.length; i++) {
+      const q = attempt.questions[i];
+      const sel = byIndex.get(i) ?? null;
+      if (sel !== q.correct) return true;
+    }
+    return false;
+  }, [attempt, byIndex]);
 
-    const ratio = attempt.total > 0 ? attempt.score / attempt.total : 0;
+  const ratio = attempt.total > 0 ? attempt.score / attempt.total : 0;
 
-    const subline = ratio >= 1
+  const subline =
+    ratio >= 1
       ? "Respondiste todo correctamente"
       : ratio >= 0.7
         ? "Repasa lo que no acertaste"
         : "Cada repaso ayuda a entender mejor";
 
-    const nQ = attempt.questions.length;
-    const idxAfterQuestions = 3 + nQ;
+  const nQ = attempt.questions.length;
+  const idxAfterQuestions = 3 + nQ;
 
-    return (
-      <ScrollView
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <StaggerEnter index={0}>
-          <View style={styles.reviewHead}>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.reviewTitle, { color: surfaces.text }]}>
-                {attempt.book} {attempt.chapter}
-              </Text>
-              <Text style={[styles.reviewSub, { color: surfaces.muted }]}>
-                {`${attempt.score} de ${attempt.total} correctas · ${subline}`}
-              </Text>
-            </View>
-            <ScoreRing
-              score={attempt.score}
-              total={attempt.total}
-              pass={attempt.pass}
-              surfaces={surfaces}
-            />
+  return (
+    <ScrollView
+      contentContainerStyle={styles.listContent}
+      showsVerticalScrollIndicator={false}
+    >
+      <StaggerEnter index={0}>
+        <View style={styles.reviewHead}>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.reviewTitle, { color: surfaces.text }]}>
+              {attempt.book} {attempt.chapter}
+            </Text>
+            <Text style={[styles.reviewSub, { color: surfaces.muted }]}>
+              {`${attempt.score} de ${attempt.total} correctas · ${subline}`}
+            </Text>
           </View>
-        </StaggerEnter>
-        <StaggerEnter index={1}>
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: surfaces.border, marginBottom: SP.lg },
-            ]}
+          <ScoreRing
+            score={attempt.score}
+            total={attempt.total}
+            pass={attempt.pass}
+            surfaces={surfaces}
+          />
+        </View>
+      </StaggerEnter>
+      <StaggerEnter index={1}>
+        <View
+          style={[
+            styles.divider,
+            { backgroundColor: surfaces.border, marginBottom: SP.lg },
+          ]}
+        />
+      </StaggerEnter>
+
+      <StaggerEnter index={2}>
+        <QuizQuickActionsRow>
+          <QuizQuickAction
+            icon="Star"
+            label={attempt.isFavorite ? "Guardado" : "Guardar"}
+            active={attempt.isFavorite}
+            onPress={onToggleFavorite}
+            surfaces={surfaces}
+          />
+          <QuizQuickAction
+            icon="Trash2"
+            label="Eliminar"
+            onPress={onDelete}
+            surfaces={surfaces}
+            danger
+          />
+        </QuizQuickActionsRow>
+      </StaggerEnter>
+
+      {attempt.questions.map((q, idx) => (
+        <StaggerEnter key={`${attempt.id}-${idx}`} index={3 + idx}>
+          <QuizReviewItem
+            index={idx}
+            question={q}
+            selected={byIndex.get(idx) ?? null}
+            surfaces={surfaces}
           />
         </StaggerEnter>
+      ))}
 
-        <StaggerEnter index={2}>
-          <QuizQuickActionsRow>
-            <QuizQuickAction
-              icon="Star"
-              label={attempt.isFavorite ? "Guardado" : "Guardar"}
-              active={attempt.isFavorite}
-              onPress={onToggleFavorite}
+      <StaggerEnter index={idxAfterQuestions}>
+        <View style={styles.reviewActions}>
+          {hasFailed ? (
+            <PrimaryButton
+              label="Reintentar falladas"
+              icon="RotateCcw"
+              onPress={onRetryFailed}
               surfaces={surfaces}
             />
-            <QuizQuickAction
-              icon="Trash2"
-              label="Eliminar"
-              onPress={onDelete}
-              surfaces={surfaces}
-              danger
-            />
-          </QuizQuickActionsRow>
-        </StaggerEnter>
+          ) : null}
+          <SecondaryButton
+            label="Volver al capítulo"
+            icon="ArrowLeft"
+            onPress={onBack}
+            surfaces={surfaces}
+          />
+        </View>
+      </StaggerEnter>
 
-        {attempt.questions.map((q, idx) => (
-          <StaggerEnter key={`${attempt.id}-${idx}`} index={3 + idx}>
-            <QuizReviewItem
-              index={idx}
-              question={q}
-              selected={byIndex.get(idx) ?? null}
-              surfaces={surfaces}
-            />
-          </StaggerEnter>
-        ))}
-
-        <StaggerEnter index={idxAfterQuestions}>
-          <View style={styles.reviewActions}>
-            {hasFailed ? (
-              <PrimaryButton
-                label="Reintentar falladas"
-                icon="RotateCcw"
-                onPress={onRetryFailed}
-                surfaces={surfaces}
-              />
-            ) : null}
-            <SecondaryButton
-              label="Volver al capítulo"
-              icon="ArrowLeft"
-              onPress={onBack}
-              surfaces={surfaces}
-            />
-          </View>
-        </StaggerEnter>
-
-        <StaggerEnter index={idxAfterQuestions + 1}>
-          <View
-            style={[
-              styles.voteSection,
-              { borderTopColor: surfaces.border },
-            ]}
-          >
-            {isDownvoted ? (
-              <>
-                <Text style={[styles.voteHint, { color: surfaces.muted }]}>
-                  Ya votaste negativo este quiz compartido
-                </Text>
-                <DangerButton
-                  label={isDownvoteLoading ? "Quitando…" : "Quitar voto negativo"}
-                  icon="Undo2"
-                  onPress={onRemoveDownvote}
-                  surfaces={surfaces}
-                  loading={isDownvoteLoading}
-                  variant="active"
-                />
-              </>
-            ) : (
+      <StaggerEnter index={idxAfterQuestions + 1}>
+        <View style={[styles.voteSection, { borderTopColor: surfaces.border }]}>
+          {isDownvoted ? (
+            <>
+              <Text style={[styles.voteHint, { color: surfaces.muted }]}>
+                Ya votaste negativo este quiz compartido
+              </Text>
               <DangerButton
-                label={
-                  isDownvoteLoading ? "Enviando…" : "Reportar quiz como incorrecto"
-                }
-                icon="ThumbsDown"
-                onPress={onDownvote}
+                label={isDownvoteLoading ? "Quitando…" : "Quitar voto negativo"}
+                icon="Undo2"
+                onPress={onRemoveDownvote}
                 surfaces={surfaces}
                 loading={isDownvoteLoading}
+                variant="active"
               />
-            )}
-          </View>
-        </StaggerEnter>
-      </ScrollView>
-    );
-  };
+            </>
+          ) : (
+            <DangerButton
+              label={
+                isDownvoteLoading
+                  ? "Enviando…"
+                  : "Reportar quiz como incorrecto"
+              }
+              icon="ThumbsDown"
+              onPress={onDownvote}
+              surfaces={surfaces}
+              loading={isDownvoteLoading}
+            />
+          )}
+        </View>
+      </StaggerEnter>
+    </ScrollView>
+  );
+};
 
 const ScoreRing: React.FC<{
   score: number;
@@ -964,9 +1003,23 @@ const ScoreRing: React.FC<{
   const color = pass ? surfaces.accent : surfaces.fail;
 
   return (
-    <View style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
+    <View
+      style={{
+        width: size,
+        height: size,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Svg width={size} height={size} style={StyleSheet.absoluteFill}>
-        <Circle cx={cx} cy={cy} r={r} stroke={surfaces.border} strokeWidth={stroke} fill="none" />
+        <Circle
+          cx={cx}
+          cy={cy}
+          r={r}
+          stroke={surfaces.border}
+          strokeWidth={stroke}
+          fill="none"
+        />
         <Circle
           cx={cx}
           cy={cy}
@@ -981,7 +1034,14 @@ const ScoreRing: React.FC<{
           originY={cy}
         />
       </Svg>
-      <Text style={{ fontSize: 11, fontWeight: "700", color: surfaces.text, letterSpacing: -0.2 }}>
+      <Text
+        style={{
+          fontSize: 11,
+          fontWeight: "700",
+          color: surfaces.text,
+          letterSpacing: -0.2,
+        }}
+      >
         {score}/{total}
       </Text>
     </View>
@@ -1050,10 +1110,12 @@ const DangerButton: React.FC<{
     style={[
       styles.btn,
       {
-        borderColor: variant === "active" ? surfaces.fail : surfaces.fail + "55",
+        borderColor:
+          variant === "active" ? surfaces.fail : surfaces.fail + "55",
         borderWidth: 1,
         borderRadius: RADIUS.button,
-        backgroundColor: variant === "active" ? surfaces.failSoft : "transparent",
+        backgroundColor:
+          variant === "active" ? surfaces.failSoft : "transparent",
         opacity: loading ? 0.6 : 1,
       },
     ]}

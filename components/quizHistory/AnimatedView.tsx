@@ -30,6 +30,7 @@ import Animated, {
   ZoomOutUp,
   ZoomOutRight,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /** Presets for `entering` / `exiting` on screen content (e.g. Mis quiz stack). */
 export type AnimatedViewTransition =
@@ -61,6 +62,10 @@ type Props = {
    * origen (p. ej. el botón o avatar que inicia la navegación).
    */
   sharedTransitionTag?: string;
+  /**
+   * Si `true`, no se aplica la animación de entrada/salida.
+   */
+  noHeader?: boolean;
 };
 
 /** Slightly long + smooth decel so Mis Quiz stack changes feel less snappy. */
@@ -79,9 +84,10 @@ function timed(Builder: typeof BaseAnimationBuilder): BaseAnimationBuilder {
 
 const sharedSheetStyle = SharedTransition.duration(DURATION);
 
-function enteringExitingFor(
-  transition: AnimatedViewTransition,
-): { entering: BaseAnimationBuilder; exiting: BaseAnimationBuilder } {
+function enteringExitingFor(transition: AnimatedViewTransition): {
+  entering: BaseAnimationBuilder;
+  exiting: BaseAnimationBuilder;
+} {
   switch (transition) {
     case "none":
       return {
@@ -165,7 +171,9 @@ export const AnimatedView: React.FC<Props> = ({
   direction = "forward",
   style,
   sharedTransitionTag,
+  noHeader = false,
 }) => {
+  const insets = useSafeAreaInsets();
   const { entering, exiting } = useMemo(
     () => enteringExitingFor(direction),
     [direction],
@@ -175,7 +183,10 @@ export const AnimatedView: React.FC<Props> = ({
 
   return (
     <Animated.View
-      style={[{ flex: 1 }, style]}
+      style={[
+        { flex: 1, paddingTop: noHeader ? insets.top : undefined },
+        style,
+      ]}
       entering={entering}
       exiting={exiting}
       sharedTransitionStyle={useShared ? sharedSheetStyle : undefined}
