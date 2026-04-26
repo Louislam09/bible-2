@@ -17,6 +17,7 @@ import type { ChapterQuizAttemptRow } from "@/services/chapterQuizLocalDbService
 import type { pbUser } from "@/types";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -32,6 +33,7 @@ import Animated, {
 import Svg, { Path } from "react-native-svg";
 
 const trophyLottieSource = require("../../assets/lottie/Trophy.json");
+const QUIZ_HOME_YELLOW = "#f4d03f";
 
 const HERO_REVEAL_MS = 520;
 /** Start inner content when hero is ~90% done */
@@ -119,8 +121,15 @@ export const QuizHistoryProfilePanel: React.FC<{
     () => textColorsOnBackground(headerYellow, surfaces.text),
     [headerYellow, surfaces.text],
   );
+  const levelSubText = progress.isMaxLevel
+    ? "Máximo alcanzado"
+    : `Nivel ${progress.level + 1}`;
+  const xpPillBg = mixHex(surfaces.accent, surfaces.card, 0.82);
+  const xpPillBorder = mixHex(surfaces.accent, surfaces.borderStrong, 0.45);
+  const xpPillNumberColor = mixHex(surfaces.accent, "#92400e", 0.55);
   const barFill = surfaces.accent;
-  const streakFlameColor = mixHex("#000", "#ea580c", 0.58);
+  const streakFlameColor = mixHex(QUIZ_HOME_YELLOW, "#ea580c", 0.58);
+  // const streakFlameColor = mixHex("#000", "#ea580c", 0.58);
 
   /** Trophy.json: recolor fills / strokes to quiz surfaces (theme). */
   const trophyLottieColorFilters = useMemo(
@@ -184,15 +193,15 @@ export const QuizHistoryProfilePanel: React.FC<{
       marginBottom: SP.sm,
     };
   });
-  const innerMiniRowStyle = useAnimatedStyle(() => {
-    const t = staggerProgress(innerReveal.value, 4);
+  const innerHandleStyle = useAnimatedStyle(() => {
+    const t = staggerProgress(innerReveal.value, 3);
     return {
       opacity: t,
       transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
     };
   });
-  const innerMiniTrackStyle = useAnimatedStyle(() => {
-    const t = staggerProgress(innerReveal.value, 5);
+  const innerTopRowStyle = useAnimatedStyle(() => {
+    const t = staggerProgress(innerReveal.value, 4);
     return {
       opacity: t,
       transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
@@ -254,70 +263,92 @@ export const QuizHistoryProfilePanel: React.FC<{
             hitSlop={14}
           >
             <View style={styles.heroCloseCircle}>
-              <Icon name="X" size={20} color={surfaces.text} />
+              <Icon name="X" size={20} color={"#000"} />
             </View>
           </Pressable>
         </Animated.View>
-        <Animated.View style={[styles.avatarWrap, innerAvatarStyle]}>
+        <Animated.View style={[styles.heroAvatarWrap, innerAvatarStyle]}>
           {avatarUri ? (
             <Image
               source={{ uri: avatarUri }}
               onError={() => {
                 if (homeAvatar?.onErrorSrc) setAvatarUri(homeAvatar.onErrorSrc);
               }}
-              style={styles.avatarImg}
+              style={styles.heroAvatarImg}
               contentFit="cover"
               accessibilityLabel="Avatar"
             />
           ) : (
-            <View
-              style={[
-                styles.avatarFallback,
-                { backgroundColor: mixHex(surfaces.accent, "#c4b5fd", 0.35) },
+            <LinearGradient
+              colors={[
+                surfaces.accent,
+                mixHex(surfaces.accent, "#c4b5fd", 0.35),
               ]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.heroAvatarFallback}
             >
               <Text style={styles.avatarFallbackText}>✝</Text>
-            </View>
+            </LinearGradient>
           )}
         </Animated.View>
         <Animated.View style={innerNameStyle}>
           <Text style={[styles.name, { color: heroFg.primary }]}>{name}</Text>
         </Animated.View>
 
-        <Animated.View style={[styles.miniBarRow, innerMiniRowStyle]}>
-          <Text style={[styles.miniBarLbl, { color: heroFg.muted }]}>
-            Progreso de nivel
-          </Text>
-          <View style={styles.miniXp}>
-            <Icon name="Star" size={14} color={heroFg.accentIcon} />
-            <Text
+        <Animated.View style={[styles.quizTopRow, innerTopRowStyle]}>
+          <View style={styles.quizTopMid}>
+            <View style={styles.quizLvlLblRow}>
+              <Text style={[styles.quizLvlBold, { color: heroFg.primary }]}>
+                Mi Nivel {progress.level}
+              </Text>
+              <Text style={[styles.quizLvlSubl, { color: heroFg.muted }]}>
+                {levelSubText}
+              </Text>
+            </View>
+            <View
               style={[
-                styles.miniXpText,
-                styles.miniXpTextGap,
-                { color: heroFg.primary },
+                styles.quizLvlBar,
+                {
+                  borderColor: mixHex(heroFg.primary, surfaces.accent, 0.45),
+                  borderWidth: 1,
+                  backgroundColor: mixHex(heroFg.primary, surfaces.accent, 0.9),
+                },
               ]}
             >
-              {progress.totalXp} XP
-            </Text>
+              <LinearGradient
+                colors={[
+                  mixHex(heroFg.primary, surfaces.accent, 0.45),
+                  mixHex(heroFg.primary, surfaces.accent, 0.15),
+                  QUIZ_HOME_YELLOW,
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={[styles.quizLvlFill, { width: `${barPct}%` }]}
+              />
+            </View>
           </View>
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.miniTrack,
-            innerMiniTrackStyle,
-            { backgroundColor: mixHex(heroFg.primary, surfaces.accent, 0.25) },
-          ]}
-        >
           <View
             style={[
-              styles.miniFill,
+              styles.quizXpPill,
               {
-                width: `${barPct}%`,
-                // backgroundColor: barFill,
-                backgroundColor: heroFg.primary,
+                backgroundColor: mixHex(heroFg.primary, surfaces.accent, 0.28),
+                borderColor: mixHex(
+                  heroFg.primary,
+                  surfaces.borderStrong,
+                  0.45,
+                ),
+                borderWidth: 1,
               },
             ]}
-          />
+          >
+            <Text style={[styles.quizXpNum, { color: heroFg.primary }]}>
+              {progress.totalXp}
+            </Text>
+            <Text style={[styles.quizXpLbl, { color: streakFlameColor }]}>
+              XP
+            </Text>
+          </View>
         </Animated.View>
       </Animated.View>
 
@@ -335,7 +366,12 @@ export const QuizHistoryProfilePanel: React.FC<{
         <Pressable
           style={[
             styles.streakCard,
-            { backgroundColor: mixHex(headerYellow, surfaces.card, 0.45) },
+            // { backgroundColor: mixHex(headerYellow, surfaces.card, 0.85) },
+            {
+              backgroundColor: mixHex(heroFg.primary, surfaces.accent, 0.28),
+              borderColor: mixHex(heroFg.primary, surfaces.borderStrong, 0.45),
+              borderWidth: 1,
+            },
           ]}
           disabled
         >
@@ -564,6 +600,84 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  heroAvatarWrap: {
+    marginBottom: SP.sm,
+    borderRadius: 999,
+    overflow: "hidden",
+    backgroundColor: "#ddd",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+  heroAvatarImg: {
+    width: 88,
+    height: 88,
+    borderRadius: 999,
+  },
+  heroAvatarFallback: {
+    width: 88,
+    height: 88,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quizTopRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    alignSelf: "stretch",
+  },
+  quizTopMid: {
+    flex: 1,
+    minWidth: 0,
+  },
+  quizLvlLblRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 6,
+    gap: 4,
+  },
+  quizLvlBold: {
+    fontSize: 11,
+    fontWeight: "800",
+    lineHeight: 14,
+  },
+  quizLvlSubl: {
+    fontSize: 11,
+    fontWeight: "600",
+    lineHeight: 14,
+  },
+  quizLvlBar: {
+    height: 9,
+    borderRadius: 99,
+    overflow: "hidden",
+  },
+  quizLvlFill: {
+    height: "100%",
+    borderRadius: 99,
+  },
+  quizXpPill: {
+    flexShrink: 0,
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 11,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  quizXpNum: {
+    fontSize: 14,
+    fontWeight: "900",
+    letterSpacing: -0.3,
+  },
+  quizXpLbl: {
+    fontSize: 10,
+    fontWeight: "800",
+    letterSpacing: 0.6,
+    marginTop: 1,
+  },
   heroCloseBtn: {
     position: "absolute",
     zIndex: 2,
@@ -581,23 +695,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 2,
   },
-  avatarWrap: {
-    marginBottom: SP.sm,
-  },
-  avatarImg: {
-    width: 88,
-    height: 88,
-    borderRadius: 999,
-    overflow: "hidden",
-    backgroundColor: "#ddd",
-  },
-  avatarFallback: {
-    width: 88,
-    height: 88,
-    borderRadius: 999,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   avatarFallbackText: {
     color: "#fff",
     fontSize: 32,
@@ -613,27 +710,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginTop: 2,
     marginBottom: SP.md,
-  },
-  miniBarRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    alignSelf: "stretch",
-    marginBottom: 6,
-  },
-  miniBarLbl: { fontSize: 12, fontWeight: "700" },
-  miniXp: { flexDirection: "row", alignItems: "center" },
-  miniXpText: { fontSize: 13, fontWeight: "800" },
-  miniXpTextGap: { marginLeft: 4 },
-  miniTrack: {
-    alignSelf: "stretch",
-    height: 6,
-    borderRadius: 99,
-    overflow: "hidden",
-  },
-  miniFill: {
-    height: "100%",
-    borderRadius: 99,
   },
   sheet: {
     borderTopLeftRadius: 24,

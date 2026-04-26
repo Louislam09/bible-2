@@ -991,7 +991,7 @@ export function buildQuizHistoryBooksHtml(payload: {
 </head>
 <body>
 <div class="wrap">
-  <header class="quiz-top">
+  <header class="quiz-top" >
     <div class="quiz-top-row">
       ${quizHomeAvatarHtml}
       <div class="quiz-top-mid">
