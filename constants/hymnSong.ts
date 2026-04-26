@@ -522,6 +522,16 @@ export default [
     ],
   },
   {
+    id: '242',
+    title: '242 - JUNTO A MI DIOS',
+    chorus: null,
+    stanzas: [
+      '(1)Junto a mi Dios deseo siempre morar,\nAunque jamás el mundo me quiera amar.\nQue del mundo no soy, que del mundo no soy\nSólo por Él tránsito, al cielo voy.',
+      '(2)Sólo a mi Dios el alma sabe querer,\nPorque de amor Él llena todo mi ser,\nVeraz es mi Señor, veraz es mi Señor.\nQue dice en su palabra: "Dios es amor".',
+      '(3)¡Mi Dios, mi bien, mi todo! Llégate a mí;\nNo permitas que more lejos de Ti.\nTú me recibirás; Tú me recibirás,\nQue estar sin Ti no puedo nunca, jamás.',
+    ],
+  },
+  {
     id: '261',
     title: '261 - ¡CUANDO TE QUIERO MAS!',
     chorus:
