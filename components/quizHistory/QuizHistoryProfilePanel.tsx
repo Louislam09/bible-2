@@ -629,23 +629,27 @@ export const QuizHistoryProfilePanel: React.FC<{
                 </Text>
               </View>
             </StaggerEnter>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.badgesRow}
-            >
+            <View style={styles.badgesGrid2Col}>
               {badgesLocked.map((b, i) => (
                 <StaggerEnter
                   key={b.id}
                   index={badgeStagger.lockedRowStart + i}
                   delayOffsetMs={SHEET_STAGGER_DELAY_OFFSET_MS}
+                  style={styles.badgeGridCell}
                 >
                   <QuizBadgeItem surfaces={surfaces} state={b} />
                 </StaggerEnter>
               ))}
-            </ScrollView>
+            </View>
           </View>
         ) : null}
+
+        <Text
+          style={[styles.badgesComingSoon, { color: surfaces.softText }]}
+          accessibilityRole="text"
+        >
+          Más insignias próximamente.
+        </Text>
       </Animated.View>
       {/* <View style={{ height: SP.xl }} /> */}
     </ScrollView>
@@ -838,12 +842,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "800",
     letterSpacing: -0.35,
-    marginBottom: SP.sm,
+    // marginBottom: SP.sm,
+    marginVertical: SP.md,
   },
   fatTrack: {
     height: 36,
     borderRadius: 99,
     overflow: "hidden",
+    marginVertical: SP.md,
     marginBottom: SP.lg,
   },
   fatFill: {
@@ -873,9 +879,28 @@ const styles = StyleSheet.create({
     gap: SP.lg,
     paddingBottom: SP.sm,
   },
+  badgesGrid2Col: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginHorizontal: -SP.xs,
+    paddingBottom: SP.sm,
+  },
+  badgeGridCell: {
+    width: "50%",
+    paddingHorizontal: SP.xs,
+    marginBottom: SP.md,
+    alignItems: "center",
+  },
   badgesEmpty: {
     fontSize: 13,
     fontWeight: "600",
     paddingVertical: SP.sm,
+  },
+  badgesComingSoon: {
+    fontSize: 12,
+    fontWeight: "600",
+    textAlign: "center",
+    marginTop: SP.xs,
+    marginBottom: SP.sm,
   },
 });
