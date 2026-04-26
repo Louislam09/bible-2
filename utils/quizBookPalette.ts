@@ -23,6 +23,44 @@ function parseHex(hex: string): { r: number; g: number; b: number } | null {
   return null;
 }
 
+function srgbChannelToLinear(c: number): number {
+  const v = c / 255;
+  return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+}
+
+/** WCAG relative luminance (0–1). Used to pick readable text on arbitrary hex backgrounds. */
+export function relativeLuminance(hex: string): number {
+  const p = parseHex(hex);
+  if (!p) return 0;
+  const r = srgbChannelToLinear(p.r);
+  const g = srgbChannelToLinear(p.g);
+  const b = srgbChannelToLinear(p.b);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * Primary / muted / icon colors that contrast with `bgHex` (e.g. quiz hero using `surfaces.accent`).
+ * `themeText` is used for the light-background branch so icons stay theme-aware.
+ */
+export function textColorsOnBackground(
+  bgHex: string,
+  themeText: string,
+): { primary: string; muted: string; accentIcon: string } {
+  const L = relativeLuminance(bgHex);
+  if (L < 0.45) {
+    return {
+      primary: mixHex("#ffffff", bgHex, 0.92),
+      muted: mixHex("#ffffff", bgHex, 0.7),
+      accentIcon: mixHex("#ffffff", bgHex, 0.58),
+    };
+  }
+  return {
+    primary: mixHex("#141414", bgHex, 0.88),
+    muted: mixHex("#404040", bgHex, 0.78),
+    accentIcon: mixHex(themeText, bgHex, 0.55),
+  };
+}
+
 /** @param ratio 0 = all `bg`, 1 = all `fg` */
 export function mixHex(fg: string, bg: string, ratio: number): string {
   const a = parseHex(fg);

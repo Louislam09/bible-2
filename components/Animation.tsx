@@ -1,5 +1,8 @@
 import AnimatedLottieView from "lottie-react-native";
+import type { ComponentProps } from "react";
 import React, { useEffect, useRef } from "react";
+
+type LottieSource = NonNullable<ComponentProps<typeof AnimatedLottieView>["source"]>;
 
 type ColorFilter = {
   keypath: string;
@@ -8,7 +11,7 @@ type ColorFilter = {
 
 type TAnimation = {
   backgroundColor: string;
-  source: string;
+  source: LottieSource;
   animationRef?: React.RefObject<AnimatedLottieView>;
   loop?: boolean;
   size?: {

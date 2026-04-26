@@ -1,3 +1,4 @@
+import Animation from "@/components/Animation";
 import Icon from "@/components/Icon";
 import { QuizBadgeItem } from "@/components/quizHistory/QuizBadgeItem";
 import {
@@ -11,7 +12,7 @@ import {
 } from "@/constants/quizHistoryWebViewHtml";
 import { useResolvedQuizBadgeStates } from "@/hooks/useResolvedQuizBadgeStates";
 import type { ChapterQuizProgress } from "@/utils/chapterQuizProgress";
-import { mixHex } from "@/utils/quizBookPalette";
+import { mixHex, textColorsOnBackground } from "@/utils/quizBookPalette";
 import type { ChapterQuizAttemptRow } from "@/services/chapterQuizLocalDbService";
 import type { pbUser } from "@/types";
 import * as Haptics from "expo-haptics";
@@ -29,6 +30,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
+
+const trophyLottieSource = require("../../assets/lottie/Trophy.json");
 
 const HERO_REVEAL_MS = 520;
 /** Start inner content when hero is ~90% done */
@@ -51,21 +54,12 @@ function staggerProgress(v: number, index: number): number {
   return interpolate(v, [start, end], [0, 1], Extrapolation.CLAMP);
 }
 
-const QUIZ_HOME_YELLOW = "#f4d03f";
-
 function levelTierLabel(level: number): string {
   if (level >= 80) return "Diamante";
   if (level >= 60) return "Platino";
   if (level >= 40) return "Oro";
   if (level >= 20) return "Plata";
   return "Bronce";
-}
-
-function displayHandle(user: pbUser | null | undefined): string {
-  if (!user) return "@invitado";
-  const local = user.email?.split("@")[0]?.trim();
-  if (local) return `@${local}`;
-  return `@${user.id.slice(0, 8)}`;
 }
 
 function displayName(user: pbUser | null | undefined): string {
@@ -92,7 +86,6 @@ export const QuizHistoryProfilePanel: React.FC<{
 }) => {
   const insets = useSafeAreaInsets();
   const name = useMemo(() => displayName(user), [user]);
-  const handle = useMemo(() => displayHandle(user), [user]);
   const [avatarUri, setAvatarUri] = useState(homeAvatar?.src ?? "");
 
   useEffect(() => {
@@ -120,10 +113,23 @@ export const QuizHistoryProfilePanel: React.FC<{
   const barPct = progress.isMaxLevel
     ? 100
     : Math.max(0, Math.min(100, progress.levelProgressPercent));
-  const headerYellow = QUIZ_HOME_YELLOW;
-  const headerYellowDeep = mixHex("#92400e", headerYellow, 0.22);
+  const headerYellow = surfaces.accent;
+  const headerYellowDeep = mixHex(surfaces.text, surfaces.accent, 0.35);
+  const heroFg = useMemo(
+    () => textColorsOnBackground(headerYellow, surfaces.text),
+    [headerYellow, surfaces.text],
+  );
   const barFill = surfaces.accent;
   const streakFlameColor = mixHex("#000", "#ea580c", 0.58);
+
+  /** Trophy.json: recolor fills / strokes to quiz surfaces (theme). */
+  const trophyLottieColorFilters = useMemo(
+    () => [
+      { keypath: "**.Fill 1", color: surfaces.card },
+      { keypath: "**.Stroke 1", color: surfaces.accent },
+    ],
+    [surfaces.card, surfaces.accent],
+  );
 
   const heroReveal = useSharedValue(0);
   const innerReveal = useSharedValue(0);
@@ -175,13 +181,7 @@ export const QuizHistoryProfilePanel: React.FC<{
     return {
       opacity: t,
       transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
-    };
-  });
-  const innerHandleStyle = useAnimatedStyle(() => {
-    const t = staggerProgress(innerReveal.value, 3);
-    return {
-      opacity: t,
-      transform: [{ translateY: (1 - t) * INNER_SLIDE_PX }],
+      marginBottom: SP.sm,
     };
   });
   const innerMiniRowStyle = useAnimatedStyle(() => {
@@ -254,7 +254,7 @@ export const QuizHistoryProfilePanel: React.FC<{
             hitSlop={14}
           >
             <View style={styles.heroCloseCircle}>
-              <Icon name="X" size={20} color="#1a1520" />
+              <Icon name="X" size={20} color={surfaces.text} />
             </View>
           </Pressable>
         </Animated.View>
@@ -281,27 +281,20 @@ export const QuizHistoryProfilePanel: React.FC<{
           )}
         </Animated.View>
         <Animated.View style={innerNameStyle}>
-          <Text style={[styles.name, { color: "#1a1520" }]}>{name}</Text>
-        </Animated.View>
-        <Animated.View style={innerHandleStyle}>
-          <Text style={[styles.handle, { color: "#3d3d3d" }]}>{handle}</Text>
+          <Text style={[styles.name, { color: heroFg.primary }]}>{name}</Text>
         </Animated.View>
 
         <Animated.View style={[styles.miniBarRow, innerMiniRowStyle]}>
-          <Text style={[styles.miniBarLbl, { color: "#3d3d3d" }]}>
+          <Text style={[styles.miniBarLbl, { color: heroFg.muted }]}>
             Progreso de nivel
           </Text>
           <View style={styles.miniXp}>
-            <Icon
-              name="Star"
-              size={14}
-              color={mixHex("#92400e", headerYellow, 0.55)}
-            />
+            <Icon name="Star" size={14} color={heroFg.accentIcon} />
             <Text
               style={[
                 styles.miniXpText,
                 styles.miniXpTextGap,
-                { color: "#1a1520" },
+                { color: heroFg.primary },
               ]}
             >
               {progress.totalXp} XP
@@ -312,7 +305,7 @@ export const QuizHistoryProfilePanel: React.FC<{
           style={[
             styles.miniTrack,
             innerMiniTrackStyle,
-            { backgroundColor: mixHex(headerYellowDeep, headerYellow, 0.25) },
+            { backgroundColor: mixHex(heroFg.primary, surfaces.accent, 0.25) },
           ]}
         >
           <View
@@ -320,7 +313,8 @@ export const QuizHistoryProfilePanel: React.FC<{
               styles.miniFill,
               {
                 width: `${barPct}%`,
-                backgroundColor: barFill,
+                // backgroundColor: barFill,
+                backgroundColor: heroFg.primary,
               },
             ]}
           />
@@ -341,7 +335,7 @@ export const QuizHistoryProfilePanel: React.FC<{
         <Pressable
           style={[
             styles.streakCard,
-            { backgroundColor: mixHex(headerYellow, "#f4d03f", 0.55) },
+            { backgroundColor: mixHex(headerYellow, surfaces.card, 0.45) },
           ]}
           disabled
         >
@@ -403,7 +397,13 @@ export const QuizHistoryProfilePanel: React.FC<{
                   { backgroundColor: surfaces.accentSoft },
                 ]}
               >
-                <Icon name="Trophy" size={18} color={surfaces.accent} />
+                <Animation
+                  backgroundColor="transparent"
+                  source={trophyLottieSource}
+                  loop
+                  size={{ width: 30, height: 30 }}
+                  colorFilters={trophyLottieColorFilters}
+                />
               </View>
               <Text style={[styles.statLbl, { color: surfaces.muted }]}>
                 Nivel
