@@ -109,7 +109,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     name: getAppName(),
     owner: "louislam09",
     slug: "bible",
-    version: "2.0.1",
+    version: "2.1.0",
     orientation: "default",
     icon: getAssetPath().icon,
     scheme: "sb-rv60",
