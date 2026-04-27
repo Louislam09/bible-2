@@ -1,6 +1,9 @@
 import type { ChapterQuizAttemptRow } from "@/services/chapterQuizLocalDbService";
 import { chapterQuizLocalDbService } from "@/services/chapterQuizLocalDbService";
-import type { ChapterQuizProgress } from "@/utils/chapterQuizProgress";
+import {
+  computeChapterQuizProgress,
+  type ChapterQuizProgress,
+} from "@/utils/chapterQuizProgress";
 import { computeChapterQuizMetrics } from "@/utils/quizHistory";
 
 /**
@@ -257,6 +260,23 @@ export function getQuizBadgeStates(
   }
 
   return out;
+}
+
+/**
+ * Insignias cuyo criterio pasa de no cumplirse a cumplirse al añadir los intentos de `attemptsAfter`
+ * (p. ej. tras guardar un intento nuevo). Solo criterio en vivo, sin fusionar SQLite.
+ */
+export function findNewlyUnlockedQuizBadgesByCriteria(
+  attemptsBefore: ChapterQuizAttemptRow[],
+  attemptsAfter: ChapterQuizAttemptRow[],
+): QuizBadgeState[] {
+  const progressBefore = computeChapterQuizProgress(attemptsBefore);
+  const progressAfter = computeChapterQuizProgress(attemptsAfter);
+  const statesBefore = getQuizBadgeStates(attemptsBefore, progressBefore);
+  const statesAfter = getQuizBadgeStates(attemptsAfter, progressAfter);
+  return statesAfter.filter(
+    (s) => s.unlocked && !statesBefore.find((b) => b.id === s.id)?.unlocked,
+  );
 }
 
 /**

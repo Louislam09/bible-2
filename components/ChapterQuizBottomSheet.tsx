@@ -7,12 +7,19 @@ import {
 import { useAlert } from "@/context/AlertContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
+import type { ChapterQuizAttemptRow } from "@/services/chapterQuizLocalDbService";
 import { chapterQuizLocalDbService } from "@/services/chapterQuizLocalDbService";
 import { submitChapterQuizDownvote } from "@/services/chapterQuizDownvoteService";
 import type { ActiveChapterQuiz } from "@/state/chapterQuizState";
 import { chapterQuizState$, chapterQuizStateHelpers } from "@/state/chapterQuizState";
 import { modalState$ } from "@/state/modalState";
 import { TTheme } from "@/types";
+import { computeChapterQuizProgress } from "@/utils/chapterQuizProgress";
+import {
+  findNewlyUnlockedQuizBadgesByCriteria,
+  persistNewQuizBadgeUnlocks,
+  type QuizBadgeState,
+} from "@/utils/quizBadges";
 import { showToast } from "@/utils/showToast";
 import { shuffleArray } from "@/utils/shuffleOptions";
 import { use$ } from "@legendapp/state/react";
@@ -28,6 +35,7 @@ import React, {
 } from "react";
 import {
   ActivityIndicator,
+  Modal,
   Pressable,
   StyleSheet,
   TouchableOpacity,
@@ -483,6 +491,10 @@ const ChapterQuizBottomSheet = () => {
   const referenceAnchorRef = useRef(null);
   const [referencePopoverVisible, setReferencePopoverVisible] = useState(false);
   const [referenceForPopover, setReferenceForPopover] = useState<string | null>(null);
+  const [badgeUnlockModalVisible, setBadgeUnlockModalVisible] = useState(false);
+  const [badgesJustUnlocked, setBadgesJustUnlocked] = useState<QuizBadgeState[]>(
+    [],
+  );
 
   const questions = activeQuiz?.questions || [];
   const currentQuestion = questions[currentIndex];
@@ -506,6 +518,8 @@ const ChapterQuizBottomSheet = () => {
     setVoteChoice(null);
     setDownvoteSubmitting(false);
     setIsFavoriteMarked(false);
+    setBadgeUnlockModalVisible(false);
+    setBadgesJustUnlocked([]);
     answersRef.current = new Array(Math.max(total, 0)).fill(null);
   }, [activeQuiz?.chapterKey, total]);
 
@@ -532,6 +546,8 @@ const ChapterQuizBottomSheet = () => {
   }, [currentIndex]);
 
   const finalizeQuizDismiss = useCallback(() => {
+    setBadgeUnlockModalVisible(false);
+    setBadgesJustUnlocked([]);
     modalState$.isChapterQuizOpen.set(false);
     const q = lastQuizRef.current;
     if (q && !isCompletedRef.current) {
@@ -572,22 +588,42 @@ const ChapterQuizBottomSheet = () => {
         }));
         const attemptId = Crypto.randomUUID();
         setCompletedAttemptId(attemptId);
-        void chapterQuizLocalDbService.insertAttempt({
-          id: attemptId,
-          chapterKey: activeQuiz.chapterKey,
-          book: activeQuiz.book,
-          chapter: activeQuiz.chapter,
-          score: finalScore,
-          total,
-          completedAt: new Date().toISOString(),
-          questions,
-          answers: answersPayload,
-          pass,
-        });
-        void chapterQuizLocalDbService.deleteQuizSession(
-          activeQuiz.chapterKey,
-          activeQuiz.requestedCount,
-        );
+        const quizSnapshot = activeQuiz;
+        void (async () => {
+          let attemptsBefore: ChapterQuizAttemptRow[] = [];
+          try {
+            attemptsBefore = await chapterQuizLocalDbService.getAllAttempts();
+            await chapterQuizLocalDbService.insertAttempt({
+              id: attemptId,
+              chapterKey: quizSnapshot.chapterKey,
+              book: quizSnapshot.book,
+              chapter: quizSnapshot.chapter,
+              score: finalScore,
+              total,
+              completedAt: new Date().toISOString(),
+              questions,
+              answers: answersPayload,
+              pass,
+            });
+            await chapterQuizLocalDbService.deleteQuizSession(
+              quizSnapshot.chapterKey,
+              quizSnapshot.requestedCount,
+            );
+            const attemptsAfter = await chapterQuizLocalDbService.getAllAttempts();
+            const progressAfter = computeChapterQuizProgress(attemptsAfter);
+            await persistNewQuizBadgeUnlocks(attemptsAfter, progressAfter);
+            const newly = findNewlyUnlockedQuizBadgesByCriteria(
+              attemptsBefore,
+              attemptsAfter,
+            );
+            if (newly.length > 0) {
+              setBadgesJustUnlocked(newly);
+              setTimeout(() => setBadgeUnlockModalVisible(true), 480);
+            }
+          } catch (e) {
+            console.error("[ChapterQuiz] persist attempt / badges", e);
+          }
+        })();
       }
       setCompletionRunId((r) => r + 1);
       setIsCompleted(true);
@@ -624,6 +660,8 @@ const ChapterQuizBottomSheet = () => {
     setVoteChoice(null);
     setDownvoteSubmitting(false);
     setIsFavoriteMarked(false);
+    setBadgeUnlockModalVisible(false);
+    setBadgesJustUnlocked([]);
   }, []);
 
   const onVoteUp = useCallback(() => {
@@ -700,6 +738,11 @@ const ChapterQuizBottomSheet = () => {
 
   const showConfettiOverlay = isCompleted && didPassQuiz;
 
+  const dismissBadgeUnlockModal = useCallback(() => {
+    setBadgeUnlockModalVisible(false);
+    setBadgesJustUnlocked([]);
+  }, []);
+
   if (!activeQuiz || total === 0) {
     return (
       <BottomModal
@@ -723,6 +766,7 @@ const ChapterQuizBottomSheet = () => {
   }
 
   return (
+    <>
     <BottomModal
       style={styles.bottomSheet}
       shouldScroll={false}
@@ -1012,6 +1056,74 @@ const ChapterQuizBottomSheet = () => {
         )}
       </View>
     </BottomModal>
+
+    <Modal
+      visible={badgeUnlockModalVisible}
+      transparent
+      animationType="fade"
+      statusBarTranslucent
+      onRequestClose={dismissBadgeUnlockModal}
+    >
+      <Pressable
+        style={styles.badgeUnlockBackdrop}
+        onPress={dismissBadgeUnlockModal}
+        accessibilityRole="button"
+        accessibilityLabel="Cerrar"
+      >
+        <RNView
+          style={[
+            styles.badgeUnlockCard,
+            {
+              backgroundColor: theme.colors.card,
+              borderColor: theme.colors.text + "18",
+            },
+          ]}
+        >
+          <Text style={[styles.badgeUnlockKicker, { color: theme.colors.notification }]}>
+            {badgesJustUnlocked.length === 1
+              ? "¡Nueva insignia!"
+              : "¡Nuevas insignias!"}
+          </Text>
+          <Text
+            style={[styles.badgeUnlockTitle, { color: theme.colors.text }]}
+            accessibilityRole="header"
+          >
+            {badgesJustUnlocked.length === 1
+              ? "Desbloqueaste una insignia de perfil"
+              : `Desbloqueaste ${badgesJustUnlocked.length} insignias de perfil`}
+          </Text>
+          <RNView style={styles.badgeUnlockList}>
+            {badgesJustUnlocked.map((b) => (
+              <RNView key={b.id} style={styles.badgeUnlockRow}>
+                <Text style={styles.badgeUnlockEmoji} accessibilityLabel={b.label}>
+                  {b.emoji}
+                </Text>
+                <Text
+                  style={[styles.badgeUnlockLabel, { color: theme.colors.text }]}
+                  numberOfLines={2}
+                >
+                  {b.label}
+                </Text>
+              </RNView>
+            ))}
+          </RNView>
+          <Text style={[styles.badgeUnlockHint, { color: theme.colors.text + "99" }]}>
+            La verás en tu perfil de Mis Quiz.
+          </Text>
+          <TouchableOpacity
+            style={[
+              styles.badgeUnlockButton,
+              { backgroundColor: theme.colors.notification },
+            ]}
+            onPress={dismissBadgeUnlockModal}
+            activeOpacity={0.9}
+          >
+            <Text style={styles.badgeUnlockButtonText}>Genial</Text>
+          </TouchableOpacity>
+        </RNView>
+      </Pressable>
+    </Modal>
+    </>
   );
 };
 
@@ -1349,6 +1461,71 @@ const getStyles = (theme: TTheme) => {
     resultPillPrimaryLabel: {
       color: "#FFFFFF",
       fontSize: 15,
+      fontWeight: "800",
+    },
+    badgeUnlockBackdrop: {
+      flex: 1,
+      backgroundColor: "rgba(0,0,0,0.5)",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: SP.lg,
+    },
+    badgeUnlockCard: {
+      width: "100%",
+      maxWidth: 340,
+      borderRadius: RADIUS.card + 4,
+      borderWidth: StyleSheet.hairlineWidth,
+      padding: SP.lg,
+      gap: SP.md,
+    },
+    badgeUnlockKicker: {
+      fontSize: 13,
+      fontWeight: "800",
+      textAlign: "center",
+      letterSpacing: 0.3,
+      textTransform: "uppercase",
+    },
+    badgeUnlockTitle: {
+      fontSize: 18,
+      fontWeight: "800",
+      textAlign: "center",
+      letterSpacing: -0.3,
+    },
+    badgeUnlockList: {
+      width: "100%",
+      gap: SP.sm,
+      marginTop: SP.xs,
+    },
+    badgeUnlockRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: SP.md,
+      paddingVertical: SP.sm,
+      paddingHorizontal: SP.sm,
+    },
+    badgeUnlockEmoji: {
+      fontSize: 40,
+      lineHeight: 48,
+    },
+    badgeUnlockLabel: {
+      flex: 1,
+      fontSize: 16,
+      fontWeight: "700",
+    },
+    badgeUnlockHint: {
+      fontSize: 13,
+      textAlign: "center",
+      lineHeight: 18,
+    },
+    badgeUnlockButton: {
+      marginTop: SP.sm,
+      borderRadius: 999,
+      paddingVertical: 14,
+      alignItems: "center",
+    },
+    badgeUnlockButtonText: {
+      color: "#FFFFFF",
+      fontSize: 16,
       fontWeight: "800",
     },
   });
