@@ -139,7 +139,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
     },
     android: {
-      versionCode: 25,
+      versionCode: 26,
       icon: getAssetPath().icon,
       adaptiveIcon: {
         foregroundImage: getAssetPath().adaptiveIcon,
